@@ -1,0 +1,36 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Claude Code per-developer settings
+.claude/settings.local.json
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python (for future pptx generation, etc.)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node (in case any tooling lands here)
+node_modules/
+
+# Office temporary lock files (pptx generation artifacts)
+~$*.pptx
+~$*.docx
+~$*.xlsx
+
+# Logs
+*.log
+logs/
