@@ -88,12 +88,44 @@ multi-agent-team/                          # 本リポジトリ（ハブ）
 
 ## 5. Git 運用
 
-- **PR 運用**。`main` への直 push は禁止
-- ブランチ命名: `feature/<topic>` / `fix/<topic>` / `docs/<topic>` / `chore/<topic>`
-- コミット粒度: 論理的に最小・PR で意図が伝わる単位
-- コミットメッセージ: 日本語、何を/なぜ を簡潔に
+### 5.1 ブランチ戦略 — trunk-based + integration
 
-例外: 本リポジトリ初期化時のキックオフコミットのみ main 直 commit を許容。
+| ブランチ | 役割 | 直接 push | 直接 PR |
+|---------|------|----------|---------|
+| `main` | リリース済み・本番安定版（タグを切る基点） | 禁止 | 禁止（development からのみ） |
+| `development` | 統合ブランチ。常時 deployable を維持 | 禁止 | feature/fix/docs/chore からの PR を受ける |
+| `feature/<topic>` | 機能追加 | 自由（自分のブランチ） | → `development` |
+| `fix/<topic>` | バグ修正 | 同上 | → `development` |
+| `docs/<topic>` | ドキュメント変更 | 同上 | → `development` |
+| `chore/<topic>` | リポ運用・設定変更 | 同上 | → `development` |
+
+### 5.2 フロー
+
+```
+feature/* ─┐
+fix/*     ─┤
+docs/*    ─┼─PR─▶ development ─PR(リリース時)─▶ main ─tag─▶ release
+chore/*   ─┘
+```
+
+- 日々の開発は **`development` への PR**。Base ブランチを間違えない
+- リリースは development → main の PR を別途起こし、マージ時にタグを切る
+- `main` は常にデプロイ可能。`development` も常時 deployable を維持する
+  （壊れた状態で滞留させない）
+
+### 5.3 PR ルール
+
+- ブランチ命名: `<種別>/<短いトピック>`（小文字・ケバブケース。例: `feature/notion-board-init`）
+- コミット粒度: 論理的に最小・PR で意図が伝わる単位
+- コミットメッセージ: 日本語、何を / なぜ を簡潔に
+- レビュー: 1 名以上の承認後マージ（チーム規模に応じて運用）
+- マージ方式: squash を基本。コミット履歴を develop で再現する必要がない限り
+- 同期: long-lived branch は定期的に `development` を rebase / merge して取り込む
+
+### 5.4 例外
+
+- 本リポジトリ初期化時のキックオフコミットのみ `main` 直 commit を許容（既に完了）
+- 緊急 hotfix は `fix/hotfix-*` を main から切り、main と development 双方へマージ
 
 ## 6. 環境
 
