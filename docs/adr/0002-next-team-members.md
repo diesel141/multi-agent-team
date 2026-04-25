@@ -1,10 +1,18 @@
 # ADR-0002: 次にアサインする職種の提案
 
-- 状態: **Proposed**（PM 承認待ち）
+- 状態: **Accepted**（PM 神崎 玲奈、2026-04-26 承認）
 - 起案日: 2026-04-25
 - 起案者: Tech Lead 早瀬 蒼
 - 関連: `docs/adr/0001-default-tech-stack.md` / `docs/personas/tech_lead.md` /
   `docs/history/2026-04-25_tech-lead-activation-decisions.md` §2.4
+
+### PM 承認時の補足条件
+
+- **§4.2 リスク 1「BE 向け開始指令の受入基準を共同レビュー」について**: 「共同レビュー」
+  は CLAUDE.md §1.3 の通信プロトコル外の運用語のため不採用。**受入基準は PM が単独で
+  起案し、Tech Lead は問題報告で差し戻す** 標準フローに揃える（§5 論点 3 とも整合）
+- §5 論点 1〜4 の PM 判断: BE 即時起用承認 / FE 優先 2 維持 / SRE 優先 3 維持 /
+  ペルソナ起案は Tech Lead 主体 / Mobile 事前確保なし
 
 ---
 

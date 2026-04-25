@@ -1,9 +1,17 @@
 # ADR-0001: 既定の技術スタック
 
-- 状態: **Proposed**（PM 承認待ち）
+- 状態: **Accepted**（PM 神崎 玲奈、2026-04-26 承認）
 - 起案日: 2026-04-25
 - 起案者: Tech Lead 早瀬 蒼
 - 関連: `docs/personas/tech_lead.md` / `CLAUDE.md` §4-§5 / `docs/history/2026-04-25_tech-lead-activation-decisions.md`
+
+### PM 承認時の補足条件
+
+- **§2.1 Clerk 採用について**: 個人情報を扱うタスクで Clerk を選ぶ場合は、データ
+  保管国・準拠法を **着手前に PM へ問題報告で確認** すること。Clerk が条件に合わない
+  場合は Supabase Auth へフォールバック可（§5 論点 2 への PM 判断）
+- 上記以外の §5 論点（Vercel 中心 / Marp+python-pptx / テンプレリポ運用）は本 ADR
+  どおりで承認
 
 ---
 
