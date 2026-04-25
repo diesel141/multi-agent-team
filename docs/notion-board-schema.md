@@ -178,35 +178,69 @@ Multi-Agent Team (Notion ワークスペース)
 
 ---
 
-## 5. API 連携 (将来)
+## 5. MCP 連携（Notion Remote MCP）
 
-### 5.1 認証
+エージェントは Notion 公式の **Remote MCP** 経由で掲示板を読み書きする。
+独自 API クライアントは原則作らない（決定経緯: `docs/history/2026-04-25_notion-mcp-adoption.md`）。
 
-- Notion Integration を作成し、Internal Integration Token を発行
-- 環境変数として `.env` に格納（`.env.example` を参照）
+### 5.1 サーバ設定
 
-### 5.2 必要な権限
+リポジトリ直下の `.mcp.json` で登録済み:
 
-- Read content
-- Update content
-- Insert content
-- データベースを Integration に共有（Notion ページの `...` メニュー → Connections）
+```json
+{
+  "mcpServers": {
+    "notion": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
+    }
+  }
+}
+```
 
-### 5.3 環境変数
+- トランスポート: HTTP（Streamable HTTP）
+- 公式エンドポイント: `https://mcp.notion.com/mcp`
+- 該当リポで起動した全 Claude Code（teammate を含む）が同じ MCP に自動接続
+
+### 5.2 認証（OAuth）
+
+Remote MCP は **OAuth 認証のみ**（bearer token 非サポート）。
+各 Claude Code インスタンスでの初回セットアップ手順:
+
+1. Claude Code 上で `/mcp` を実行
+2. `notion` サーバを選択 → OAuth フローのリンクが表示される
+3. ブラウザで Notion にログインし、ワークスペースへの認可を許可
+4. Claude Code に戻ると認証情報が保存され、以降ツール呼び出し可能
+
+OAuth 情報は Claude Code の認証ストアで管理されるため、`.env` にトークンを置く必要はない。
+
+### 5.3 主要ツール対応表
+
+| 操作 | MCP ツール（典型名） | 本PJ の使われ方 |
+|------|---------------------|----------------|
+| メッセージ投稿 | `create_page` (DB 配下) | 開始指令 / 問題報告 / 完了報告 |
+| 受信箱確認 | `query_database`（フィルタ: 受領者 = self） | 担当タスクの取得 |
+| ステータス更新 | `update_page_properties` | 未着手 → 進行中 → 完了 |
+| 詳細閲覧 | `retrieve_page` / `retrieve_block_children` | 親メッセージ本文の確認 |
+| 検索 | `search` | TASK-ID 横断検索 |
+
+ツール名は MCP サーバ実装の更新で変わる可能性があるため、Claude が `/mcp` で
+実際の利用可能ツールを確認してから使う。
+
+### 5.4 環境変数
 
 ```
-NOTION_TOKEN=secret_xxxxxxxxxx
-NOTION_BOARD_DATABASE_ID=xxxxxxxxxx
+NOTION_BOARD_DATABASE_ID=<32文字hex>
 ```
 
-詳細は `.env.example` を参照。
+DB ID のみ `.env` に設定。`NOTION_TOKEN` は Remote MCP では使わない（OAuth 管理のため）。
 
-### 5.4 通知レイヤ
+### 5.5 通知レイヤ
 
 エージェントへの「メールあり」通知の実装方針は未確定。
 `docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` §4 で議論した
 4 候補（Notion API ポーリング / Webhooks / FileSystemWatcher / chokidar）の中から
-Tech Lead が選定する。
+Tech Lead が選定する。MCP は能動的な検知機能を持たないので、別レイヤが必要。
 
 ---
 
@@ -216,10 +250,11 @@ Tech Lead が選定する。
 - [ ] 「掲示板」ページを作成
 - [ ] 配下に `Messages` Database を作成し §1.2 のプロパティを設定
 - [ ] §1.3 の Select 値を登録
-- [ ] Notion Integration を作成し Token を取得
-- [ ] Integration を Messages DB に Connect
 - [ ] Database ID を URL から抽出（`notion.so/<workspace>/<database-id>?v=...`）
-- [ ] `.env` を作成し `NOTION_TOKEN` / `NOTION_BOARD_DATABASE_ID` を設定（`.env.example` をコピー）
+- [ ] `.env` を作成し `NOTION_BOARD_DATABASE_ID` を設定（`.env.example` をコピー）
+- [ ] Claude Code 上で `/mcp` を実行 → `notion` を選択 → OAuth フローを完了
+      （ワークスペースへの認可。掲示板 DB を含むページに Integration / Remote MCP のアクセスを許可）
+- [ ] 接続確認: Claude に「掲示板 DB を 1 件取得して」と依頼し、MCP 経由で DB が見えることをテスト
 - [ ] PM 神崎の最初の開始指令 (`docs/notion-messages/2026-04-25_001_tech-lead-onboarding.md`)
       を Messages DB に新規ページとして投稿
 
