@@ -1,9 +1,9 @@
 # ADR-0002: 次にアサインする職種の提案
 
-- 状態: **Proposed**（PM 承認待ち）
+- 状態: **Superseded by ADR-0006**（§5.3 ペルソナ起案フローは ADR-0006 §5 で更新。§2.1 BE/FE/SRE 採用順 / §3 却下案 A〜G の起用条件は継続有効）
 - 起案日: 2026-04-25
 - 起案者: Tech Lead 早瀬 蒼
-- 関連: `docs/adr/0001-default-tech-stack.md` / `docs/personas/tech_lead.md` /
+- 関連: `docs/adr/0001-default-tech-stack.md` / `docs/adr/0006-persona-creation-flow-and-role-recalibration.md` / `docs/personas/tech_lead.md` /
   `docs/history/2026-04-25_tech-lead-activation-decisions.md` §2.4
 
 ---
@@ -224,6 +224,7 @@ ADR-0001 §3 / §4 と TASK-0001 完了後の自然な次タスクから、以�
 3. **ペルソナ起案の主体** — 本 ADR では Tech Lead 起案 + PM 承認としているが、
    PM がペルソナ自体は自分で起こしたい場合は分担を変更可能（その場合 Tech Lead は
    スキル要件・初期タスクの定義のみ提供）
+   **※ 2026-04-27 ADR-0006 §5 で本論点は更新済。正規ルートは「PM 起案」、Tech Lead 起案は残置ルートに縮退（ADR-0006 §2.1 / §5.1 / §5.2 参照）。**
 4. **Mobile 担当の事前確保** — 顧客側で Mobile タスクが内定している場合、
    §3 却下 A の判断を事前に動かす
 
