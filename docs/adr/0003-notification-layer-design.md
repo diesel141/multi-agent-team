@@ -21,7 +21,7 @@
 - 結果、Notion に届いてから人が気付くまでのレイテンシは **数十分〜数時間** のばらつき
 - POC 期は許容できるが、BE 久遠周採択（TASK-0011 / PR #17）以降の実装フェーズでは **掲示板の運用速度がチーム全体のスループットの律速** になる
 
-本 ADR は通知レイヤの実装方式を確定し、`mat-notion-watcher` サブリポでの実装着手（後続 TASK-0012 / BE 担当）に必要な技術判断・境界仕様を残す。
+本 ADR は通知レイヤの実装方式を確定し、`mat-board-watcher` サブリポでの実装着手（後続 TASK-0012 / BE 担当）に必要な技術判断・境界仕様を残す。
 
 ### 1.2 前提・制約
 
@@ -51,7 +51,7 @@ shogun の `inotifywait` は Linux 限定で本環境（Windows）では使え�
 
 1. 通知レイヤの実装方式（4 候補 + 採用案）
 2. 5 評価軸での比較（レイテンシ / レート制限耐性 / 障害モード / 初期コスト / 近期拡張性）
-3. `mat-notion-watcher` サブリポ初期化方針（ディレクトリ構成 / テンプレ参照先 / CI/CD 雛形）
+3. `mat-board-watcher` サブリポ初期化方針（ディレクトリ構成 / テンプレ参照先 / CI/CD 雛形）
 4. 開いている論点（PM 承認で動かす可能性のある項目）
 
 実装そのものは後続タスク（TASK-0012 想定）として BE 久遠周に委譲する。
@@ -208,27 +208,27 @@ shogun の `inotifywait` は Linux 限定で本環境（Windows）では使え�
 ### 4.3 影響範囲
 
 - **本ハブリポ（multi-agent-team）**: 本 ADR と歴史化メモのみ。実装コードは含まない
-- **新規サブリポ `mat-notion-watcher`**: 後続 TASK-0012 で BE 久遠周が初期化（§5 の方針に従う）
+- **新規サブリポ `mat-board-watcher`**: 後続 TASK-0012 で BE 久遠周が初期化（§5 の方針に従う）
 - **Notion Messages DB**: スキーマ変更なし。`last_edited_time` を差分検知のキーにするだけ
 - **CLAUDE.md**: §1.2 「send-keys は業務通信に使わない」という記述と整合。本 ADR で send-keys を **通知用途に限定**して使う旨を §4.2 緩和策レベルで明示
 - **既存ペルソナ**: Tech Lead / BE / PM の責任分担に影響なし
 
 ---
 
-## 5. mat-notion-watcher サブリポ初期化方針
+## 5. mat-board-watcher サブリポ初期化方針
 
 > 実装は後続 TASK-0012（BE 久遠周担当想定）。本 ADR ではスケルトンと境界のみを確定する。
 
 ### 5.1 リポジトリ命名・配置
 
-- リポジトリ名: `mat-notion-watcher`（ADR-0001 §2.4 命名規約「`mat-<purpose>`」準拠）
-- GitHub 配置: `diesel141/mat-notion-watcher` を想定（PM 承認後に Tech Lead が `gh repo create` で初期化）
+- リポジトリ名: `mat-board-watcher`（ADR-0001 §2.4 命名規約「`mat-<purpose>`」準拠）
+- GitHub 配置: `diesel141/mat-board-watcher` を想定（PM 承認後に Tech Lead が `gh repo create` で初期化）
 - ライセンス: 非公開リポを想定（社内ツール）
 
 ### 5.2 ディレクトリ構成（提案）
 
 ```
-mat-notion-watcher/
+mat-board-watcher/
 ├── README.md                       # セットアップ・運用手順
 ├── package.json                    # pnpm workspace root
 ├── pnpm-workspace.yaml
@@ -279,8 +279,8 @@ mat-notion-watcher/
 
 ### 5.3 テンプレート参照先
 
-- `multi-agent-template`（ADR-0001 §2.3 で言及）は **未起票**。本 ADR の §6 開いている論点 (5) で、Tech Lead が後続タスクとして `multi-agent-template` リポを起こすか、`mat-notion-watcher` が **事実上の最初のテンプレ実装** になるかを PM と議論する
-- 暫定方針: `mat-notion-watcher` を **「最初のテンプレ実装」として丁寧に作り、`multi-agent-template` は本リポの構成を抽出する形で後追い起票**（PM 承認後に別 ADR で確定）
+- `multi-agent-template`（ADR-0001 §2.3 で言及）は **未起票**。本 ADR の §6 開いている論点 (5) で、Tech Lead が後続タスクとして `multi-agent-template` リポを起こすか、`mat-board-watcher` が **事実上の最初のテンプレ実装** になるかを PM と議論する
+- 暫定方針: `mat-board-watcher` を **「最初のテンプレ実装」として丁寧に作り、`multi-agent-template` は本リポの構成を抽出する形で後追い起票**（PM 承認後に別 ADR で確定）
 
 ### 5.4 CI/CD 雛形
 
@@ -322,17 +322,17 @@ jobs:
 
 #### 5.4.1 ユーザー作業手順（事前セットアップ・約 15 分）
 
-本 ADR の採用認証経路では、BE 久遠周が `mat-notion-watcher` 実装に着手する前にユーザー（プロジェクトオーナー）が以下を済ませる必要がある。BE 工数を削るため **PM が事前準備チェックリストとして TASK-0012 開始指令と並行発注** する想定。
+本 ADR の採用認証経路では、BE 久遠周が `mat-board-watcher` 実装に着手する前にユーザー（プロジェクトオーナー）が以下を済ませる必要がある。BE 工数を削るため **PM が事前準備チェックリストとして TASK-0012 開始指令と並行発注** する想定。
 
 1. **Notion Internal Integration を作成**
    - Notion → Settings → Connections → Develop or manage integrations → New integration
-   - Name: `mat-notion-watcher` / Type: **Internal** / Associated workspace: 個人ワークスペース
+   - Name: `mat-board-watcher` / Type: **Internal** / Associated workspace: 個人ワークスペース
    - Capabilities: Read content / Update content / Insert content / Read user information without email
    - 表示された **Internal Integration Secret**（`secret_xxx...`）をコピー（後で Vercel に投入）
 2. **Messages DB に Integration を接続**
-   - Notion 掲示板の Messages DB ページ → 右上「・・・」→ Connections → `mat-notion-watcher` を追加
+   - Notion 掲示板の Messages DB ページ → 右上「・・・」→ Connections → `mat-board-watcher` を追加
 3. **Vercel プロジェクト作成 + KV 紐付け**
-   - Vercel Hobby 枠で `mat-notion-watcher` プロジェクトを GitHub 連携で作成
+   - Vercel Hobby 枠で `mat-board-watcher` プロジェクトを GitHub 連携で作成
    - Storage タブから **Vercel KV** を新規作成し本プロジェクトに紐付け（自動で `KV_REST_API_*` 注入）
    - Encrypted env に `NOTION_TOKEN` / `NOTION_DB_MESSAGES` / `LOCAL_NOTIFIER_URL` / `LOCAL_NOTIFIER_HMAC_SECRET` を設定
 4. **Cloudflare Tunnel セットアップ**（ユーザー所有ドメイン使用 / 無料）
@@ -366,8 +366,8 @@ jobs:
 1. **ポーリング間隔の確定** — 本 ADR では Vercel Cron 1 min を採用したが、コスト面で 5 min まで緩めるか、Notion API レート余裕を活かして手動 30 sec を入れるかは PM 判断の余地あり。**測定方針**: phase1 リリース後 2 週間の formal 投稿数 / informal 投稿数の実測 P95 で再評価
 2. **Webhook そのものの使用可否（phase2 移行条件）** — §3 却下案 B 再考閾値の (a) Notion 公式 Webhook GA / (b) 自前リレー不要 / (c) SLA 強化 のいずれを優先するかは PM の事業方針次第。本 ADR では「(a)+(b) を必要条件、(c) を十分条件」としたが見直し可
 3. **ハイブリッド（Cron + ローカル Watcher）への phase3 移行タイミング** — ローカル PC 常時稼働を業務前提にできるか / SRE 起用と紐付けるかは PM 判断
-4. **`multi-agent-template` の起票タイミング** — §5.3 暫定方針は「mat-notion-watcher を最初のテンプレ実装にし、`multi-agent-template` を後追い」だが、逆順（先にテンプレリポを作る）で進める案も残す。Tech Lead は **後追い派** だが PM が異論を述べる余地あり
-5. **`mat-notion-watcher` の所有・運用責任** — 通知レイヤは BE 実装だが、運用障害時の一次対応者を BE / Tech Lead / SRE（未起用）のいずれに置くかは未確定。SRE 起用前は Tech Lead が一次対応する想定だが、PM 承認で固定したい
+4. **`multi-agent-template` の起票タイミング** — §5.3 暫定方針は「mat-board-watcher を最初のテンプレ実装にし、`multi-agent-template` を後追い」だが、逆順（先にテンプレリポを作る）で進める案も残す。Tech Lead は **後追い派** だが PM が異論を述べる余地あり
+5. **`mat-board-watcher` の所有・運用責任** — 通知レイヤは BE 実装だが、運用障害時の一次対応者を BE / Tech Lead / SRE（未起用）のいずれに置くかは未確定。SRE 起用前は Tech Lead が一次対応する想定だが、PM 承認で固定したい
 6. **send-keys の「通知のみ」規律の自動検証** — §4.2 緩和策で型ガードを置くが、「規律違反を CI で検知する仕組み」（例: payload 文字列長を 80 文字未満に強制）まで踏み込むかは別 ADR 候補
 7. **サーバー側 OAuth 化の phase2 移行条件** — §3 却下 F の再考閾値 (a)-(d) のいずれが先に到達するか不明。本 ADR では Internal Integration bearer で phase1 完結とし、Public Integration + OAuth 化は phase2 候補として保留。**測定方針**: bearer token 漏洩インシデント・複数ワークスペース要件・rotation SLA 要求の 3 シグナルを四半期に 1 度棚卸し、いずれか出たら独立 ADR で再起案
 

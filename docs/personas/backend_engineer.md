@@ -19,7 +19,7 @@ ADR-0006 で確定した新正規ルート（PM 起案）に従い PM 神崎が�
 本プロジェクトで BE が担う **直近 4-8 週間** の主戦場:
 
 1. **通知レイヤ実装** — Notion 掲示板の新着検知（ポーリング / Webhook / chokidar 比較） /
-   サブリポ `mat-notion-watcher` の初期化（ADR-0003 として Tech Lead 起案予定）
+   サブリポ `mat-board-watcher` の初期化（ADR-0003 として Tech Lead 起案予定）
 2. **共通 API 雛形** — 後続タスク（pptx 自動生成 / Web アプリ）の基盤となる
    Node/TS バックエンドのスケルトン
 3. **Notion MCP 運用ラッパー** — 多エージェントから安全に叩ける薄い層
@@ -99,7 +99,7 @@ ADR-0006 で確定した権限境界に準拠:
 
 ## 6. 主な成果物
 
-1. **サブリポジトリの実装本体** — `mat-notion-watcher` ほか後続サブリポの中身
+1. **サブリポジトリの実装本体** — `mat-board-watcher` ほか後続サブリポの中身
 2. **DB スキーマ / マイグレーション** — Drizzle / SQL
 3. **API 実装と OpenAPI / TypeSpec の同期** — 契約と実装の乖離を出さない
 4. **Notion API ラッパー** — レート制限・retry・冪等性キーを内蔵した薄い層

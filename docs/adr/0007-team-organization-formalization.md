@@ -111,13 +111,13 @@ TASK-0011（PR #17 / commit `4beab20`）で運用試行・採用方向で決着�
 
 ### 2.4 論点 4: `multi-agent-template` の起票タイミング（既決の正式化）
 
-#### 採用案: 後追い派（`mat-notion-watcher` を最初のテンプレ実装にし、`multi-agent-template` は構成抽出として後追い起票）
+#### 採用案: 後追い派（`mat-board-watcher` を最初のテンプレ実装にし、`multi-agent-template` は構成抽出として後追い起票）
 
 TASK-0002 受入レビューで PM が採用済。本 ADR で正式化:
 
-- BE 久遠周は `mat-notion-watcher` を最初のサブリポとして **テンプレ実装の品質基準を満たすように丁寧に作る**
+- BE 久遠周は `mat-board-watcher` を最初のサブリポとして **テンプレ実装の品質基準を満たすように丁寧に作る**
 - サブリポ 2 つ目以降が現れたタイミングで Tech Lead が `multi-agent-template` を ADR-0008（仮）として起案 → 構成抽出
-- `mat-notion-watcher` が稼働を始める前に「テンプレ抽出のルール」を Tech Lead が ADR で定義することは妨げない（任意）
+- `mat-board-watcher` が稼働を始める前に「テンプレ抽出のルール」を Tech Lead が ADR で定義することは妨げない（任意）
 
 #### 却下案 4A: 先（テンプレリポを先に作る）
 
@@ -138,7 +138,7 @@ ADR-0003 §4.2-4 で `dispatcher` 層に payload 型ガード + 正規表現制�
 
 #### 却下案 5A: 即実装（CI で検証）
 
-- **却下理由 1**: phase1 では送信元（`mat-notion-watcher` の `dispatcher`）が単一で、コード型ガードで十分。CI 検証は二重防御
+- **却下理由 1**: phase1 では送信元（`mat-board-watcher` の `dispatcher`）が単一で、コード型ガードで十分。CI 検証は二重防御
 - **却下理由 2**: CI 設計（payload サンプル収集 / mock dispatcher / lint rule 自作）の工数 vs 規律違反リスクの ROI が POC 期では合わない
 - **再考の閾値**: send-keys 規律違反が **1 件でも発生** した場合 → 即時 ADR-0008 起案で CI 検証実装
 
@@ -215,7 +215,7 @@ ADR-0006 §5.2 で確定した PM 責務「(a) スコープ / 期日 / 受入基
 1. **§2.1 共同議論項目の運用** — 「ローディング / エラー UX」「アクセシビリティ」を informal 議論で言語化する想定だが、実際に FE 起用後にこの議論が機能するかは未検証。FE 着任後 1 ヶ月で再評価
 2. **§2.2 ソフト基準の運用** — 「同時進行 P1 タスク数 + 1」を上限の目安としたが、POC 期は同時進行が変動するため目安の解像度が低い可能性。半年後（2026-10-27 頃）に実測値で見直し
 3. **§2.3 PM 起案ペルソナの Tech Lead レビュー観点リスト** — 本 ADR では「責任範囲整合 / 技術スキル過不足」と概括したが、観点を `docs/templates/checklists/` に詳細化するかは別議論
-4. **§2.4 テンプレ抽出ルールの先行 ADR** — Tech Lead が `mat-notion-watcher` 稼働前に「テンプレ抽出のルール」を ADR-0008 として起案するか否かは Tech Lead 裁量
+4. **§2.4 テンプレ抽出ルールの先行 ADR** — Tech Lead が `mat-board-watcher` 稼働前に「テンプレ抽出のルール」を ADR-0008 として起案するか否かは Tech Lead 裁量
 5. **§2.6 「組織規律 ADR」のカタログ化** — PM が今後起案する組織規律 ADR の累積で「規律のパッチワーク」化するリスク。半年に 1 回統合 ADR で Superseded 化するか、それとも累積を許容するかは別議論
 
 ---

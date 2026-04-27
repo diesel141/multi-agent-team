@@ -29,7 +29,7 @@ ADR-0001 §3 / §4 と TASK-0001 完了後の自然な次タスクから、以�
 1. **通知レイヤの実装** — `docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` §4 で
    未決のまま Tech Lead に投げられた、Notion 掲示板の新着検知
    （ポーリング / Webhook / chokidar 等から選定）。
-   サブリポ `mat-notion-watcher` を新設して実装する想定
+   サブリポ `mat-board-watcher` を新設して実装する想定
 2. **テンプレートリポ整備** — ADR-0001 §2.3 で決めたサブリポ初期化テンプレート
    `multi-agent-template` の新規作成（TS モノレポ + Biome + Vitest + GH Actions）
 3. **最初の業務タスク（未到来）** — Web/Backend/Mobile/研修 のいずれか
@@ -53,7 +53,7 @@ ADR-0001 §3 / §4 と TASK-0001 完了後の自然な次タスクから、以�
 
 | 優先 | 職種 | 起用タイミング | 初期想定タスク | ペルソナ起案優先度 |
 |------|------|---------------|----------------|-------------------|
-| **1** | **Backend Engineer (BE)** | **即時**（PM 承認直後） | 通知レイヤ実装 / `mat-notion-watcher` サブリポ初期化 / Notion MCP の運用ラッパー / 共通 API 雛形 | **高**（即時、ADR-0001 と同じ品質基準で起案） |
+| **1** | **Backend Engineer (BE)** | **即時**（PM 承認直後） | 通知レイヤ実装 / `mat-board-watcher` サブリポ初期化 / Notion MCP の運用ラッパー / 共通 API 雛形 | **高**（即時、ADR-0001 と同じ品質基準で起案） |
 | **2** | **Frontend Engineer (FE)** | **タスク到来時**（最初の Web タスク受領時） | Next.js 15 雛形のテンプレートリポ整備 / 認証導線（Clerk）/ 最初のページ実装 | 中（タスクが見えた時点で起案） |
 | **3** | **SRE / DevOps Engineer** | **タスク到来時**（CI/CD またはインフラ案件発生時） | GitHub Actions ワークフロー整備 / Vercel/Supabase の権限設計 / シークレット運用 / 観測性整備（Sentry/Axiom） | 低（必要性が顕在化したら起案） |
 

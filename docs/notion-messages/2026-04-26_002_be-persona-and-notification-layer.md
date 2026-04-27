@@ -59,8 +59,8 @@ ADR で残す必要がある。BE はこの ADR を実装仕様として受け�
   - Notion 掲示板の新着検知方式の **比較** と採用案（最低 3 案を比較。例: 定期ポーリング /
     Notion Webhook（提供される場合）/ chokidar によるファイル監視 / SSE / etc.）
   - 採用案の **アーキテクチャ概要図**（Mermaid 推奨）
-  - サブリポ `mat-notion-watcher` の初期化方針（`multi-agent-template` を先行整備するか、
-    `mat-notion-watcher` で同時に整備するか）
+  - サブリポ `mat-board-watcher` の初期化方針（`multi-agent-template` を先行整備するか、
+    `mat-board-watcher` で同時に整備するか）
   - レート制限・障害対応・観測性（Sentry / Axiom）の初期設計
   - **採用しない案ごとに「再考の閾値」を必ず明示**
 
@@ -101,7 +101,7 @@ ADR で残す必要がある。BE はこの ADR を実装仕様として受け�
 - **問題報告の即時性**: 通知レイヤ設計で技術的な不確実性が見えた段階で
   問題報告として投稿する（沈黙によるリスク隠蔽の禁止）
 - 後続: 本タスク完了後、PM が「TASK-0003 BE 起用」開始指令を発行 → BE 着任 →
-  `mat-notion-watcher` サブリポ初期化に着手
+  `mat-board-watcher` サブリポ初期化に着手
 
 ---
 
