@@ -3,6 +3,7 @@
 - 状態: **Proposed**（PM 承認待ち / Tech Lead 自己マージ前提・ADR-0006 §5.2）
 - 起案日: 2026-04-27
 - 起案者: Tech Lead 早瀬 蒼
+- 改訂: 2026-04-27 §2.1 / §2.2 / §3 却下 F / §5.4 / §5.4.1 / §6 に **認証経路の補足**（TASK-0014 起因 / ユーザー希望「OAuth 基本無料」を解釈し Internal Integration 並存に確定）
 - 関連: `docs/adr/0001-default-tech-stack.md` / `docs/adr/0002-next-team-members.md` / `docs/adr/0005-communication-protocol-revision.md` / `docs/adr/0006-persona-creation-flow-and-role-recalibration.md` / `docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` §4 / `docs/personas/backend_engineer.md`（久遠周）/ `CLAUDE.md` §1.3 / `memory/adr_house_style.md`
 
 ---
@@ -104,9 +105,20 @@ shogun の `inotifywait` は Linux 限定で本環境（Windows）では使え�
 - **phase2（再考閾値到達時）**: Notion 公式 Webhook が GA かつ自前リレー不要になったら Webhook 受け皿に切替（§3 却下案 B 参照）
 - **phase3（将来）**: ローカル PC 常時稼働が前提化したらハイブリッド（Cron + ローカル Watcher）に拡張（§3 却下案 C / §6-3 開いている論点）
 
+#### 2.1.4 認証経路（MCP OAuth と Vercel bearer の並存設計）
+
+本 ADR 構成では Notion 認証は **2 系統が並存** する。両者は同一 Notion Messages DB を読み書きするが、認証主体・認証方式・配置先が異なる。
+
+| 系統 | 認証方式 | 主体 | 配置先 | 用途 |
+|------|---------|------|--------|------|
+| MCP OAuth | OAuth 2.0（Notion Remote MCP） | 各 Claude Code インスタンス | ローカル PC（Claude Code keychain） | 各エージェントが掲示板を直接読み書き（投稿・参照） |
+| Internal Integration bearer | Bearer token（`secret_xxx`） | サーバー側（Vercel Functions） | Vercel Encrypted env (`NOTION_TOKEN`) | Cron による差分ポーリング・safety net 投稿 |
+
+両系統が同時に動くため、Messages DB のページ設定で **MCP OAuth と Internal Integration の両方をコネクションとして許可** する。ユーザーが「OAuth、基本無料で作業」と希望した点は、**MCP OAuth は OAuth のまま維持し、Vercel 側のみ Internal Integration を使う** ことで満たす（OAuth Public Integration を Vercel 側にも実装する案は §3 却下 F で外した）。
+
 ### 2.2 既定スタックとの整合（ADR-0001）
 
-採用案は ADR-0001 §2.1 の既定スタックと整合する:
+採用案は ADR-0001 §2.1 の既定スタックと整合する。認証は §2.1.4 の通り **MCP OAuth（Claude Code 側）+ Internal Integration（Vercel 側）の並存**。OAuth フロー実装は本 ADR では行わない（§3 却下 F）。
 
 - 言語: TypeScript（Node 22 LTS） ✅
 - API フレームワーク: Hono on Vercel Functions ✅
@@ -157,6 +169,16 @@ shogun の `inotifywait` は Linux 限定で本環境（Windows）では使え�
 - **却下理由 2**: Actions は短時間ジョブ向けで、状態管理（cursor）に外部 KV を結局必要とする。Vercel Functions + Vercel KV のセット採用と比べ「実行基盤 + 状態管理」の組合せが分散する
 - **却下理由 3**: ロギング / 失敗時通知が Actions UI 中心で、Vercel Dashboard の方が一覧性が高い
 - **再考の閾値**: Vercel Cron が有償化または Hobby 枠から外された時 / または GitHub Actions の cron 粒度が公式に 1 min 化された時
+
+### 却下 F: Notion Public Integration + OAuth フローを Vercel Functions に実装（サーバー側 OAuth）
+
+ユーザー希望「OAuth、基本無料で作業」を **サーバー側も OAuth で統一** と解釈した場合の案。本 ADR は §2.1.4 の **MCP OAuth（Claude Code 側）+ Internal Integration（Vercel 側）の並存** で「OAuth 希望」を実質満たすため、サーバー側まで OAuth 化する案は phase1 では却下する。
+
+- **却下理由 1**: phase1 ROI に合わない。OAuth 認可エンドポイント / コールバック / リフレッシュトークン保管（Vercel KV）/ 失効時再取得フローを実装すると BE 1〜2 日工数が発生する。phase1 の通知レイヤは「1 分ポーリング + ペイン wake-up」が本質で、OAuth 機構は本質貢献しない
+- **却下理由 2**: ユーザーワークスペースは 1 つのみで、PM が単一 writer として運用する前提（ADR-0005 / shogun §3）。Public Integration の主要利点（マルチワークスペース対応・テナント別認可）は phase1 で発揮されない
+- **却下理由 3**: Internal Integration の bearer token はワークスペース管理者が Notion 管理画面で **作成 / 失効 / 再発行 を 1 クリック** で操作できる。漏洩時のリカバリは bearer 再発行 + Vercel env 更新の 2 手で完了し、OAuth refresh token rotation の自動化より単純
+- **却下理由 4**: ユーザーの「OAuth 希望」は Claude Code 側 MCP の OAuth を維持したい意向（既存資産の流用）と解釈でき、§2.1.4 の **MCP OAuth + Vercel Internal Integration の並存** で実質満たされる。サーバー側まで OAuth を強制する必要はない
+- **再考の閾値**: (a) 複数 Notion ワークスペースを横断する業務要件が発生（例: 顧客企業の Notion を直接参照する SaaS 化）/ (b) bearer token rotation を自動化する SLA（例: 90 日強制ローテ）が業務契約上要求される / (c) 非管理者ユーザーが PM を介さず直接アクセス付与する UX が必要になった / (d) Notion が Internal Integration を deprecation 予告した時
 
 ---
 
@@ -288,13 +310,42 @@ jobs:
 
 デプロイは Vercel の Git 連携（development → preview / main → production）を採用。Vercel 側で次の環境変数を設定:
 
-| 環境変数 | 用途 | 設定先 |
-|---------|------|--------|
-| `NOTION_TOKEN` | Notion integration token | Vercel Encrypted env |
-| `NOTION_DB_MESSAGES` | Messages DB ID | Vercel Encrypted env |
-| `KV_REST_API_URL` / `KV_REST_API_TOKEN` | Vercel KV | Vercel KV 自動注入 |
-| `LOCAL_NOTIFIER_URL` | ローカル Notifier の公開エンドポイント | Vercel Encrypted env |
-| `LOCAL_NOTIFIER_HMAC_SECRET` | POST 署名鍵 | Vercel Encrypted env / ローカル `.env` 双方 |
+| 環境変数 | 用途 | 認証方式 | 設定先 |
+|---------|------|---------|--------|
+| `NOTION_TOKEN` | Notion **Internal Integration** secret（`secret_xxx...`） | Bearer token（OAuth ではない） | Vercel Encrypted env |
+| `NOTION_DB_MESSAGES` | Messages DB ID | — | Vercel Encrypted env |
+| `KV_REST_API_URL` / `KV_REST_API_TOKEN` | Vercel KV | — | Vercel KV 自動注入 |
+| `LOCAL_NOTIFIER_URL` | ローカル Notifier の公開エンドポイント（Cloudflare Tunnel public URL） | — | Vercel Encrypted env |
+| `LOCAL_NOTIFIER_HMAC_SECRET` | POST 署名鍵（HMAC-SHA256） | — | Vercel Encrypted env / ローカル `.env` 双方 |
+
+`NOTION_TOKEN` の正体は **Notion Internal Integration secret**（`secret_` 接頭辞）であり、Claude Code 側 MCP の OAuth トークンとは別物。両者が同じ Messages DB を読み書きする並存設計の根拠は §2.1.4。OAuth Public Integration を Vercel 側にも実装する案は §3 却下 F で外している。
+
+#### 5.4.1 ユーザー作業手順（事前セットアップ・約 15 分）
+
+本 ADR の採用認証経路では、BE 久遠周が `mat-notion-watcher` 実装に着手する前にユーザー（プロジェクトオーナー）が以下を済ませる必要がある。BE 工数を削るため **PM が事前準備チェックリストとして TASK-0012 開始指令と並行発注** する想定。
+
+1. **Notion Internal Integration を作成**
+   - Notion → Settings → Connections → Develop or manage integrations → New integration
+   - Name: `mat-notion-watcher` / Type: **Internal** / Associated workspace: 個人ワークスペース
+   - Capabilities: Read content / Update content / Insert content / Read user information without email
+   - 表示された **Internal Integration Secret**（`secret_xxx...`）をコピー（後で Vercel に投入）
+2. **Messages DB に Integration を接続**
+   - Notion 掲示板の Messages DB ページ → 右上「・・・」→ Connections → `mat-notion-watcher` を追加
+3. **Vercel プロジェクト作成 + KV 紐付け**
+   - Vercel Hobby 枠で `mat-notion-watcher` プロジェクトを GitHub 連携で作成
+   - Storage タブから **Vercel KV** を新規作成し本プロジェクトに紐付け（自動で `KV_REST_API_*` 注入）
+   - Encrypted env に `NOTION_TOKEN` / `NOTION_DB_MESSAGES` / `LOCAL_NOTIFIER_URL` / `LOCAL_NOTIFIER_HMAC_SECRET` を設定
+4. **Cloudflare Tunnel セットアップ**（ユーザー所有ドメイン使用 / 無料）
+   - `cloudflared tunnel create mat-notifier`
+   - DNS ルート: `cloudflared tunnel route dns mat-notifier notifier.<your-domain>`
+   - `~/.cloudflared/config.yml` でローカルポート（例: `http://localhost:8787`）にバインド
+   - サービス起動: PowerShell で `cloudflared tunnel run mat-notifier`
+   - 公開 URL（`https://notifier.<your-domain>`）を Vercel `LOCAL_NOTIFIER_URL` に設定
+5. **HMAC 共通鍵生成**
+   - PowerShell: `[Convert]::ToBase64String((1..32 | ForEach-Object { Get-Random -Maximum 256 }))` で 32 バイト乱数
+   - Vercel `LOCAL_NOTIFIER_HMAC_SECRET` とローカル PC の `.env` の双方に同値を設定
+
+完了後、PM がチェックリスト全項目を確認し BE に「事前準備完了」を通知する（TASK-0012 開始指令の依存関係欄）。
 
 ### 5.5 受入基準（後続 TASK-0012 で BE 久遠周が満たす項目）
 
@@ -318,6 +369,7 @@ jobs:
 4. **`multi-agent-template` の起票タイミング** — §5.3 暫定方針は「mat-notion-watcher を最初のテンプレ実装にし、`multi-agent-template` を後追い」だが、逆順（先にテンプレリポを作る）で進める案も残す。Tech Lead は **後追い派** だが PM が異論を述べる余地あり
 5. **`mat-notion-watcher` の所有・運用責任** — 通知レイヤは BE 実装だが、運用障害時の一次対応者を BE / Tech Lead / SRE（未起用）のいずれに置くかは未確定。SRE 起用前は Tech Lead が一次対応する想定だが、PM 承認で固定したい
 6. **send-keys の「通知のみ」規律の自動検証** — §4.2 緩和策で型ガードを置くが、「規律違反を CI で検知する仕組み」（例: payload 文字列長を 80 文字未満に強制）まで踏み込むかは別 ADR 候補
+7. **サーバー側 OAuth 化の phase2 移行条件** — §3 却下 F の再考閾値 (a)-(d) のいずれが先に到達するか不明。本 ADR では Internal Integration bearer で phase1 完結とし、Public Integration + OAuth 化は phase2 候補として保留。**測定方針**: bearer token 漏洩インシデント・複数ワークスペース要件・rotation SLA 要求の 3 シグナルを四半期に 1 度棚卸し、いずれか出たら独立 ADR で再起案
 
 ---
 
