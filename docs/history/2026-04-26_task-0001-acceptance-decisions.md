@@ -46,7 +46,7 @@ TASK-0001 開始指令（Notion 掲示板）のステータスを「進行中」
 | 1 | Vercel 中心ホスティング | 現状維持 | 国内コンプラ要件案件は手元になし。再考閾値（月額 $500 / VPC 必須）が機能 |
 | 2 | Clerk の採用 | 現状維持 | 海外保管に懸念がある案件発生時に Supabase Auth へスライドする分岐が ADR で明示済 |
 | 3 | Marp + python-pptx の研修資料スタック | 現状維持 | 研修案件未到来。発行時に PM が要件提示する形で十分 |
-| 4 | テンプレートリポ運用 vs ADR 単独 | 現状維持 | BE 着任後の `mat-notion-watcher` が初の被試験者となる前提で TASK-0002 に明記 |
+| 4 | テンプレートリポ運用 vs ADR 単独 | 現状維持 | BE 着任後の `mat-board-watcher` が初の被試験者となる前提で TASK-0002 に明記 |
 
 ### ADR-0002 次メンバー提案
 
@@ -111,7 +111,7 @@ TASK-0002 単独で進める。
   1. ADR-0003: `docs/adr/0003-backend-engineer-persona.md`
      （Tech Lead ペルソナと同フォーマット）
   2. ADR-0004: `docs/adr/0004-notification-layer-design.md`
-     （通知レイヤの設計選択肢比較 + サブリポ `mat-notion-watcher` 初期化方針）
+     （通知レイヤの設計選択肢比較 + サブリポ `mat-board-watcher` 初期化方針）
 - **期日**: 2026-05-10（2 週間）
 - **補足条件**: ADR ハウススタイル「却下案ごとに測定可能な再考の閾値を必ず明示」を
   100% 適用すること（§6 の漏れを参考に）
@@ -120,7 +120,7 @@ TASK-0002 単独で進める。
 1. Tech Lead が ADR-0003 / ADR-0004 を起案 → PR 起票 → 完了報告
 2. PM が受入レビュー → マージ
 3. PM が「TASK-0003 BE 起用」開始指令を発行 → BE 着任
-4. BE が `mat-notion-watcher` サブリポを初期化（`multi-agent-template` も併設）
+4. BE が `mat-board-watcher` サブリポを初期化（`multi-agent-template` も併設）
 5. 通知レイヤ実装 → 共通 API 雛形 → 後続タスクの基盤完成
 
 ## 8. なぜこれを残すか（歴史化の理由）

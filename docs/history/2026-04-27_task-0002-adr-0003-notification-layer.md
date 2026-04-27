@@ -3,7 +3,7 @@ date: 2026-04-27
 type: decision / architecture
 title: TASK-0002 ADR-0003 通知レイヤ実装方式の決定
 status: ADR 起案完了 / PM 受入待ち
-tags: [adr, notification, vercel-cron, notion, mat-notion-watcher, history]
+tags: [adr, notification, vercel-cron, notion, mat-board-watcher, history]
 ---
 
 # TASK-0002 ADR-0003 通知レイヤ実装方式の決定
@@ -41,14 +41,14 @@ tags: [adr, notification, vercel-cron, notion, mat-notion-watcher, history]
 | D | shogun 直系 YAML inbox + Notion 二次降格 | ADR-0005 通信プロトコルを覆す / 単一 writer 維持に難 | Notion 連続障害 四半期 2 回以上 / air-gap 環境への移行 |
 | E | GitHub Actions cron + ポーリング | cron 粒度 5-15 min で P95 10x 悪化 / ロギング分散 | Vercel Cron 有償化 / Actions cron 1 min 化公式化 |
 
-## 4. mat-notion-watcher サブリポ初期化方針
+## 4. mat-board-watcher サブリポ初期化方針
 
 - 命名: `mat-<purpose>` 規約準拠（ADR-0001 §2.4）
 - スタック: TS / pnpm + Turborepo / Hono on Vercel Functions / Vercel KV / Biome / Vitest
 - ディレクトリ: `apps/api`（Vercel Functions）+ `packages/{notion-client, state, dispatcher}` + `tools/local-notifier`
 - CI: GitHub Actions で lint / typecheck / test
 - デプロイ: Vercel の Git 連携（development → preview / main → production）
-- **`multi-agent-template` は未起票** — 暫定方針として「mat-notion-watcher を事実上の最初のテンプレ実装」とし、後追いで `multi-agent-template` を抽出（§6 開いている論点 (4)）
+- **`multi-agent-template` は未起票** — 暫定方針として「mat-board-watcher を事実上の最初のテンプレ実装」とし、後追いで `multi-agent-template` を抽出（§6 開いている論点 (4)）
 
 ## 5. 開いている論点（PM 承認で動かす可能性）
 
@@ -56,7 +56,7 @@ tags: [adr, notification, vercel-cron, notion, mat-notion-watcher, history]
 2. Webhook 移行条件の優先順位（GA / リレー不要 / SLA 強化）
 3. ハイブリッド（Cron + ローカル Watcher）への phase3 移行タイミング
 4. `multi-agent-template` の起票タイミング（先 or 後追い）
-5. mat-notion-watcher の運用責任者（BE / Tech Lead / SRE 未起用期）
+5. mat-board-watcher の運用責任者（BE / Tech Lead / SRE 未起用期）
 6. send-keys 通知規律の CI 自動検証（payload 長制限など）
 
 ## 6. 学び・ハイライト
@@ -75,7 +75,7 @@ CLAUDE.md §1.2 の「send-keys 業務通信禁止」を ADR §4.2 緩和策で 
 
 ### 6.4 後続タスクへの引き継ぎ
 
-- TASK-0012（想定）: BE 久遠周が `mat-notion-watcher` サブリポを初期化、本 ADR §5 の受入基準を満たす実装
+- TASK-0012（想定）: BE 久遠周が `mat-board-watcher` サブリポを初期化、本 ADR §5 の受入基準を満たす実装
 - ADR-0007（PM 起案検討中）: 本 ADR §6 開いている論点 (1)(2)(4) を統合する PM 主導 ADR の候補
 
 ## 7. 関連資料

@@ -105,7 +105,7 @@
 ### 2.4 サブリポ命名規約
 
 - 形式: `mat-<purpose>` （`mat` = Multi-Agent Team の略）
-- 例: `mat-notion-watcher`（通知レイヤ）/ `mat-training-2026q2`（研修資料）
+- 例: `mat-board-watcher`（通知レイヤ）/ `mat-training-2026q2`（研修資料）
 - 本ハブリポ `multi-agent-team` は例外（既存名を維持）
 
 ---
