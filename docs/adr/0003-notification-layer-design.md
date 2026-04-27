@@ -338,7 +338,7 @@ jobs:
 4. **Cloudflare Tunnel セットアップ**（ユーザー所有ドメイン使用 / 無料）
    - `cloudflared tunnel create mat-notifier`
    - DNS ルート: `cloudflared tunnel route dns mat-notifier notifier.<your-domain>`
-   - `~/.cloudflared/config.yml` でローカルポート（例: `http://localhost:8787`）にバインド
+   - `~/.cloudflared/config.yml` でローカルポート（**実運用値: `http://localhost:3010`**）にバインド。本 ADR は当初 `:8787` を例示していたが、TASK-0012 起動時の PM 環境調整で **3010** を採用（ユーザー環境の :3000 が他プロセスで占有されていたため）。BE 実装 (`tools/local-notifier`) も :3010 で待機する
    - サービス起動: PowerShell で `cloudflared tunnel run mat-notifier`
    - 公開 URL（`https://notifier.<your-domain>`）を Vercel `LOCAL_NOTIFIER_URL` に設定
 5. **HMAC 共通鍵生成**
