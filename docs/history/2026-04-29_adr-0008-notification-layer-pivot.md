@@ -87,7 +87,9 @@ PM 着手（2026-04-29 セッション 3）:
 6. PM gh CLI 代行: GitHub Actions secrets `CRON_SECRET` / `PRODUCTION_POLL_URL` 削除
 7. ユーザー作業 ステップ 2 完了: Vercel project `mat-board-watcher` 削除（env vars 5 件連動消滅）
 8. **ユーザー判断 D2 採択**: 「使わないものは全部削除」方針で mat-board-watcher リポ自体を GitHub 削除 → ADR-0008 §2.1 / §4.2 / §4.3 / §5 を D2 反映に修正（追加コミット）→ PR #12 close → `gh repo delete diesel141/mat-board-watcher` で完全削除
-9. ユーザー作業 ステップ 3 残: Cloudflare Tunnel resource + DNS record の最終削除（Cloudflare Dashboard 操作）
+9. ユーザー作業 ステップ 3 完了: Cloudflare Tunnel resource + DNS record `notifier.141plot.org` を Cloudflare Dashboard で削除
+
+これにより、ADR-0003 phase1 通知レイヤの全外部リソース（GitHub リポ / Vercel project / Vercel env vars / GitHub Actions secrets / Cloudflare Tunnel resource / DNS record）は **完全に削除済み**。残るのは本リポの ADR / 歴史化メモ / 個人ローカル clone のみ。
 
 ## 4. 失われたもの・残るもの
 
@@ -95,8 +97,9 @@ PM 着手（2026-04-29 セッション 3）:
 
 - mat-board-watcher の phase1 実装稼働（dispatcher / notion-client / state / cron-poll handler / Vercel deploy / GitHub Actions cron）
 - BE 久遠周の TASK-0019 着工分（PR #11 / runtime 表記修正コミット）
-- Cloudflare Tunnel `notifier.141plot.org` プロセス稼働（停止済）
+- Cloudflare Tunnel `notifier.141plot.org` プロセス + Tunnel resource + DNS CNAME（全削除済）
 - **mat-board-watcher リポ自体**（D2 採択により GitHub から完全削除 / 2026-04-29）
+- **個人ローカル clone `/c/_vps/git/mat-board-watcher/`**（L1 採択により削除済 / 2026-04-29）
 - Vercel project `mat-board-watcher` + env vars 5 件（削除済）
 - GitHub Actions secrets 2 件（削除済）
 
@@ -104,7 +107,6 @@ PM 着手（2026-04-29 セッション 3）:
 
 - ADR-0003 §3 却下案 A〜F + 再考閾値（phase2 復活時の判断材料）
 - ADR-0003 §5.4 認証経路（Notion mcp Internal Integration / OAuth 並存）
-- ローカル clone `/c/_vps/git/mat-board-watcher/`（個人環境依存 / git log / git show で過去 commit 参照可 / 別マシンからは参照不可）
 - ペルソナ群（PM / Tech Lead / Designer / BE）と権限境界（ADR-0006 §5.2）
 - ハイブリッド通信プロトコル（ADR-0005 / formal 3 + informal 4）
 - ADR ハウススタイル（採用 + 却下 + 再考閾値）
