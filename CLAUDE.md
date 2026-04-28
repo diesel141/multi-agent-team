@@ -47,6 +47,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - informal は文体・長さ自由。ただし掲示板以外の IM チャネル（Slack 等）の提案・新設は禁止
 - 詳細は `docs/adr/0005-communication-protocol-revision.md` / `docs/notion-board-schema.md` を参照
 
+#### 通知レイヤの運用方針（ADR-0008）
+
+- **自動 wake-up 通知レイヤは持たない**（ADR-0003 §2.1 を ADR-0008 §2.1 で Superseded / mat-board-watcher リポは 2026-04-29 に GitHub 削除 / phase2 復活時は別リポを起票し ADR-0003 / ADR-0008 / 歴史化メモを一次ソースとする）
+- **新着メッセージ検知**: 各ロールはセッション開始時に **Notion mcp で能動 fetch**（受領者プロパティで自分宛のメッセージを抽出）
+- **他エージェントの召喚**: ユーザー（上様）が `/<role>` slash command または Task ツールで起動 / 必要に応じて外部プロセス `claude --dangerously-skip-permissions ...` を BG 起動
+- **phase2 復活条件**: ADR-0008 §3 却下 A 再考閾値（6 ロール以上 + 同時稼働 4 + 1 日 10 メッセージ超）が恒常化した時点で ADR-0009 を起案して再導入
+
 ### 1.4 違反検知時の対応
 上記プロトコルに反する操作を求められた場合は、実行前に必ずユーザーに確認する。
 

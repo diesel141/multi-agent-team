@@ -1,9 +1,11 @@
 # ADR-0003: 通知レイヤ実装方式（Notion 掲示板 → ローカルエージェント起動）
 
-- 状態: **Proposed**（PM 承認待ち / Tech Lead 自己マージ前提・ADR-0006 §5.2）
+- 状態: **Superseded by ADR-0008（粒度: §2.1 採用案 / §5 サブリポ初期化方針 / §5.5 受入基準）** — 2026-04-29
+- 継続有効: §3 却下案 A〜F + 各再考閾値 / §5.4 認証経路 / §6 開いている論点
 - 起案日: 2026-04-27
 - 起案者: Tech Lead 早瀬 蒼
 - 改訂: 2026-04-27 §2.1 / §2.2 / §3 却下 F / §5.4 / §5.4.1 / §6 に **認証経路の補足**（TASK-0014 起因 / ユーザー希望「OAuth 基本無料」を解釈し Internal Integration 並存に確定）
+- Superseded 経緯: TASK-0016〜0019 の連鎖罠 + shogun 実装層再参照により「自動 wake-up 通知レイヤそのものが過剰設計」と判定 → ADR-0008 で能動 fetch 方式へピボット
 - 関連: `docs/adr/0001-default-tech-stack.md` / `docs/adr/0002-next-team-members.md` / `docs/adr/0005-communication-protocol-revision.md` / `docs/adr/0006-persona-creation-flow-and-role-recalibration.md` / `docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` §4 / `docs/personas/backend_engineer.md`（久遠周）/ `CLAUDE.md` §1.3 / `memory/adr_house_style.md`
 
 ---
