@@ -366,9 +366,9 @@ jobs:
 1. **ポーリング間隔の確定** — 本 ADR では Vercel Cron 1 min を採用したが、コスト面で 5 min まで緩めるか、Notion API レート余裕を活かして手動 30 sec を入れるかは PM 判断の余地あり。**測定方針**: phase1 リリース後 2 週間の formal 投稿数 / informal 投稿数の実測 P95 で再評価
 2. **Webhook そのものの使用可否（phase2 移行条件）** — §3 却下案 B 再考閾値の (a) Notion 公式 Webhook GA / (b) 自前リレー不要 / (c) SLA 強化 のいずれを優先するかは PM の事業方針次第。本 ADR では「(a)+(b) を必要条件、(c) を十分条件」としたが見直し可
 3. **ハイブリッド（Cron + ローカル Watcher）への phase3 移行タイミング** — ローカル PC 常時稼働を業務前提にできるか / SRE 起用と紐付けるかは PM 判断
-4. **`multi-agent-template` の起票タイミング** — §5.3 暫定方針は「mat-board-watcher を最初のテンプレ実装にし、`multi-agent-template` を後追い」だが、逆順（先にテンプレリポを作る）で進める案も残す。Tech Lead は **後追い派** だが PM が異論を述べる余地あり
+4. **`multi-agent-template` の起票タイミング** — §5.3 暫定方針は「mat-board-watcher を最初のテンプレ実装にし、`multi-agent-template` を後追い」だが、逆順（先にテンプレリポを作る）で進める案も残す。Tech Lead は **後追い派** だが PM が異論を述べる余地あり。**※ ADR-0007 §2.4 で決議（後追い派採用 / サブリポ 2 つ目 or ドリフト 5 サブリポ蓄積で再評価）**
 5. **`mat-board-watcher` の所有・運用責任** — 通知レイヤは BE 実装だが、運用障害時の一次対応者を BE / Tech Lead / SRE（未起用）のいずれに置くかは未確定。SRE 起用前は Tech Lead が一次対応する想定だが、PM 承認で固定したい
-6. **send-keys の「通知のみ」規律の自動検証** — §4.2 緩和策で型ガードを置くが、「規律違反を CI で検知する仕組み」（例: payload 文字列長を 80 文字未満に強制）まで踏み込むかは別 ADR 候補
+6. **send-keys の「通知のみ」規律の自動検証** — §4.2 緩和策で型ガードを置くが、「規律違反を CI で検知する仕組み」（例: payload 文字列長を 80 文字未満に強制）まで踏み込むかは別 ADR 候補。**※ ADR-0007 §2.5 で決議（phase1 は型ガード + payload 正規表現で十分 / 規律違反 1 件発生で ADR-0008 起案）**
 7. **サーバー側 OAuth 化の phase2 移行条件** — §3 却下 F の再考閾値 (a)-(d) のいずれが先に到達するか不明。本 ADR では Internal Integration bearer で phase1 完結とし、Public Integration + OAuth 化は phase2 候補として保留。**測定方針**: bearer token 漏洩インシデント・複数ワークスペース要件・rotation SLA 要求の 3 シグナルを四半期に 1 度棚卸し、いずれか出たら独立 ADR で再起案
 
 ---

@@ -51,6 +51,7 @@ ADR-0006 §5.1 で「ペルソナ起案 = PM 主導」が正規化されたが�
 | アニメーション / マイクロインタラクション | Designer 仕様 → FE 実装 |
 | フォントサイズ / line-height の最終値 | Designer |
 | アクセシビリティ（WCAG / フォーカス制御 / キーボード対応） | **共同議論** → 機能要件は FE、視覚要件は Designer |
+| モバイル / レスポンシブ / SSR で見た目が変わる UI の境界判断 | **共同議論** → breakpoint 数値・各幅の視覚再現は Designer、レンダリング戦略（CSR/SSR/RSC）と hydration / layout shift 対策は FE |
 
 **境界の原則**: 「**見た目の数値**は Designer、**振る舞いの実装**は FE。両者が交わる UX フィードバックは informal 議論で先に言語化してから分業」。
 
