@@ -12,6 +12,7 @@
 - [ ] **PM 越権チェック**: スコープ・期日・受入基準を超えて **実装方針 / UX 仕様** を裁量で確定していないか
 - [ ] **PM 組織規律 ADR の越権チェック**（ADR-0007 §2.6）: 組織規律 ADR を起案する場合、**技術詳細（実装方式 / CI 設計 / ライブラリ選定）まで踏み込んでいないか**。技術詳細は Tech Lead 起案の別 ADR に逃がす
 - [ ] **指示書テンプレート参照**: `docs/templates/instructions/<role>-task.md` を使い、共通プロローグへの参照を含めたか
+- [ ] **ADR 起案時の関連歴史化メモ全件再読**（2026-04-29 ADR-0008 由来）: ADR が触れる領域に関連する `docs/adr/*.md` の既存 ADR と `docs/history/*.md` の歴史化メモを全件再読。受入基準に「関連 ADR / 歴史化メモを全件参照済み」を明示
 
 ## 工程 B: 受入レビュー（完了報告受領後）
 
@@ -20,8 +21,11 @@
 - [ ] **ドメイン横断チェック**:
   - pptx 系: 内部 padding + 実描画 PDF + Squint test 相当（`feedback_pptx_review_discipline.md`）
   - 用語集系: 粒度整合 + UI 描画層（`feedback_glossary_review_discipline.md`）
+  - ADR / 設計系: `.env` / 既存環境変数 / 認証経路 / `.env.example` / `.mcp.json` を Read して、ADR が要求する環境前提と現実の乖離を検証
+  - 採用スタック踏破経験（`feedback_pm_stack_adoption_verification.md`）: 採用スタック組み合わせの本番実績 5 件以上 + 公式 docs の framework 前提 + 無料枠制限の Pricing/Limits 独立検証 の 3 点
 - [ ] **症状治療 vs 本質解の判別**: 表層対応で済ませていないか
 - [ ] **却下案の再考閾値**: 完了報告に却下案ごとの再考閾値が 100% 明示されているか
+- [ ] **連鎖罠ゾーンの早期撤退判断**（2026-04-29 ADR-0008 由来）: 同一スコープで同種の手戻り（build / runtime / config / SaaS 制限など）が 2 段階以上連鎖したら **要件そのものの過剰設計疑念** を独立検証。3 段階超でユーザーへ撤退案を提示する閾値ライン
 
 ## 工程 C: クロージング（受入承認後）
 
@@ -40,6 +44,7 @@
 - [ ] `gh pr list --state open` で放置 PR がないか
 - [ ] Notion 全タスク横断で「進行中」「未着手」「ブロック」が放置されていないか
 - [ ] **Designer 稼働率モニタリング**（ADR-0007 §2.1 却下案 1B 再考閾値 / §4.2 緩和策）: 直近 30 日の Notion メッセージで受領者 = Designer の件数 / 全件比率を点検。20% 未満が 3 ヶ月続いたら ADR-0007 §2.1 を再評価
+- [ ] **auto memory と project repo の規律同期点検**（2026-04-29 ADR-0008 由来）: `memory/feedback_*.md` に追加した規律が `docs/templates/checklists/pm-self-review.md` にも反映されているか。二重管理ドリフトを検知
 
 ## 怠慢化検知シグナル（自分で気づくため）
 
