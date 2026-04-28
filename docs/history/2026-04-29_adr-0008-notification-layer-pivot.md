@@ -77,13 +77,17 @@ ADR-0003 で立てた「自動 wake-up 通知レイヤ」要件 **そのもの�
 
 ユーザー判断: **案 B（部分撤退）**。
 
-PM 着手:
+PM 着手（2026-04-29 セッション 3）:
 
 1. TASK-0019 「却下」遷移 + PM クロージング formal 投稿
 2. PR #11 close（撤退方向確定の即時シグナル）
-3. ADR-0008 起案（本 ADR）+ ADR-0003 ヘッダ Superseded + CLAUDE.md §1.3 更新 を 1 PR
-4. mat-board-watcher 凍結 PR（schedule 削除 + README 凍結告知）
-5. ユーザー作業要請（Cloudflare Tunnel 停止 / Vercel project 削除 / secrets 削除）
+3. ADR-0008 起案（本 ADR）+ ADR-0003 ヘッダ Superseded + CLAUDE.md §1.3 更新 を 1 PR（PR #24）
+4. mat-board-watcher 凍結 PR（PR #12 / schedule 削除 + README 凍結告知）/ ただし下記 8 で D2 採択により close 連動消滅
+5. ユーザー作業 ステップ 1 完了: Cloudflare Tunnel `notifier.141plot.org` プロセス停止（cloudflared.exe Ctrl+C）
+6. PM gh CLI 代行: GitHub Actions secrets `CRON_SECRET` / `PRODUCTION_POLL_URL` 削除
+7. ユーザー作業 ステップ 2 完了: Vercel project `mat-board-watcher` 削除（env vars 5 件連動消滅）
+8. **ユーザー判断 D2 採択**: 「使わないものは全部削除」方針で mat-board-watcher リポ自体を GitHub 削除 → ADR-0008 §2.1 / §4.2 / §4.3 / §5 を D2 反映に修正（追加コミット）→ PR #12 close → `gh repo delete diesel141/mat-board-watcher` で完全削除
+9. ユーザー作業 ステップ 3 残: Cloudflare Tunnel resource + DNS record の最終削除（Cloudflare Dashboard 操作）
 
 ## 4. 失われたもの・残るもの
 
@@ -91,13 +95,16 @@ PM 着手:
 
 - mat-board-watcher の phase1 実装稼働（dispatcher / notion-client / state / cron-poll handler / Vercel deploy / GitHub Actions cron）
 - BE 久遠周の TASK-0019 着工分（PR #11 / runtime 表記修正コミット）
-- Cloudflare Tunnel resource 稼働（停止 / 当面削除しない判断は ADR-0008 §2.1）
+- Cloudflare Tunnel `notifier.141plot.org` プロセス稼働（停止済）
+- **mat-board-watcher リポ自体**（D2 採択により GitHub から完全削除 / 2026-04-29）
+- Vercel project `mat-board-watcher` + env vars 5 件（削除済）
+- GitHub Actions secrets 2 件（削除済）
 
 ### 残るもの
 
 - ADR-0003 §3 却下案 A〜F + 再考閾値（phase2 復活時の判断材料）
 - ADR-0003 §5.4 認証経路（Notion mcp Internal Integration / OAuth 並存）
-- mat-board-watcher リポのコード（phase2 参考実装）
+- ローカル clone `/c/_vps/git/mat-board-watcher/`（個人環境依存 / git log / git show で過去 commit 参照可 / 別マシンからは参照不可）
 - ペルソナ群（PM / Tech Lead / Designer / BE）と権限境界（ADR-0006 §5.2）
 - ハイブリッド通信プロトコル（ADR-0005 / formal 3 + informal 4）
 - ADR ハウススタイル（採用 + 却下 + 再考閾値）

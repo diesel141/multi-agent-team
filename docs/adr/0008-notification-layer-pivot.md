@@ -55,11 +55,12 @@ ADR-0003 §2.1 採用案（Vercel Cron + Cloudflare Tunnel + ローカル Notifi
 
 | 撤去対象 | 措置 |
 |---------|------|
-| Vercel Production deploy（mat-board-watcher） | 凍結（リポは残す / README に告知 / Vercel project は削除） |
-| GitHub Actions `Cron Poll` workflow | schedule トリガー削除 / `workflow_dispatch` のみ残置（手動再起動の余地確保） |
-| Cloudflare Tunnel `notifier.141plot.org` | 停止（cloudflared.exe foreground プロセスを停止 / Tunnel resource 自体は残置 / phase2 復活時の再利用候補） |
-| ローカル Notifier (`tools/local-notifier`) | コードは残置（参考実装） |
-| `dispatcher` 層 / `tmux send-keys` wake-up | 未稼働。コードは残置（参考実装） |
+| Vercel project `mat-board-watcher` | **削除済**（2026-04-29 ユーザー Web UI 操作 / env vars 5 件も連動消滅） |
+| GitHub Actions secrets（`CRON_SECRET` / `PRODUCTION_POLL_URL`） | **削除済**（2026-04-29 PM gh CLI 代行） |
+| GitHub Actions `Cron Poll` workflow | schedule トリガー削除（PR #12 / リポ削除に伴い消滅） |
+| Cloudflare Tunnel `notifier.141plot.org` | 停止済（cloudflared.exe Ctrl+C / 2026-04-29 ユーザー実施）→ Tunnel resource + DNS record はユーザーが Cloudflare Dashboard で削除 |
+| mat-board-watcher リポ | **GitHub から完全削除**（2026-04-29 / ユーザー D2 判断 / ローカル clone は任意保存 / phase2 復活時は別リポ起票） |
+| ローカル Notifier (`tools/local-notifier`) / `dispatcher` 層 / `tmux send-keys` wake-up | リポ削除に伴い GitHub からは消滅（ローカル clone のみ任意保存） |
 
 ### 2.2 wake-up 機能の代替（採用案: ユーザー起動 + 能動 fetch）
 
@@ -129,8 +130,8 @@ ADR-0003 自体は archive せず、ヘッダに「**Superseded by ADR-0008（�
 
 ### 4.2 ネガティブ・リスク
 
-1. **mat-board-watcher の実装投資が遊休資産化** — phase1 で書いた 200+ 行（dispatcher / notion-client / state / cron-poll handler / vercel.json / GitHub Actions workflow）は当面稼働しない
-   - **緩和策**: コードは凍結状態で残し、phase2 復活時の参考実装として README に明記
+1. **mat-board-watcher の実装投資が完全消失（D2 採択 / 2026-04-29）** — phase1 で書いた 200+ 行（dispatcher / notion-client / state / cron-poll handler / vercel.json / GitHub Actions workflow）は GitHub からは削除
+   - **緩和策**: 個人ローカル clone（`/c/_vps/git/mat-board-watcher/`）の git log / git show で過去 commit を読み返し可能（個人環境依存 / 別マシンからは参照不可）。phase2 復活時は新規リポを起票し、ADR-0003 / ADR-0008 / 本歴史化メモ §1〜§5 を一次ソースとして起案
 2. **自動 wake-up 不在による「次セッション着手の遅延」** — ユーザーが Notion 新着に気付かないとセッション再開が遅れる
    - **緩和策**: ユーザーが手動で Notion を覗く運用 / 重要な進捗は PM が能動的にユーザーに報告（既に動いている運用）
 3. **shogun 比較分析の遅延が引き起こした手戻り** — ADR 起案時に関連歴史化メモを再読する規律が無かったことの代償
@@ -146,8 +147,9 @@ ADR-0003 自体は archive せず、ヘッダに「**Superseded by ADR-0008（�
 | `docs/adr/0003-notification-layer-design.md` | ヘッダに Superseded 注記 + 粒度明示 |
 | `CLAUDE.md` §1.3 | 通知レイヤ運用方針の節を追加（能動 fetch の明文化） |
 | `docs/history/2026-04-29_adr-0008-notification-layer-pivot.md` | 新規（連鎖罠経緯 + shogun 比較 + 学び） |
-| mat-board-watcher リポ | 別 PR（凍結 chore：schedule 削除 + README 凍結告知） |
-| Vercel project / Cloudflare Tunnel / GitHub Actions secrets | ユーザー UI 操作（Phase 3 で要請） |
+| mat-board-watcher リポ | **GitHub 削除済**（2026-04-29 / ユーザー D2 判断）/ 凍結 PR #12 は close 連動消滅 |
+| Vercel project / GitHub Actions secrets | **削除済**（2026-04-29 / Vercel = ユーザー UI / secrets = PM gh CLI 代行） |
+| Cloudflare Tunnel `notifier.141plot.org` プロセス | **停止済**（2026-04-29 / ユーザー Ctrl+C）/ Tunnel resource + DNS record の最終削除はユーザー Cloudflare Dashboard 操作 |
 
 ---
 
@@ -155,7 +157,7 @@ ADR-0003 自体は archive せず、ヘッダに「**Superseded by ADR-0008（�
 
 1. **能動 fetch の運用粒度標準化** — PM / Tech Lead / Designer / BE が各セッション開始時に Notion mcp で fetch する頻度・対象範囲を共通プロローグ `docs/templates/instructions/_common-prologue.md` に追記すべきか。**測定方針**: 1 ヶ月運用後に「メッセージ取りこぼし件数 / 重複応答件数」を点検
 2. **チーム規模拡大時の自動 wake-up 復活閾値** — §3 却下 A 再考閾値「6 ロール以上 + 同時稼働 4 + 1 日 10 メッセージ超」の妥当性は半年後（2026-10-29 頃）に実測値で再評価
-3. **mat-board-watcher リポの最終処置** — 当面凍結 / 半年後アーカイブ / 削除のいずれにするかは ADR-0008 採択時点では確定せず、6 ヶ月後に「phase2 通知レイヤ復活の見込み」と合わせて判断
+3. **mat-board-watcher リポの最終処置** — **決議済（2026-04-29 ユーザー D2 判断）**: GitHub 上から完全削除。phase2 復活時は新規リポを起票し ADR-0003 / ADR-0008 / 歴史化メモを一次ソースとする
 4. **shogun 流 WSL2 ピボットの検討タイミング** — §3 却下 B 再考閾値「ローカル PC 24/7 稼働を業務前提化できる事業フェーズ」が成立した時に検討
 5. **PR #23 (ADR-0007 派生整理) と本 ADR の merge 順序** — §4.3 整合性リスクの実運用判断（Tech Lead 領域）
 
