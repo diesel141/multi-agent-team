@@ -34,3 +34,8 @@ node_modules/
 # Logs
 *.log
 logs/
+
+# Multi-Agent Team runtime queues (YAML mailboxes)
+queue/
+dashboard.md
+
