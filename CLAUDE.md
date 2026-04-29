@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-[yohey-w/multi-agent-shogun](https://github.com/yohey-w/multi-agent-shogun) の YAML キュー + tmux + inotifywait の思想を踏襲した、本プロダクト独自の **Multi-Agent ADD（Agent-Driven Development）チーム**環境です。shogun を直接組み込まず、本 PJ 仕様で独立実装。
+[yohey-w/multi-agent-shogun](https://github.com/yohey-w/multi-agent-shogun) の YAML キュー + マルチペイン + ファイル監視思想を踏襲した、本プロダクト独自の **Multi-Agent ADD（Agent-Driven Development）チーム**環境です。Windows ネイティブで psmux を使い、WSL2 不要。
 
 ## 階層
 
@@ -9,17 +9,23 @@
 - **pm**: タスク分解 / UX 仕様判断 / dev への分配 / 受入レビュー
 - **dev1 / dev2 / dev3**: 実装 + 自己テスト / pm へ完了報告
 
-## 起動手順（WSL2 必須）
+## 起動環境
 
-1. `install.bat` を **管理者権限** で実行（初回のみ / WSL2 自動セットアップ）
-   - Windows エクスプローラーで右クリック → 「管理者として実行」（bash からは起動不可）
-2. WSL2 内で:
-   ```bash
-   cd /mnt/c/_vps/git/multi-agent-team
-   claude --dangerously-skip-permissions   # 初回認証のみ
-   ./scripts/start.sh
-   ```
-3. tmux セッション `team` が 4 ペイン（pm / dev1 / dev2 / dev3）で起動
+- **マルチプレクサ**: psmux 3.3.3+（Windows ネイティブ Rust 実装 / `winget install psmux`）
+- **シェル**: bash（Git for Windows / MSYS2 等）
+- **Claude Code**: Windows ネイティブ
+- **WSL2 不要**
+
+## 起動手順
+
+bash プロンプトで:
+
+```bash
+cd /c/_vps/git/multi-agent-team
+./scripts/start.sh
+```
+
+psmux セッション `team` が 4 ペイン（pm + dev1 + dev2 + dev3）で起動。各ペインで `claude --dangerously-skip-permissions` が自動起動し、`instructions/<role>.md` を Read してから指示待ち状態に入ります。
 
 ## 通信プロトコル
 
@@ -28,12 +34,12 @@ YAML キュー方式:
 | ファイル | 用途 |
 |---|---|
 | `queue/you_to_pm.yaml` | ユーザー → PM 指示 |
-| `queue/inbox/<agent>.yaml` | エージェント別メールボックス（pm / dev1 / dev2 / dev3） |
+| `queue/inbox/<agent>.yaml` | エージェント別メールボックス |
 | `queue/reports/<agent>.yaml` | dev → PM 完了報告 |
 
-- **通知**: `tmux send-keys "inbox" Enter`（短い合図のみ。本文は YAML）
-- **受信**: `inotifywait` でファイル変更検知（ポーリング 0）
-- **書き込み**: `flock` で排他ロック
+- **通知**: `tmux send-keys -t team:0.<N> "inbox" Enter`（psmux の tmux 互換コマンド）
+- **受信**: 当面は polling（pm が手動 or 数秒間隔で inbox チェック）
+- **将来**: PowerShell `FileSystemWatcher` で push 型に拡張可能
 
 ## 個別タスクのコード
 
@@ -48,7 +54,7 @@ YAML キュー方式:
 ## 既存資産
 
 - `archive/pre-shogun-reset` ブランチに旧運用資産（旧 CLAUDE.md / docs/personas / docs/adr 9 本 / docs/templates / Notion 通信）を退避済み
-- `docs/history/` は資産として保持
+- `docs/history/` は資産として保持（特に `2026-04-25_psmux-windows-investigation.md` が起動環境の一次ソース）
 
 ## Git 運用
 
