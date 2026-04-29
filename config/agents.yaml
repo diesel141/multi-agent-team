@@ -1,0 +1,45 @@
+# Multi-Agent Team エージェント定義
+# 階層: ユーザー (you) → PM 兼 Designer (pm) → Developer 兼 Tester (dev) × 3
+
+language: ja
+shell: bash
+cli: claude  # claude / codex / copilot / kimi
+
+agents:
+  - id: pm
+    role: PM 兼 Designer
+    instruction: instructions/pm.md
+    inbox: queue/inbox/pm.yaml
+    pane: team:0.0
+
+  - id: dev1
+    role: Developer 兼 Tester
+    instruction: instructions/dev.md
+    inbox: queue/inbox/dev1.yaml
+    pane: team:0.1
+
+  - id: dev2
+    role: Developer 兼 Tester
+    instruction: instructions/dev.md
+    inbox: queue/inbox/dev2.yaml
+    pane: team:0.2
+
+  - id: dev3
+    role: Developer 兼 Tester
+    instruction: instructions/dev.md
+    inbox: queue/inbox/dev3.yaml
+    pane: team:0.3
+
+projects:
+  ai_training_for_rjc:
+    path: W:/ai_training_for_rjc
+    type: pptx
+    notes: 社内 AI 研修 pptx（5 シリーズ + 用語集）
+  mat-board-watcher:
+    path: ../mat-board-watcher
+    type: web
+    notes: Notion 掲示板通知レイヤ（旧運用 / 現在は休眠）
+  multi-agent-team:
+    path: .
+    type: hub
+    notes: 本リポ。運用ハブ
