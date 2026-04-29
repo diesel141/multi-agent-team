@@ -1,0 +1,3 @@
+[submodule "shogun"]
+	path = shogun
+	url = https://github.com/yohey-w/multi-agent-shogun.git
