@@ -28,7 +28,11 @@ touch queue/you_to_pm.yaml
 # tmux セッション既存確認
 if tmux has-session -t team 2>/dev/null; then
   echo "[info] team セッションが既に存在します。アタッチします。"
-  tmux attach-session -t team
+  if [ -n "$TMUX" ]; then
+    tmux switch-client -t team
+  else
+    tmux attach-session -t team
+  fi
   exit 0
 fi
 
@@ -93,4 +97,8 @@ echo "[ok] team セッション起動完了 (pm + dev1 + dev2 + dev3)"
 echo "アタッチ: tmux attach-session -t team"
 echo "終了: tmux kill-session -t team"
 
-tmux attach-session -t team
+if [ -n "$TMUX" ]; then
+  tmux switch-client -t team
+else
+  tmux attach-session -t team
+fi
