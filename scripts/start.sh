@@ -17,8 +17,8 @@ if [ "$1" = "-c" ]; then
   rm -rf queue/
 fi
 
-# キューディレクトリ初期化
-mkdir -p queue/inbox queue/reports
+# キュー・ログディレクトリ初期化
+mkdir -p queue/inbox queue/reports logs
 for agent in pm dev1 dev2 dev3; do
   touch "queue/inbox/${agent}.yaml"
 done
@@ -94,6 +94,17 @@ for i in 0 1 2 3; do
 done
 
 echo "[ok] team セッション起動完了 (pm + dev1 + dev2 + dev3)"
+
+# queue ウォッチャーをバックグラウンドで起動
+# yaml 書き込みを検知して対象ペインに inbox を自動送信する
+WIN_QUEUE_DIR=$(cygpath -w "$REPO_ROOT/queue" 2>/dev/null || echo "$REPO_ROOT\\queue")
+pwsh -NoProfile -NonInteractive \
+  -File "$REPO_ROOT/scripts/watch-queue.ps1" \
+  -QueueDir "$WIN_QUEUE_DIR" \
+  -Session team \
+  > "$REPO_ROOT/logs/watch-queue.log" 2>&1 &
+echo "[ok] queue ウォッチャー起動 (PID: $! / ログ: logs/watch-queue.log)"
+
 echo "アタッチ: tmux attach-session -t team"
 echo "終了: tmux kill-session -t team"
 
