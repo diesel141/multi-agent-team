@@ -296,23 +296,7 @@
 <div class="page cover">
   <div class="cover-eyebrow">Multi-Agent ADD Team — Development Report</div>
 
-  <svg width="60" height="60" viewBox="0 0 60 60" style="margin-bottom:8mm">
-    <circle cx="30" cy="30" r="28" fill="none" stroke="rgba(91,106,240,.5)" stroke-width="1.5"/>
-    <!-- PM node -->
-    <circle cx="30" cy="12" r="7" fill="#5b6af0"/>
-    <text x="30" y="15.5" text-anchor="middle" fill="white" font-size="6" font-family="sans-serif" font-weight="bold">PM</text>
-    <!-- dev nodes -->
-    <circle cx="10" cy="44" r="6" fill="#5b6af0" opacity=".75"/>
-    <text x="10" y="47" text-anchor="middle" fill="white" font-size="5" font-family="sans-serif">dev1</text>
-    <circle cx="30" cy="50" r="6" fill="#5b6af0" opacity=".75"/>
-    <text x="30" y="53" text-anchor="middle" fill="white" font-size="5" font-family="sans-serif">dev2</text>
-    <circle cx="50" cy="44" r="6" fill="#5b6af0" opacity=".75"/>
-    <text x="50" y="47" text-anchor="middle" fill="white" font-size="5" font-family="sans-serif">dev3</text>
-    <!-- lines -->
-    <line x1="30" y1="19" x2="14" y2="38" stroke="rgba(91,106,240,.6)" stroke-width="1.5"/>
-    <line x1="30" y1="19" x2="30" y2="44" stroke="rgba(91,106,240,.6)" stroke-width="1.5"/>
-    <line x1="30" y1="19" x2="46" y2="38" stroke="rgba(91,106,240,.6)" stroke-width="1.5"/>
-  </svg>
+  <img src="脳みそチーム.png" style="max-width:160mm;max-height:120mm;object-fit:contain;margin-bottom:6mm;border-radius:8px;">
 
   <div class="cover-badge"><div class="cover-dot"></div>ドラフト v1 — 2026-05-11</div>
 
@@ -322,7 +306,7 @@
   <div class="cover-divider"></div>
 
   <div class="cover-meta">
-    プロジェクト: yohey-w/multi-agent-team<br>
+    プロジェクト: tomokazu-i/multi-agent-team<br>
     記録期間: 2026-04-25 〜 2026-05-11<br>
     発行: ユーザー + Claude (claude-sonnet-4-6)
   </div>
@@ -338,7 +322,7 @@
     <span class="section-title">目次</span>
   </div>
 
-  <table>
+  <table style="font-size:11pt;">
     <tr>
       <th style="width:12mm">§</th>
       <th>セクション</th>
@@ -411,7 +395,8 @@
 
       <!-- Step 3 -->
       <rect x="217" y="14" width="88" height="62" rx="8" fill="#5b6af0"/>
-      <text x="261" y="38" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="9" font-family="sans-serif">Step 3</text>
+      <text x="261" y="30" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="9" font-family="sans-serif">Step 3</text>
+      <text x="261" y="47" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="8" font-family="sans-serif">エージェントによる</text>
       <text x="261" y="63" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif" font-weight="bold">実作業</text>
 
       <line x1="307" y1="45" x2="317" y2="45" stroke="#5b6af0" stroke-width="2" marker-end="url(#arr-ov)"/>
@@ -458,17 +443,17 @@
 
         <!-- dev1 -->
         <rect x="10"  y="120" width="120" height="32" rx="6" fill="#1a1a2e"/>
-        <text x="70"  y="133" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">dev1 — 描画系</text>
+        <text x="70"  y="133" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">黒崎 颯真</text>
         <text x="70"  y="146" text-anchor="middle" fill="white" font-size="9" font-family="sans-serif" font-weight="bold">黒崎 颯真</text>
 
         <!-- dev2 -->
         <rect x="150" y="120" width="120" height="32" rx="6" fill="#1a4a1a"/>
-        <text x="210" y="133" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">dev2 — インフラ</text>
+        <text x="210" y="133" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">緑川 啓介</text>
         <text x="210" y="146" text-anchor="middle" fill="white" font-size="9" font-family="sans-serif" font-weight="bold">緑川 啓介</text>
 
         <!-- dev3 -->
         <rect x="290" y="120" width="120" height="32" rx="6" fill="#4a1a1a"/>
-        <text x="350" y="133" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">dev3 — QA</text>
+        <text x="350" y="133" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">茜野 真理</text>
         <text x="350" y="146" text-anchor="middle" fill="white" font-size="9" font-family="sans-serif" font-weight="bold">茜野 真理</text>
       </svg>
     </div>
@@ -512,11 +497,19 @@
   <!-- ペルソナカード -->
   <div class="fig">
     <svg viewBox="0 0 420 320">
+      <defs>
+        <clipPath id="clip-pm">  <rect x="338" y="13" width="64" height="82" rx="8"/></clipPath>
+        <clipPath id="clip-d1"><rect x="98"  y="122" width="34" height="56" rx="5"/></clipPath>
+        <clipPath id="clip-d2"><rect x="236" y="122" width="34" height="56" rx="5"/></clipPath>
+        <clipPath id="clip-d3"><rect x="374" y="122" width="34" height="56" rx="5"/></clipPath>
+      </defs>
       <rect width="420" height="320" rx="10" fill="#f5f5fc"/>
 
       <!-- PM カード（上段・全幅） -->
       <rect x="10" y="10" width="400" height="96" rx="8" fill="#5b6af0"/>
       <rect x="10" y="10" width="6" height="96" rx="3" fill="#fff" opacity=".3"/>
+      <!-- PM アバター -->
+      <image href="藤宮詩織.png" x="338" y="13" width="64" height="82" clip-path="url(#clip-pm)" preserveAspectRatio="xMidYMid meet"/>
       <text x="28" y="30" fill="rgba(255,255,255,.55)" font-size="7.5" font-family="sans-serif">PM 兼 Designer</text>
       <text x="28" y="50" fill="white" font-size="13" font-family="sans-serif" font-weight="bold">藤宮 詩織　Fujimiya Shiori</text>
       <text x="28" y="66" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="sans-serif">UX 出身 → PM 8 年。受入規律のテンプレ化を主導。</text>
@@ -525,8 +518,10 @@
 
       <!-- dev1 カード（下段左） -->
       <rect x="10" y="118" width="126" height="192" rx="8" fill="#1a1a2e"/>
+      <!-- dev1 アバター -->
+      <image href="黒崎颯真.png" x="98" y="122" width="34" height="56" clip-path="url(#clip-d1)" preserveAspectRatio="xMidYMid meet"/>
       <rect x="10" y="118" width="126" height="5" rx="3" fill="#888" opacity=".5"/>
-      <text x="22" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">dev 1 — 36歳</text>
+      <text x="22" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">黒崎 — 36歳</text>
       <text x="22" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">黒崎 颯真</text>
       <text x="22" y="173" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">描画系 Developer</text>
       <line x1="22" y1="181" x2="122" y2="181" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
@@ -542,8 +537,10 @@
 
       <!-- dev2 カード（下段中） -->
       <rect x="148" y="118" width="126" height="192" rx="8" fill="#1a4a1a"/>
+      <!-- dev2 アバター -->
+      <image href="緑川啓介.png" x="236" y="122" width="34" height="56" clip-path="url(#clip-d2)" preserveAspectRatio="xMidYMid meet"/>
       <rect x="148" y="118" width="126" height="5" rx="3" fill="#4caf50" opacity=".7"/>
-      <text x="160" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">dev 2 — 49歳</text>
+      <text x="160" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">緑川 — 49歳</text>
       <text x="160" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">緑川 啓介</text>
       <text x="160" y="173" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">インフラエンジニア</text>
       <line x1="160" y1="181" x2="260" y2="181" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
@@ -559,8 +556,10 @@
 
       <!-- dev3 カード（下段右） -->
       <rect x="286" y="118" width="124" height="192" rx="8" fill="#4a1a1a"/>
+      <!-- dev3 アバター -->
+      <image href="茜野真理.png" x="374" y="122" width="34" height="56" clip-path="url(#clip-d3)" preserveAspectRatio="xMidYMid meet"/>
       <rect x="286" y="118" width="124" height="5" rx="3" fill="#e85d7a" opacity=".7"/>
-      <text x="298" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">dev 3</text>
+      <text x="298" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">茜野 真理</text>
       <text x="298" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">茜野 真理</text>
       <text x="298" y="173" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">QA + 検証 + 仕様書化</text>
       <line x1="298" y1="181" x2="398" y2="181" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
@@ -580,6 +579,17 @@
   <div class="highlight warn" style="margin-top:3mm">
     <strong>権限境界の明文化:</strong>
     PM はスコープ・期日・受入基準を担い、UX 仕様の最終判断は Designer 権限。実装・PR レビューは dev が担い self-merge は禁止。ペルソナごとの「やらないこと」が自律性を保つ。
+  </div>
+
+  <div style="margin-top:5mm;background:var(--ink);border-radius:10px;padding:5mm 6mm 4mm;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-6mm;left:3mm;font-size:52pt;font-family:var(--font-serif);color:rgba(91,106,240,.18);line-height:1;pointer-events:none;">"</div>
+    <div style="position:absolute;bottom:-8mm;right:4mm;font-size:52pt;font-family:var(--font-serif);color:rgba(232,93,122,.12);line-height:1;pointer-events:none;">"</div>
+    <div style="font-family:var(--font-serif);font-size:15pt;font-weight:700;color:#fff;line-height:1.4;margin-bottom:3mm;">
+      実はこれらのペルソナは、<span style="color:#a8b4ff;">中2思想</span>で設計した。
+    </div>
+    <p style="font-size:8pt;color:rgba(255,255,255,.65);line-height:1.75;margin:0;">
+      例えば藤宮さんは「<strong style="color:rgba(255,255,255,.9);">世界最高峰の PM</strong>」、緑川さんは「<strong style="color:rgba(255,255,255,.9);">ハーバード大卒の天才プログラマー</strong>」とだけ提示。細かな設定は AI が提案してくれたもの。
+    </p>
   </div>
 
   <div class="footer">
@@ -631,8 +641,128 @@
   </div>
   <p class="caption">図3-1 通信プロトコル 3 世代。Formal を土台に Informal を積み上げた。</p>
 
+  <!-- Notion カンバン + GitHub Issues イメージ -->
+  <div class="cols-2" style="margin-top:4mm;margin-bottom:1mm;gap:4mm;">
+    <div>
+      <div style="font-size:7pt;font-weight:700;color:var(--mid);margin-bottom:1.5mm;letter-spacing:.05em;text-transform:uppercase;">Notion カンバン (イメージ)</div>
+      <svg viewBox="0 0 200 100" style="border-radius:5px;overflow:visible">
+        <rect width="200" height="100" rx="5" fill="#f7f6f3"/>
+        <!-- header bar -->
+        <rect width="200" height="19" rx="5" fill="#e9e8e4"/>
+        <rect x="0" y="14" width="200" height="5" fill="#e9e8e4"/>
+        <text x="9" y="13" font-size="7" font-family="sans-serif" font-weight="700" fill="#37352f">タスクボード</text>
+        <!-- Col 1: Todo -->
+        <rect x="4" y="22" width="59" height="74" rx="4" fill="#eeede9"/>
+        <text x="9" y="32" font-size="5.5" font-family="sans-serif" font-weight="700" fill="#37352f">Todo</text>
+        <rect x="7" y="35" width="53" height="22" rx="3" fill="white"/>
+        <text x="10" y="44" font-size="5" font-family="sans-serif" fill="#37352f">LEGACY-FIX-01</text>
+        <rect x="10" y="47" width="18" height="7" rx="2" fill="#d3e5ef"/>
+        <text x="11.5" y="52.5" font-size="4.5" font-family="sans-serif" fill="#0b6e99">fix</text>
+        <!-- Col 2: In Progress -->
+        <rect x="68" y="22" width="60" height="74" rx="4" fill="#e8eeff"/>
+        <text x="73" y="32" font-size="5.5" font-family="sans-serif" font-weight="700" fill="#37352f">In Progress</text>
+        <rect x="71" y="35" width="54" height="22" rx="3" fill="white"/>
+        <text x="74" y="44" font-size="5" font-family="sans-serif" fill="#37352f">SECFIX-01</text>
+        <rect x="74" y="47" width="17" height="7" rx="2" fill="#d3e5ef"/>
+        <text x="75.5" y="52.5" font-size="4.5" font-family="sans-serif" fill="#0b6e99">fix</text>
+        <rect x="94" y="47" width="22" height="7" rx="2" fill="#f0e8f8"/>
+        <text x="96" y="52.5" font-size="4.5" font-family="sans-serif" fill="#9c4dc8">黒崎</text>
+        <rect x="71" y="60" width="54" height="22" rx="3" fill="white"/>
+        <text x="74" y="69" font-size="5" font-family="sans-serif" fill="#37352f">CI-01</text>
+        <rect x="74" y="72" width="14" height="7" rx="2" fill="#feebc8"/>
+        <text x="75.5" y="77.5" font-size="4.5" font-family="sans-serif" fill="#975a16">CI</text>
+        <rect x="91" y="72" width="22" height="7" rx="2" fill="#f0e8f8"/>
+        <text x="93" y="77.5" font-size="4.5" font-family="sans-serif" fill="#9c4dc8">緑川</text>
+        <!-- Col 3: Done -->
+        <rect x="133" y="22" width="63" height="74" rx="4" fill="#ebf5eb"/>
+        <text x="138" y="32" font-size="5.5" font-family="sans-serif" font-weight="700" fill="#37352f">Done</text>
+        <rect x="136" y="35" width="56" height="22" rx="3" fill="white" opacity=".8"/>
+        <text x="139" y="44" font-size="5" font-family="sans-serif" fill="#9b9a97">NEWCH-01</text>
+        <rect x="139" y="47" width="22" height="7" rx="2" fill="#c6f6d5"/>
+        <text x="140.5" y="52.5" font-size="4.5" font-family="sans-serif" fill="#22543d">done</text>
+        <rect x="136" y="60" width="56" height="22" rx="3" fill="white" opacity=".8"/>
+        <text x="139" y="69" font-size="5" font-family="sans-serif" fill="#9b9a97">NEWCH2-01</text>
+        <rect x="139" y="72" width="22" height="7" rx="2" fill="#c6f6d5"/>
+        <text x="140.5" y="77.5" font-size="4.5" font-family="sans-serif" fill="#22543d">done</text>
+      </svg>
+    </div>
+    <div>
+      <div style="font-size:7pt;font-weight:700;color:var(--mid);margin-bottom:1.5mm;letter-spacing:.05em;text-transform:uppercase;">GitHub Issues (イメージ)</div>
+      <svg viewBox="0 0 200 108" style="border-radius:5px;border:0.6px solid #d1d5db;overflow:visible">
+        <rect width="200" height="108" rx="5" fill="white"/>
+        <!-- issue header -->
+        <rect width="200" height="18" rx="5" fill="#f6f8fa"/>
+        <rect x="0" y="13" width="200" height="5" fill="#f6f8fa"/>
+        <circle cx="10" cy="9.5" r="3.5" fill="none" stroke="#1a7f37" stroke-width="1.2"/>
+        <circle cx="10" cy="9.5" r="1.8" fill="#1a7f37"/>
+        <text x="16" y="12.5" font-size="6" font-family="sans-serif" font-weight="700" fill="#1f2328">TASK-CI-01 — 進捗チェック</text>
+        <rect x="158" y="5" width="30" height="9" rx="3" fill="#dcfce7"/>
+        <text x="161" y="12" font-size="4.5" font-family="sans-serif" fill="#15803d">informal</text>
+        <!-- comment 1: dev2 -->
+        <rect x="0" y="18" width="200" height="24" fill="white"/>
+        <circle cx="11" cy="29" r="5.5" fill="#5b6af0"/>
+        <text x="11" y="31.5" font-size="5.5" font-family="sans-serif" font-weight="700" fill="white" text-anchor="middle">緑</text>
+        <text x="20" y="27" font-size="5" font-family="sans-serif" font-weight="700" fill="#1f2328">緑川啓介</text>
+        <text x="47" y="27" font-size="4.5" font-family="sans-serif" fill="#9ba5b3">dev2</text>
+        <text x="20" y="36" font-size="5.5" font-family="sans-serif" fill="#24292f">着手しました。設計判断 1 件確認いいですか？</text>
+        <line x1="0" y1="42" x2="200" y2="42" stroke="#d8dee4" stroke-width="0.5"/>
+        <!-- comment 2: pm -->
+        <rect x="0" y="42" width="200" height="24" fill="#fffdf5"/>
+        <circle cx="11" cy="53" r="5.5" fill="#e85d7a"/>
+        <text x="11" y="55.5" font-size="5.5" font-family="sans-serif" font-weight="700" fill="white" text-anchor="middle">藤</text>
+        <text x="20" y="51" font-size="5" font-family="sans-serif" font-weight="700" fill="#1f2328">藤宮詩織</text>
+        <text x="47" y="51" font-size="4.5" font-family="sans-serif" fill="#9ba5b3">pm</text>
+        <text x="20" y="60" font-size="5.5" font-family="sans-serif" fill="#24292f">どうぞ！B 案で進めて。推奨に賛同です</text>
+        <line x1="0" y1="66" x2="200" y2="66" stroke="#d8dee4" stroke-width="0.5"/>
+        <!-- comment 3: dev2 -->
+        <rect x="0" y="66" width="200" height="24" fill="white"/>
+        <circle cx="11" cy="77" r="5.5" fill="#5b6af0"/>
+        <text x="11" y="79.5" font-size="5.5" font-family="sans-serif" font-weight="700" fill="white" text-anchor="middle">緑</text>
+        <text x="20" y="75" font-size="5" font-family="sans-serif" font-weight="700" fill="#1f2328">緑川啓介</text>
+        <text x="47" y="75" font-size="4.5" font-family="sans-serif" fill="#9ba5b3">dev2</text>
+        <text x="20" y="84" font-size="5.5" font-family="sans-serif" fill="#24292f">承認ありがとうございます。実装します！</text>
+        <line x1="0" y1="90" x2="200" y2="90" stroke="#d8dee4" stroke-width="0.5"/>
+        <!-- footer -->
+        <rect x="0" y="90" width="200" height="18" rx="5" fill="#f6f8fa"/>
+        <rect x="0" y="90" width="200" height="5" fill="#f6f8fa"/>
+        <text x="8" y="102" font-size="4.5" font-family="sans-serif" fill="#9ba5b3">口語調 OK — インフォーマル通信の実例</text>
+      </svg>
+    </div>
+  </div>
+  <p class="caption" style="margin-top:1mm;">図3-1-b タスク可視化の二層構造。Notion カンバンでリアルタイム状況把握、GitHub Issues でラベル・担当・番号による正式記録。</p>
+
+  <div style="margin:4mm 0;background:var(--ink);border-radius:10px;padding:5mm 6mm 4mm;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-6mm;left:3mm;font-size:52pt;font-family:var(--font-serif);color:rgba(91,106,240,.18);line-height:1;pointer-events:none;">"</div>
+    <div style="position:absolute;bottom:-8mm;right:4mm;font-size:52pt;font-family:var(--font-serif);color:rgba(232,93,122,.12);line-height:1;pointer-events:none;">"</div>
+    <div style="font-size:7pt;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:2mm;">Design Decision</div>
+    <div style="font-family:var(--font-serif);font-size:13pt;font-weight:700;color:#fff;line-height:1.55;margin-bottom:2mm;">
+      作業可視化はカンバンでも可能だが、<span style="color:#a8b4ff;">イマイチ面白くない。</span>
+    </div>
+    <p style="font-size:8pt;color:rgba(255,255,255,.65);line-height:1.75;margin:0;">
+      せっかく人格のあるエージェントをつかうのだから、口語口調でやり取りが<strong style="color:rgba(255,255,255,.9);">雑談メッセージ化できる Issues</strong> を採用した。
+    </p>
+  </div>
+
+  <!-- 失敗した通信手法 -->
+  <div style="margin:4mm 0 3mm;padding:3.5mm 4.5mm;background:#fff5f6;border:1px solid #f5c5c8;border-radius:8px;">
+    <div style="font-size:8pt;font-weight:700;color:#c0392b;margin-bottom:2.5mm;letter-spacing:.02em;">YAML キュー採択前の失敗パターン</div>
+    <div class="cols-2" style="margin:0;gap:4mm;">
+      <div>
+        <div style="font-size:7.5pt;font-weight:700;color:#c0392b;margin-bottom:1mm;">案 A — Notion API 全読込ポーリング</div>
+        <p style="font-size:7.5pt;color:var(--mid);margin:0;line-height:1.65;">各エージェントが毎ターン Notion ボードの全ページ内容を API で取得する方式。タスク数・コメント数が増えるにつれ <strong>1 往復あたりのトークン消費が数千〜数万</strong> に膨張。コンテキストウィンドウを圧迫し、長時間セッションで文脈欠落が頻発。</p>
+      </div>
+      <div>
+        <div style="font-size:7.5pt;font-weight:700;color:#c0392b;margin-bottom:1mm;">案 B — tmux 全文 send-keys 方式</div>
+        <p style="font-size:7.5pt;color:var(--mid);margin:0;line-height:1.65;">PM がタスク仕様・完了報告の全文を <code style="font-size:6.5pt;background:#f5e8e8;padding:1px 3px;border-radius:2px;">tmux send-keys</code> で流し込む方式。仕様文が Claude のコンテキストに直接入るため <strong>セッション内トークンが加速度的に増加</strong>。数回のやり取りで上限に達しクラッシュ。</p>
+      </div>
+    </div>
+    <div style="margin-top:2.5mm;padding-top:2mm;border-top:1px solid #f5c5c8;font-size:7pt;color:#999;letter-spacing:.02em;">
+      → 解決策: <strong style="color:var(--ink);">tmux は短い "inbox" 通知のみ。メッセージ本文はファイルに分離</strong>（以下 図3-2）
+    </div>
+  </div>
+
   <!-- YAML キュー構造図 -->
-  <div style="margin-top:4mm">
+  <div style="margin-top:3mm">
     <div class="card-title" style="color:var(--ink);margin-bottom:3mm;font-size:9.5pt;">YAML キュー — 現行通信インフラ</div>
     <div class="fig">
       <svg viewBox="0 0 420 150" height="150">
@@ -669,15 +799,15 @@
         <!-- inbox files -->
         <rect x="290" y="14" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
         <text x="334" y="30" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev1.yaml</text>
-        <text x="334" y="42" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ dev 1</text>
+        <text x="334" y="42" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 黒崎</text>
 
         <rect x="290" y="58" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
         <text x="334" y="74" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev2.yaml</text>
-        <text x="334" y="86" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ dev 2</text>
+        <text x="334" y="86" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 緑川</text>
 
         <rect x="290" y="102" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
         <text x="334" y="118" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev3.yaml</text>
-        <text x="334" y="130" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ dev 3</text>
+        <text x="334" y="130" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 茜野</text>
 
         <!-- PM → inbox lines -->
         <line x1="274" y1="62" x2="288" y2="40" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
@@ -779,8 +909,8 @@
         <rect x="192" y="20" width="78" height="70" rx="5" fill="#16213e"/>
         <text x="231" y="38" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="monospace">Step 3</text>
         <text x="231" y="52" text-anchor="middle" fill="#a8c5ff" font-size="7.5" font-family="monospace">4ペイン作成</text>
-        <text x="231" y="65" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="monospace">pm/dev1</text>
-        <text x="231" y="77" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="monospace">dev2/dev3</text>
+        <text x="231" y="65" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="monospace">pm / 黒崎</text>
+        <text x="231" y="77" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="monospace">緑川 / 茜野</text>
 
         <line x1="272" y1="55" x2="284" y2="55" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah4)"/>
 
@@ -808,16 +938,16 @@
         <text x="108" y="38" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">藤宮詩織 — 待機中</text>
 
         <rect x="212" y="8" width="200" height="40" rx="4" fill="#1a1a2e" stroke="#16213e" stroke-width="1.2"/>
-        <text x="312" y="25" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="monospace" font-weight="bold">dev1 (team:0.1)</text>
+        <text x="312" y="25" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="monospace" font-weight="bold">黒崎 (team:0.1)</text>
         <text x="312" y="38" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">黒崎颯真 — 待機中</text>
 
         <!-- 下半分 左右 -->
         <rect x="8" y="52" width="200" height="40" rx="4" fill="#1a1a2e" stroke="#16213e" stroke-width="1.2"/>
-        <text x="108" y="69" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="monospace" font-weight="bold">dev2 (team:0.2)</text>
+        <text x="108" y="69" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="monospace" font-weight="bold">緑川 (team:0.2)</text>
         <text x="108" y="82" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">緑川啓介 — 待機中</text>
 
         <rect x="212" y="52" width="200" height="40" rx="4" fill="#1a1a2e" stroke="#16213e" stroke-width="1.2"/>
-        <text x="312" y="69" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="monospace" font-weight="bold">dev3 (team:0.3)</text>
+        <text x="312" y="69" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="monospace" font-weight="bold">茜野 (team:0.3)</text>
         <text x="312" y="82" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">茜野真理 — 待機中</text>
       </svg>
     </div>
@@ -1072,17 +1202,17 @@
 
       <!-- STEP 3 dev 3並列 -->
       <rect x="10" y="145" width="82" height="56" rx="6" fill="#16213e"/>
-      <text x="51" y="163" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="sans-serif">③-a dev1</text>
+      <text x="51" y="163" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="sans-serif">③-a 黒崎</text>
       <text x="51" y="177" text-anchor="middle" fill="white" font-size="8" font-family="sans-serif" font-weight="bold">実装+テスト</text>
       <text x="51" y="191" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="sans-serif">PR 作成</text>
 
       <rect x="99" y="145" width="82" height="56" rx="6" fill="#16213e"/>
-      <text x="140" y="163" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="sans-serif">③-b dev2</text>
+      <text x="140" y="163" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="sans-serif">③-b 緑川</text>
       <text x="140" y="177" text-anchor="middle" fill="white" font-size="8" font-family="sans-serif" font-weight="bold">実装+テスト</text>
       <text x="140" y="191" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="sans-serif">PR 作成</text>
 
       <rect x="188" y="145" width="82" height="56" rx="6" fill="#16213e"/>
-      <text x="229" y="163" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="sans-serif">③-c dev3</text>
+      <text x="229" y="163" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="sans-serif">③-c 茜野</text>
       <text x="229" y="177" text-anchor="middle" fill="white" font-size="8" font-family="sans-serif" font-weight="bold">実装+テスト</text>
       <text x="229" y="191" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="sans-serif">PR 作成</text>
 
