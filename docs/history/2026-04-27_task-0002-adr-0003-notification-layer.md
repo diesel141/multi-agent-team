@@ -13,7 +13,7 @@ tags: [adr, notification, vercel-cron, notion, mat-board-watcher, history]
 - TASK-0002 は元来「BE ペルソナ起案 + 通知レイヤ初期設計」のセット
 - ADR-0006 §5.1 で「ペルソナ起案 = PM の正規ルート」と確定したため、BE ペルソナ部分は TASK-0011 に分離（PR #17 / commit `4beab20` でマージ済）
 - 本タスクは残スコープ「ADR-0003 通知レイヤ実装方式の起案」のみを担当
-- `docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` §4 で「Tech Lead アサイン後に委ねる」と保留されていた論点を、Tech Lead 早瀬が本 ADR で決着
+- `docs/history/2026-04-25_multi-agent-architecture-reference.md` §4 で「Tech Lead アサイン後に委ねる」と保留されていた論点を、Tech Lead 早瀬が本 ADR で決着
 
 ## 2. 採用案サマリ
 
@@ -21,7 +21,7 @@ tags: [adr, notification, vercel-cron, notion, mat-board-watcher, history]
 
 - Vercel Cron Functions が 1 分間隔で Notion Messages DB の `last_edited_time` 差分を取得
 - cursor は Vercel KV に CAS 更新で永続化
-- ローカル PC 側で動く Node CLI Notifier に署名付き HTTPS POST → `tmux send-keys` で各 psmux ペインに **短い wake-up シグナル** を投入（業務本文は流さない、shogun 思想を継承）
+- ローカル PC 側で動く Node CLI Notifier に署名付き HTTPS POST → `tmux send-keys` で各 psmux ペインに **短い wake-up シグナル** を投入（業務本文は流さない、参照実装思想を継承）
 
 ### 5 評価軸 P95 数値
 
@@ -38,7 +38,7 @@ tags: [adr, notification, vercel-cron, notion, mat-board-watcher, history]
 | A | short-interval setInterval ローカル常駐ポーリング | ローカル PC 常時稼働非保証 / Vercel KV 案より状態同期難 | UPS/自動起床つき常時稼働ホスト + sub-minute SLA 必須化 |
 | B | Notion 公式 Webhook + Vercel Functions 受け皿 | Webhook DB scope 未 GA / 中継 SaaS 必須 / phase1 SLA に過剰 | (a) 公式 Webhook GA + (b) 中継 SaaS 不要 + (c) P95 < 10 sec SLA |
 | C | chokidar / FileSystemWatcher + docs/history 代理シグナル | 歴史化原則と逆向き / カバレッジ不完全 / PC 依存 | 歴史化と通知の event sourcing 統合再設計（別 ADR） |
-| D | shogun 直系 YAML inbox + Notion 二次降格 | ADR-0005 通信プロトコルを覆す / 単一 writer 維持に難 | Notion 連続障害 四半期 2 回以上 / air-gap 環境への移行 |
+| D | 参照実装直系 YAML inbox + Notion 二次降格 | ADR-0005 通信プロトコルを覆す / 単一 writer 維持に難 | Notion 連続障害 四半期 2 回以上 / air-gap 環境への移行 |
 | E | GitHub Actions cron + ポーリング | cron 粒度 5-15 min で P95 10x 悪化 / ロギング分散 | Vercel Cron 有償化 / Actions cron 1 min 化公式化 |
 
 ## 4. mat-board-watcher サブリポ初期化方針
@@ -84,5 +84,5 @@ CLAUDE.md §1.2 の「send-keys 業務通信禁止」を ADR §4.2 緩和策で 
 - `docs/adr/0001-default-tech-stack.md` — 既定スタック
 - `docs/adr/0005-communication-protocol-revision.md` — 通信プロトコル
 - `docs/adr/0006-persona-creation-flow-and-role-recalibration.md` — 権限境界（PR レビュー＆マージ Tech Lead）
-- `docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` §4 — 元の未決問題
+- `docs/history/2026-04-25_multi-agent-architecture-reference.md` §4 — 元の未決問題
 - `memory/adr_house_style.md` — ADR ハウススタイル

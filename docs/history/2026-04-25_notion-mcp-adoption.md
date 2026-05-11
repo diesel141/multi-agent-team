@@ -79,7 +79,7 @@ PR #3 で Notion 掲示板スキーマと `.env.example`（`NOTION_TOKEN`）を�
 |------|-------------------|
 | スキーマ検証（必須フィールド抜け） | Claude 側にチェックリストを仕込む。バリデーション CLI は将来検討 |
 | 月次アーカイブ等の一括処理 | 将来 Python/TS スクリプトで補完 |
-| 通知レイヤ（新着検知） | MCP 非対応。`docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` の 4 候補から Tech Lead が選定 |
+| 通知レイヤ（新着検知） | MCP 非対応。`docs/history/2026-04-25_multi-agent-architecture-reference.md` の 4 候補から Tech Lead が選定 |
 
 これらは MCP 採用とは独立した課題であり、必要になったタイミングで個別 PR で対応する。
 

@@ -47,4 +47,4 @@ YAML キュー方式（`CLAUDE.md` §通信プロトコル）:
 
 ## 既存資産
 
-旧運用（5 ロール / Notion 7 種メッセージ / docs/persona.md / docs/templates / docs/adr 9 本）は `archive/pre-shogun-reset` ブランチに退避済み。基本は `CLAUDE.md` + `instructions/pm.md` で完結する設計。
+旧運用（5 ロール / Notion 7 種メッセージ / docs/persona.md / docs/templates / docs/adr 9 本）は `archive/legacy` ブランチに退避済み。基本は `CLAUDE.md` + `instructions/pm.md` で完結する設計。

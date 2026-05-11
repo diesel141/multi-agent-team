@@ -3,10 +3,10 @@ date: 2026-04-29
 type: history / pivot-decision
 title: ADR-0008 通知レイヤピボット（ADR-0003 部分 Superseded）
 status: 採択時点の経緯記録
-tags: [adr-0008, notification-layer, pivot, lessons-learned, shogun-comparison, mat-board-watcher]
+tags: [adr-0008, notification-layer, pivot, lessons-learned, 参照実装-comparison, mat-board-watcher]
 ---
 
-# ADR-0008 通知レイヤピボット — 連鎖罠と shogun 再参照の経緯
+# ADR-0008 通知レイヤピボット — 連鎖罠と 参照実装再確認の経緯
 
 ## 1. ADR-0003 採用後の 4 段階連鎖罠
 
@@ -38,30 +38,30 @@ tags: [adr-0008, notification-layer, pivot, lessons-learned, shogun-comparison, 
 - ユーザーへ vercel login 要請（A 案）→ ユーザー回答前に PM が ADR-0008 起案方針を提示
 - 結果: TASK-0019 却下クローズ / PR #11 close
 
-## 2. shogun 比較分析（再参照のタイミング）
+## 2. 参照実装比較分析（再参照のタイミング）
 
 ### 当時（2026-04-25）の参照範囲
 
-`docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` で shogun の **通信レイヤ思想**（YAML + flock + inotifywait + tmux 通知のみ）を整理。
+`docs/history/2026-04-25_multi-agent-architecture-reference.md` で 参照実装の **通信レイヤ思想**（YAML + flock + inotifywait + tmux 通知のみ）を整理。
 結論: 「思想を援用 / 直接フォークしない」。
 
 ### ADR-0003 起案時の見落とし
 
-shogun の **実装層**（クラウド deploy 不使用 / Notion mcp は能動 fetch のみ）を ADR-0003 起案（2026-04-27）時に再参照していなかった。
+参照実装の **実装層**（クラウド deploy 不使用 / Notion mcp は能動 fetch のみ）を ADR-0003 起案（2026-04-27）時に再参照していなかった。
 
 ### 2026-04-28〜29 の再参照で判明した事実
 
-ユーザー指摘で shogun リポ（更新: 2026-04-28）を再調査:
+ユーザー指摘で 参照実装リポ（更新: 2026-04-28）を再調査:
 
-| 観点 | shogun | 本 PJ ADR-0003 |
+| 観点 | 参照実装 | 本 PJ ADR-0003 |
 |------|--------|----------------|
 | Notion 連携 | `claude mcp add notion` のみ（能動 fetch） | mcp + Vercel Cron polling + Cloudflare Tunnel + ローカル Notifier |
 | 自動 wake-up 通知 | **無し**（エージェントは起動時に能動 fetch） | あり（tmux send-keys 経由） |
 | クラウド deploy | 無し（Tailscale でリモート可） | mat-board-watcher → Vercel |
 | Windows サポート | WSL2 + Ubuntu | psmux + Windows ネイティブ |
-| ペルソナ階層 | shogun / karo / ashigaru / gunshi（4 階層） | PM / Tech Lead / Designer / BE（フラット 4 ロール + 権限境界） |
+| ペルソナ階層 | 参照実装 / karo / ashigaru / gunshi（4 階層） | PM / Tech Lead / Designer / BE（フラット 4 ロール + 権限境界） |
 
-つまり、shogun は **「Notion 新着の自動 wake-up 通知レイヤ」自体を持っていない**。Claude Code 多エージェント運用は能動 fetch + ユーザー起動で成立している。
+つまり、参照実装は **「Notion 新着の自動 wake-up 通知レイヤ」自体を持っていない**。Claude Code 多エージェント運用は能動 fetch + ユーザー起動で成立している。
 
 ### 本 PJ への含意
 
@@ -73,7 +73,7 @@ ADR-0003 で立てた「自動 wake-up 通知レイヤ」要件 **そのもの�
 
 - **案 A**: 現アーキ継続（vercel logs → BE 再起動 → 500 解消）
 - **案 B**: 部分撤退（mat-board-watcher 凍結 + 能動 fetch 運用化 / ADR-0003 §2.1 / §5 / §5.5 を Superseded）
-- **案 C**: shogun フル準拠（WSL2 + tmux + inotifywait）
+- **案 C**: 参照実装フル準拠（WSL2 + tmux + inotifywait）
 
 ユーザー判断: **案 B（部分撤退）**。
 
@@ -117,7 +117,7 @@ PM 着手（2026-04-29 セッション 3）:
 
 ### 学び 1: ADR 起案時の関連歴史化メモ全件再読
 
-ADR-0003 起案時に shogun 参照メモ（2026-04-25）を再読していれば、「shogun は通知レイヤ無しで運用」という重要事実が見えていた可能性が高い。
+ADR-0003 起案時に 参照実装 参照メモ（2026-04-25）を再読していれば、「参照実装は通知レイヤ無しで運用」という重要事実が見えていた可能性が高い。
 
 **規律化候補**:
 
@@ -163,13 +163,13 @@ ADR-0008 §3 却下 A 再考閾値 + §5 開いている論点 (2) 数値:
 
 phase2 採用スタック候補:
 
-- shogun 流 WSL2（却下 B 再考閾値が並行成立した場合）
+- 参照実装スタイル WSL2（却下 B 再考閾値が並行成立した場合）
 - Cloudflare Workers + Notion Webhooks（却下 C 再考閾値が並行成立した場合）
 - その他
 
 ## 7. 参考資料
 
 - ADR-0003 / ADR-0008 / ADR-0006 §5.2 / ADR-0007 §2.6
-- shogun リポ: <https://github.com/yohey-w/multi-agent-shogun>
-- 本 PJ history: `docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` / `2026-04-25_psmux-windows-investigation.md`
+- 参照実装リポ: <https://github.com/yohey-w/参照実装リポ>
+- 本 PJ history: `docs/history/2026-04-25_multi-agent-architecture-reference.md` / `2026-04-25_psmux-windows-investigation.md`
 - TASK-0016〜0019 Notion ページ群（タスクID 横断検索 / TASK-0017 0018 PM 受入レビュー / TASK-0019 PM クロージング却下）

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-[yohey-w/multi-agent-shogun](https://github.com/yohey-w/multi-agent-shogun) の YAML キュー + マルチペイン + ファイル監視思想を踏襲した、本プロダクト独自の **Multi-Agent ADD（Agent-Driven Development）チーム**環境です。Windows ネイティブで psmux を使い、WSL2 不要。
+[参照リポジトリ](https://github.com/yohey-w/参照実装リポ) の YAML キュー + マルチペイン + ファイル監視思想を踏襲した、本プロダクト独自の **Multi-Agent ADD（Agent-Driven Development）チーム**環境です。Windows ネイティブで psmux を使い、WSL2 不要。
 
 ## 階層
 
@@ -53,7 +53,7 @@ YAML キュー方式:
 
 ## 既存資産
 
-- `archive/pre-shogun-reset` ブランチに旧運用資産（旧 CLAUDE.md / docs/personas / docs/adr 9 本 / docs/templates / Notion 通信）を退避済み
+- `archive/legacy` ブランチに旧運用資産（旧 CLAUDE.md / docs/personas / docs/adr 9 本 / docs/templates / Notion 通信）を退避済み
 - `docs/history/` は資産として保持（特に `2026-04-25_psmux-windows-investigation.md` が起動環境の一次ソース）
 
 ## Git 運用

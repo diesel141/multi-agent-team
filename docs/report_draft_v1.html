@@ -347,7 +347,7 @@
     <tr><td>1</td><td>本プロジェクト概要</td><td style="text-align:right">3</td></tr>
     <tr><td>2</td><td>チーム設計 — 少数精鋭のペルソナ</td><td style="text-align:right">4</td></tr>
     <tr><td>3</td><td>コミュニケーション設計の進化</td><td style="text-align:right">5</td></tr>
-    <tr><td>4</td><td>環境設計の変遷 — Shogun → WSL2 → psmux</td><td style="text-align:right">6</td></tr>
+    <tr><td>4</td><td>環境設計の変遷 — 外部参照実装 → WSL2 → psmux</td><td style="text-align:right">6</td></tr>
     <tr><td>5</td><td>意思決定の記録（ADR 系統図）</td><td style="text-align:right">7</td></tr>
     <tr><td>6</td><td>開発タイムライン</td><td style="text-align:right">8</td></tr>
     <tr><td>7</td><td>現在の運用フロー</td><td style="text-align:right">9</td></tr>
@@ -511,67 +511,68 @@
 
   <!-- ペルソナカード -->
   <div class="fig">
-    <svg viewBox="0 0 420 300">
-      <rect width="420" height="300" rx="10" fill="#f5f5fc"/>
+    <svg viewBox="0 0 420 320">
+      <rect width="420" height="320" rx="10" fill="#f5f5fc"/>
 
       <!-- PM カード（上段・全幅） -->
-      <rect x="10" y="10" width="400" height="80" rx="8" fill="#5b6af0"/>
-      <rect x="10" y="10" width="6" height="80" rx="3" fill="#fff" opacity=".3"/>
+      <rect x="10" y="10" width="400" height="96" rx="8" fill="#5b6af0"/>
+      <rect x="10" y="10" width="6" height="96" rx="3" fill="#fff" opacity=".3"/>
       <text x="28" y="30" fill="rgba(255,255,255,.55)" font-size="7.5" font-family="sans-serif">PM 兼 Designer</text>
       <text x="28" y="50" fill="white" font-size="13" font-family="sans-serif" font-weight="bold">藤宮 詩織　Fujimiya Shiori</text>
-      <text x="28" y="65" fill="rgba(255,255,255,.8)" font-size="8" font-family="sans-serif">UX 出身 → PM 8 年。教育系 SaaS の品質基盤を立ち上げ、受入規律のテンプレ化を主導。</text>
-      <text x="28" y="80" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">Goal: タスク分解 / 受入レビュー / UX 仕様の最終判断　｜　Constraint: 自分でコードは書かない / self-merge 禁止</text>
+      <text x="28" y="66" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="sans-serif">UX 出身 → PM 8 年。受入規律のテンプレ化を主導。</text>
+      <text x="28" y="81" fill="rgba(255,255,255,.65)" font-size="7" font-family="sans-serif">Goal: タスク分解 / 受入レビュー / UX 仕様の最終判断</text>
+      <text x="28" y="95" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">Constraint: 自分でコードは書かない / self-merge 禁止</text>
 
       <!-- dev1 カード（下段左） -->
-      <rect x="10" y="104" width="126" height="180" rx="8" fill="#1a1a2e"/>
-      <rect x="10" y="104" width="126" height="5" rx="3" fill="#888" opacity=".5"/>
-      <text x="22" y="126" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">dev 1 — 36歳</text>
-      <text x="22" y="145" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">黒崎 颯真</text>
-      <text x="22" y="160" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">描画系 Developer</text>
-      <line x1="22" y1="168" x2="122" y2="168" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="22" y="184" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">フロント 10 年。</text>
-      <text x="22" y="197" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">pixel-perfect /</text>
-      <text x="22" y="210" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">grid systems /</text>
-      <text x="22" y="223" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">typography / a11y</text>
-      <line x1="22" y1="232" x2="122" y2="232" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="22" y="248" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="sans-serif">Tools:</text>
-      <text x="22" y="261" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">python-pptx</text>
-      <text x="22" y="273" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">8pt baseline grid</text>
-      <text x="22" y="285" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">Figma / VSCode</text>
+      <rect x="10" y="118" width="126" height="192" rx="8" fill="#1a1a2e"/>
+      <rect x="10" y="118" width="126" height="5" rx="3" fill="#888" opacity=".5"/>
+      <text x="22" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">dev 1 — 36歳</text>
+      <text x="22" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">黒崎 颯真</text>
+      <text x="22" y="173" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">描画系 Developer</text>
+      <line x1="22" y1="181" x2="122" y2="181" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <text x="22" y="196" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">フロント 10 年。</text>
+      <text x="22" y="209" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">pixel-perfect /</text>
+      <text x="22" y="222" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">grid systems /</text>
+      <text x="22" y="235" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">typography / a11y</text>
+      <line x1="22" y1="244" x2="122" y2="244" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <text x="22" y="259" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="sans-serif">Tools:</text>
+      <text x="22" y="272" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">python-pptx</text>
+      <text x="22" y="284" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">8pt baseline grid</text>
+      <text x="22" y="296" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">Figma / VSCode</text>
 
       <!-- dev2 カード（下段中） -->
-      <rect x="148" y="104" width="126" height="180" rx="8" fill="#1a4a1a"/>
-      <rect x="148" y="104" width="126" height="5" rx="3" fill="#4caf50" opacity=".7"/>
-      <text x="160" y="126" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">dev 2 — 49歳</text>
-      <text x="160" y="145" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">緑川 啓介</text>
-      <text x="160" y="160" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">インフラエンジニア</text>
-      <line x1="160" y1="168" x2="260" y2="168" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="160" y="184" fill="#7dd87d" font-size="7" font-family="sans-serif" font-weight="bold">Harvard 卒</text>
-      <text x="160" y="197" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">シリコンバレー →</text>
-      <text x="160" y="210" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">国内大規模 SaaS</text>
-      <text x="160" y="223" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">インフラ責任者を歴任</text>
-      <line x1="160" y1="232" x2="260" y2="232" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="160" y="248" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="sans-serif">Tools:</text>
-      <text x="160" y="261" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">AWS / GCP / K8s</text>
-      <text x="160" y="273" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">Terraform / Datadog</text>
-      <text x="160" y="285" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">OpenTelemetry / IaC</text>
+      <rect x="148" y="118" width="126" height="192" rx="8" fill="#1a4a1a"/>
+      <rect x="148" y="118" width="126" height="5" rx="3" fill="#4caf50" opacity=".7"/>
+      <text x="160" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">dev 2 — 49歳</text>
+      <text x="160" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">緑川 啓介</text>
+      <text x="160" y="173" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">インフラエンジニア</text>
+      <line x1="160" y1="181" x2="260" y2="181" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <text x="160" y="196" fill="#7dd87d" font-size="7" font-family="sans-serif" font-weight="bold">Harvard 卒</text>
+      <text x="160" y="209" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">シリコンバレー →</text>
+      <text x="160" y="222" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">国内大規模 SaaS</text>
+      <text x="160" y="235" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">インフラ責任者を歴任</text>
+      <line x1="160" y1="244" x2="260" y2="244" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <text x="160" y="259" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="sans-serif">Tools:</text>
+      <text x="160" y="272" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">AWS / GCP / K8s</text>
+      <text x="160" y="284" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">Terraform / Datadog</text>
+      <text x="160" y="296" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">OpenTelemetry / IaC</text>
 
       <!-- dev3 カード（下段右） -->
-      <rect x="286" y="104" width="124" height="180" rx="8" fill="#4a1a1a"/>
-      <rect x="286" y="104" width="124" height="5" rx="3" fill="#e85d7a" opacity=".7"/>
-      <text x="298" y="126" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">dev 3</text>
-      <text x="298" y="145" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">茜野 真理</text>
-      <text x="298" y="160" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">QA + 検証 + 仕様書化</text>
-      <line x1="298" y1="168" x2="398" y2="168" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="298" y="184" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">QA リード 10 年。</text>
-      <text x="298" y="197" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">E2E / Property-based</text>
-      <text x="298" y="210" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">Mutation testing の</text>
-      <text x="298" y="223" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">標準化を主導</text>
-      <line x1="298" y1="232" x2="398" y2="232" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="298" y="248" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="sans-serif">Tools:</text>
-      <text x="298" y="261" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">pytest / playwright</text>
-      <text x="298" y="273" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">hypothesis / mermaid</text>
-      <text x="298" y="285" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">python-pptx</text>
+      <rect x="286" y="118" width="124" height="192" rx="8" fill="#4a1a1a"/>
+      <rect x="286" y="118" width="124" height="5" rx="3" fill="#e85d7a" opacity=".7"/>
+      <text x="298" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">dev 3</text>
+      <text x="298" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">茜野 真理</text>
+      <text x="298" y="173" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">QA + 検証 + 仕様書化</text>
+      <line x1="298" y1="181" x2="398" y2="181" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <text x="298" y="196" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">QA リード 10 年。</text>
+      <text x="298" y="209" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">E2E / Property-based</text>
+      <text x="298" y="222" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">Mutation testing の</text>
+      <text x="298" y="235" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">標準化を主導</text>
+      <line x1="298" y1="244" x2="398" y2="244" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <text x="298" y="259" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="sans-serif">Tools:</text>
+      <text x="298" y="272" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">pytest / playwright</text>
+      <text x="298" y="284" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">hypothesis / mermaid</text>
+      <text x="298" y="296" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">python-pptx</text>
     </svg>
   </div>
   <p class="caption">図2-1 4名のペルソナカード。各メンバーは固有の専門性・バックストーリー・ツールセットを持つ。</p>
@@ -710,7 +711,7 @@
 <div class="page">
   <div class="section-header">
     <span class="section-num">§ 4</span>
-    <span class="section-title">環境設計の変遷 — Shogun → WSL2 → psmux</span>
+    <span class="section-title">環境設計の変遷 — 外部参照実装 → WSL2 → psmux</span>
   </div>
 
   <p class="lead">
@@ -723,7 +724,7 @@
     <div class="card" style="border-top:3px solid #8888aa;">
       <div class="card-title" style="color:#8888aa">Phase 0（旧運用）</div>
       <p><strong>Notion 掲示板</strong>で全通信<br>
-      shogun サブモジュール組み込み<br>
+      外部サブモジュール組み込み<br>
       ターミナル多重化なし<br>
       <br>
       <span style="color:var(--pale);font-size:8pt">→ 通知レイヤが複雑化</span></p>
@@ -731,7 +732,7 @@
     <div class="card" style="border-top:3px solid #e85d7a;">
       <div class="card-title" style="color:#e85d7a">Phase 1（WSL2 試行）</div>
       <p><strong>WSL2 Ubuntu</strong> で tmux 起動<br>
-      shogun スタイルへ全面刷新<br>
+      参照実装スタイルへ全面刷新<br>
       ワンコマンドセットアップ試作<br>
       <br>
       <span style="color:#e85d7a;font-size:8pt">→ Windows 環境との摩擦で撤退</span></p>
@@ -979,7 +980,7 @@
     <div class="tl-dot-col"><div class="tl-dot warn"></div><div class="tl-line"></div></div>
     <div class="tl-body">
       <div class="tl-title">🔴 通知レイヤ 4 段階連鎖罠 → ピボット決定</div>
-      <div class="tl-desc">Vercel Hobby 制限 → GitHub Actions 移行 → Hono routing 破綻 → Function 500 error。shogun 再参照で「通知レイヤ不要」判定。<strong>ADR-0008</strong> 採択：能動 fetch 方式へ全面撤退。mat-board-watcher 全削除。セッション 4 PM 自律完遂（ユーザー就寝中に完了）。</div>
+      <div class="tl-desc">Vercel Hobby 制限 → GitHub Actions 移行 → Hono routing 破綻 → Function 500 error。参照実装再確認で「通知レイヤ不要」判定。<strong>ADR-0008</strong> 採択：能動 fetch 方式へ全面撤退。mat-board-watcher 全削除。セッション 4 PM 自律完遂（ユーザー就寝中に完了）。</div>
     </div>
   </div>
 
@@ -988,7 +989,7 @@
     <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
     <div class="tl-body">
       <div class="tl-title">psmux 移行 & 旧資産 archive 退避</div>
-      <div class="tl-desc">WSL2 完全撤退。shogun スタイルへ全面刷新（PR #27）。本プロダクト仕様カスタマイズ + shogun submodule 削除（PR #28）。旧運用資産を <code>archive/pre-shogun-reset</code> ブランチへ退避。psmux 4 ペイン疎通確認完了（PR #31/#32）。</div>
+      <div class="tl-desc">WSL2 完全撤退。参照実装スタイルへ全面刷新（PR #27）。本プロダクト仕様カスタマイズ + 参照実装 submodule 削除（PR #28）。旧運用資産を <code>archive/legacy</code> ブランチへ退避。psmux 4 ペイン疎通確認完了（PR #31/#32）。</div>
     </div>
   </div>
 
@@ -1149,7 +1150,7 @@ acceptance_criteria:
     </div>
     <div class="card">
       <div class="card-title">④ 参照元ドキュメントに早期回帰する</div>
-      <p>shogun アーキテクチャ調査メモ（2026-04-25）を ADR-0003 起案時（04-27）に再読していれば「通知レイヤ不要」判定が 2 日早かった。ADR 起案前の関連歴史化メモ全件再読を義務化。</p>
+      <p>参照実装 アーキテクチャ調査メモ（2026-04-25）を ADR-0003 起案時（04-27）に再読していれば「通知レイヤ不要」判定が 2 日早かった。ADR 起案前の関連歴史化メモ全件再読を義務化。</p>
     </div>
   </div>
 

@@ -155,7 +155,7 @@ PM 判断で **auto memory 直接編集** に切り替え、PR 不要として�
 
 ### 6.1 拡充内容
 
-ADR-0008 採択経緯（連鎖罠 4 段階 + shogun 再参照）から得た学び 4 件を `feedback_pm_proactive_review.md` に反映:
+ADR-0008 採択経緯（連鎖罠 4 段階 + 参照実装再確認）から得た学び 4 件を `feedback_pm_proactive_review.md` に反映:
 
 | 学び | 反映先 |
 |------|--------|

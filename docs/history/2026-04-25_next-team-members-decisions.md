@@ -86,5 +86,5 @@ ADR-0002 が PM 承認されたら、以下の順で動く:
 - `docs/adr/0002-next-team-members.md` — ADR 本体
 - `docs/adr/0001-default-tech-stack.md` — 前提となる既定スタック
 - `docs/history/2026-04-25_tech-lead-activation-decisions.md` — 委譲の決定
-- `docs/history/2026-04-25_multi-agent-shogun-architecture-reference.md` §4 — 通知レイヤ未決
+- `docs/history/2026-04-25_multi-agent-architecture-reference.md` §4 — 通知レイヤ未決
 - `docs/notion-board-schema.md` §1.3 — 役職スキーマ（追加不要）
