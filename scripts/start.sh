@@ -10,8 +10,6 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
-WIN_REPO_ROOT=$(cygpath -w "$REPO_ROOT" 2>/dev/null || echo "$REPO_ROOT")
-
 NO_ATTACH=0
 for arg in "$@"; do
   [ "$arg" = "--no-attach" ] && NO_ATTACH=1
@@ -72,8 +70,10 @@ instr_for() {
 }
 
 # 各ペインで claude を起動
+# psmux のデフォルトシェルが PowerShell のため、bash.exe を明示的に呼び出す
+BASH_EXE="C:/Program Files/Git/bin/bash.exe"
 for i in 0 1 2 3; do
-  tmux send-keys -t team:0.$i "cd '$REPO_ROOT' && claude --dangerously-skip-permissions" Enter
+  tmux send-keys -t team:0.$i "& '$BASH_EXE' --login -c 'cd $REPO_ROOT && claude --dangerously-skip-permissions'" Enter
 done
 
 # claude 起動待機（psmux は capture-pane で ❯ を検出できないため固定 sleep）
