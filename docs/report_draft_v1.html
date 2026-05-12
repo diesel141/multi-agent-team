@@ -609,8 +609,6 @@
     <span class="section-title">コミュニケーション設計の進化</span>
   </div>
 
-  <p class="lead">通信プロトコルは「形式的すぎる → 軽量 informal 追加 → 雑談・進捗ログ整理」という 3 段階で洗練された。</p>
-
   <!-- ADD チームの価値 -->
   <div style="margin-bottom:6mm;background:var(--bg-soft);border-radius:10px;padding:5mm 6mm;border:1px solid var(--border);">
     <div style="font-size:7.5pt;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3mm;">ADD チームが実現すること</div>
@@ -692,6 +690,8 @@
       <div style="font-size:7.5pt;color:var(--pale);">用途例: アプリ開発 / 研修資料作成 / データ分析…</div>
     </div>
   </div>
+
+  <p class="lead">通信プロトコルは「形式的すぎる → 軽量 informal 追加 → 雑談・進捗ログ整理」という 3 段階で洗練された。</p>
 
   <!-- プロトコル進化図 -->
   <div class="fig">
@@ -826,73 +826,6 @@
     </p>
   </div>
 
-  <!-- YAML キュー構造図 -->
-  <div style="margin-top:3mm">
-    <div class="card-title" style="color:var(--ink);margin-bottom:3mm;font-size:9.5pt;">YAML キュー — 現行通信インフラ</div>
-    <div class="fig">
-      <svg viewBox="0 0 420 150" height="150">
-        <defs>
-          <marker id="ah2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#5b6af0"/>
-          </marker>
-          <marker id="ah3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#e85d7a"/>
-          </marker>
-        </defs>
-        <rect width="420" height="150" rx="8" fill="#1a1a2e"/>
-
-        <!-- user -->
-        <rect x="10" y="52" width="62" height="46" rx="6" fill="#0f3460"/>
-        <text x="41" y="73" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="7" font-family="monospace">User</text>
-        <text x="41" y="87" text-anchor="middle" fill="white" font-size="8" font-family="monospace" font-weight="bold">you</text>
-
-        <!-- you_to_pm.yaml -->
-        <rect x="90" y="55" width="90" height="40" rx="5" fill="rgba(91,106,240,.25)" stroke="#5b6af0" stroke-width="1"/>
-        <text x="135" y="73" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">you_to_pm</text>
-        <text x="135" y="86" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">.yaml</text>
-        <line x1="74" y1="75" x2="88" y2="75" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah2)"/>
-
-        <!-- PM -->
-        <rect x="200" y="35" width="72" height="80" rx="6" fill="#5b6af0"/>
-        <text x="236" y="58" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="7" font-family="monospace">PM</text>
-        <text x="236" y="73" text-anchor="middle" fill="white" font-size="8" font-family="monospace" font-weight="bold">藤宮詩織</text>
-        <text x="236" y="86" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="6" font-family="monospace">inbox/pm.yaml</text>
-        <text x="236" y="99" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="6" font-family="monospace">→ reports/</text>
-
-        <line x1="182" y1="75" x2="198" y2="75" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah2)"/>
-
-        <!-- inbox files -->
-        <rect x="290" y="14" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
-        <text x="334" y="30" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev1.yaml</text>
-        <text x="334" y="42" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 黒崎</text>
-
-        <rect x="290" y="58" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
-        <text x="334" y="74" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev2.yaml</text>
-        <text x="334" y="86" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 緑川</text>
-
-        <rect x="290" y="102" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
-        <text x="334" y="118" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev3.yaml</text>
-        <text x="334" y="130" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 茜野</text>
-
-        <!-- PM → inbox lines -->
-        <line x1="274" y1="62" x2="288" y2="40" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
-        <line x1="274" y1="75" x2="288" y2="75" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
-        <line x1="274" y1="88" x2="288" y2="110" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
-
-        <!-- watch-queue label -->
-        <text x="210" y="136" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="6.5" font-family="monospace">watch-queue.ps1 → tmux send-keys "inbox"</text>
-      </svg>
-    </div>
-    <p class="caption">図3-2 YAML キュー全体図。watch-queue.ps1 がファイル変更を検知し、対象ペインに inbox コマンドを自動送信する。</p>
-  </div>
-
-  <table style="margin-top:2mm">
-    <tr><th style="width:32mm">通信種別</th><th style="width:28mm">分類</th><th>内容</th></tr>
-    <tr><td>開始指令 / 完了報告 / 問題報告</td><td><strong>Formal</strong></td><td>YAML 必須記入。PM レビュー対象。</td></tr>
-    <tr><td>着手返答 / 進捗共有 / 質疑</td><td>Informal</td><td>軽量テキストで可。YAML 省略可。</td></tr>
-    <tr><td>雑談・思考メモ</td><td>Informal</td><td>ADR-0009 で追加。口語調 OK。</td></tr>
-  </table>
-
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
     <span class="page-num">5</span>
@@ -977,9 +910,62 @@
 
 
 <!-- ══════════════════════════════════════════ -->
-<!-- p6: §4 環境設計の変遷                     -->
+<!-- p6: §3続き + §4 環境設計の変遷            -->
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
+
+  <!-- YAML キュー構造図 -->
+  <div style="margin-bottom:4mm">
+    <div class="card-title" style="color:var(--ink);margin-bottom:3mm;font-size:9.5pt;">YAML キュー — 現行通信インフラ</div>
+    <div class="fig">
+      <svg viewBox="0 0 420 150" height="150">
+        <defs>
+          <marker id="ah2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#5b6af0"/>
+          </marker>
+          <marker id="ah3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#e85d7a"/>
+          </marker>
+        </defs>
+        <rect width="420" height="150" rx="8" fill="#1a1a2e"/>
+        <rect x="10" y="52" width="62" height="46" rx="6" fill="#0f3460"/>
+        <text x="41" y="73" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="7" font-family="monospace">User</text>
+        <text x="41" y="87" text-anchor="middle" fill="white" font-size="8" font-family="monospace" font-weight="bold">you</text>
+        <rect x="90" y="55" width="90" height="40" rx="5" fill="rgba(91,106,240,.25)" stroke="#5b6af0" stroke-width="1"/>
+        <text x="135" y="73" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">you_to_pm</text>
+        <text x="135" y="86" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">.yaml</text>
+        <line x1="74" y1="75" x2="88" y2="75" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah2)"/>
+        <rect x="200" y="35" width="72" height="80" rx="6" fill="#5b6af0"/>
+        <text x="236" y="58" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="7" font-family="monospace">PM</text>
+        <text x="236" y="73" text-anchor="middle" fill="white" font-size="8" font-family="monospace" font-weight="bold">藤宮詩織</text>
+        <text x="236" y="86" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="6" font-family="monospace">inbox/pm.yaml</text>
+        <text x="236" y="99" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="6" font-family="monospace">→ reports/</text>
+        <line x1="182" y1="75" x2="198" y2="75" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah2)"/>
+        <rect x="290" y="14" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
+        <text x="334" y="30" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev1.yaml</text>
+        <text x="334" y="42" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 黒崎</text>
+        <rect x="290" y="58" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
+        <text x="334" y="74" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev2.yaml</text>
+        <text x="334" y="86" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 緑川</text>
+        <rect x="290" y="102" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
+        <text x="334" y="118" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev3.yaml</text>
+        <text x="334" y="130" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 茜野</text>
+        <line x1="274" y1="62" x2="288" y2="40" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
+        <line x1="274" y1="75" x2="288" y2="75" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
+        <line x1="274" y1="88" x2="288" y2="110" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
+        <text x="210" y="136" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="6.5" font-family="monospace">watch-queue.ps1 → tmux send-keys "inbox"</text>
+      </svg>
+    </div>
+    <p class="caption">図3-2 YAML キュー全体図。watch-queue.ps1 がファイル変更を検知し、対象ペインに inbox コマンドを自動送信する。</p>
+  </div>
+
+  <table style="margin-bottom:6mm">
+    <tr><th style="width:32mm">通信種別</th><th style="width:28mm">分類</th><th>内容</th></tr>
+    <tr><td>開始指令 / 完了報告 / 問題報告</td><td><strong>Formal</strong></td><td>YAML 必須記入。PM レビュー対象。</td></tr>
+    <tr><td>着手返答 / 進捗共有 / 質疑</td><td>Informal</td><td>軽量テキストで可。YAML 省略可。</td></tr>
+    <tr><td>雑談・思考メモ</td><td>Informal</td><td>ADR-0009 で追加。口語調 OK。</td></tr>
+  </table>
+
   <div class="section-header">
     <span class="section-num">§ 4</span>
     <span class="section-title">環境設計の変遷 — 外部参照実装 → WSL2 → psmux</span>
