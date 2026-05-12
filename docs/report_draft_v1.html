@@ -584,8 +584,9 @@
   <div style="margin-top:5mm;background:var(--ink);border-radius:10px;padding:5mm 6mm 4mm;position:relative;overflow:hidden;">
     <div style="position:absolute;top:-6mm;left:3mm;font-size:52pt;font-family:var(--font-serif);color:rgba(91,106,240,.18);line-height:1;pointer-events:none;">"</div>
     <div style="position:absolute;bottom:-8mm;right:4mm;font-size:52pt;font-family:var(--font-serif);color:rgba(232,93,122,.12);line-height:1;pointer-events:none;">"</div>
+    <div style="font-size:9pt;font-weight:700;color:var(--accent2);margin-bottom:2mm;">チェック！！</div>
     <div style="font-family:var(--font-serif);font-size:15pt;font-weight:700;color:#fff;line-height:1.4;margin-bottom:3mm;">
-      <span style="color:var(--accent2);">チェック！！</span>　実はこれらのペルソナは、<span style="color:#a8b4ff;">中2思想</span>で設計した。
+      実はこれらのペルソナは、<span style="color:#a8b4ff;">中2思想</span>で設計した。
     </div>
     <p style="font-size:8pt;color:rgba(255,255,255,.65);line-height:1.75;margin:0;">
       例えば藤宮さんは「<strong style="color:rgba(255,255,255,.9);">世界最高峰の PM</strong>」、緑川さんは「<strong style="color:rgba(255,255,255,.9);">ハーバード大卒の天才プログラマー</strong>」とだけ提示。細かな設定は AI が提案してくれたもの。
@@ -609,6 +610,88 @@
   </div>
 
   <p class="lead">通信プロトコルは「形式的すぎる → 軽量 informal 追加 → 雑談・進捗ログ整理」という 3 段階で洗練された。</p>
+
+  <!-- ADD チームの価値 -->
+  <div style="margin-bottom:6mm;background:var(--bg-soft);border-radius:10px;padding:5mm 6mm;border:1px solid var(--border);">
+    <div style="font-size:7.5pt;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3mm;">ADD チームが実現すること</div>
+    <div class="fig" style="margin:0 0 3mm;">
+      <svg viewBox="0 0 420 98" height="98">
+        <defs>
+          <marker id="arr-add1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#5b6af0"/>
+          </marker>
+          <marker id="arr-add2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+            <path d="M0,0 L5,2.5 L0,5 Z" fill="rgba(255,255,255,.6)"/>
+          </marker>
+          <marker id="arr-add3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#1a7f37"/>
+          </marker>
+        </defs>
+
+        <!-- エージェント自走ゾーン -->
+        <rect x="100" y="28" width="234" height="54" rx="6" fill="rgba(91,106,240,.08)" stroke="rgba(91,106,240,.22)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="217" y="20" text-anchor="middle" font-size="6.5" font-family="sans-serif" fill="#5b6af0" letter-spacing=".05em">エージェントチーム 自走ゾーン</text>
+
+        <!-- YOU（左・依頼） -->
+        <circle cx="36" cy="55" r="20" fill="#1a1a2e"/>
+        <text x="36" y="51" text-anchor="middle" font-size="5.5" font-family="sans-serif" fill="rgba(255,255,255,.55)">User</text>
+        <text x="36" y="63" text-anchor="middle" font-size="8.5" font-family="sans-serif" font-weight="bold" fill="white">YOU</text>
+
+        <!-- 依頼 矢印 -->
+        <line x1="57" y1="55" x2="70" y2="55" stroke="#5b6af0" stroke-width="1.6" marker-end="url(#arr-add1)"/>
+        <text x="63" y="48" text-anchor="middle" font-size="6.5" font-family="sans-serif" fill="#5b6af0" font-weight="bold">依頼</text>
+
+        <!-- PM 藤宮 -->
+        <circle cx="85" cy="55" r="14" fill="#e85d7a"/>
+        <text x="85" y="51" text-anchor="middle" font-size="5" font-family="sans-serif" fill="rgba(255,255,255,.75)">PM</text>
+        <text x="85" y="62" text-anchor="middle" font-size="6.5" font-family="sans-serif" font-weight="bold" fill="white">藤宮</text>
+
+        <!-- PM → zone -->
+        <line x1="99" y1="55" x2="107" y2="55" stroke="rgba(91,106,240,.5)" stroke-width="1.2" marker-end="url(#arr-add2)"/>
+
+        <!-- 思考 -->
+        <rect x="109" y="37" width="38" height="34" rx="4" fill="#5b6af0"/>
+        <text x="128" y="57" text-anchor="middle" font-size="8" font-family="sans-serif" font-weight="bold" fill="white">思考</text>
+        <line x1="147" y1="55" x2="152" y2="55" stroke="rgba(255,255,255,.5)" stroke-width="1" marker-end="url(#arr-add2)"/>
+
+        <!-- 計画立案 -->
+        <rect x="154" y="37" width="38" height="34" rx="4" fill="#4a56d0"/>
+        <text x="173" y="52" text-anchor="middle" font-size="7" font-family="sans-serif" fill="white">計画</text>
+        <text x="173" y="63" text-anchor="middle" font-size="6" font-family="sans-serif" fill="rgba(255,255,255,.75)">立案</text>
+        <line x1="192" y1="55" x2="197" y2="55" stroke="rgba(255,255,255,.5)" stroke-width="1" marker-end="url(#arr-add2)"/>
+
+        <!-- 設計 -->
+        <rect x="199" y="37" width="38" height="34" rx="4" fill="#3d4abb"/>
+        <text x="218" y="57" text-anchor="middle" font-size="8" font-family="sans-serif" font-weight="bold" fill="white">設計</text>
+        <line x1="237" y1="55" x2="242" y2="55" stroke="rgba(255,255,255,.5)" stroke-width="1" marker-end="url(#arr-add2)"/>
+
+        <!-- 実装 -->
+        <rect x="244" y="37" width="38" height="34" rx="4" fill="#2f3ea5"/>
+        <text x="263" y="57" text-anchor="middle" font-size="8" font-family="sans-serif" font-weight="bold" fill="white">実装</text>
+        <line x1="282" y1="55" x2="287" y2="55" stroke="rgba(255,255,255,.5)" stroke-width="1" marker-end="url(#arr-add2)"/>
+
+        <!-- テスト -->
+        <rect x="289" y="37" width="38" height="34" rx="4" fill="#1a1a2e" stroke="#5b6af0" stroke-width="1.2"/>
+        <text x="308" y="57" text-anchor="middle" font-size="8" font-family="sans-serif" font-weight="bold" fill="white">テスト</text>
+
+        <!-- zone → YOU（右） -->
+        <line x1="333" y1="55" x2="352" y2="55" stroke="#1a7f37" stroke-width="1.6" marker-end="url(#arr-add3)"/>
+        <text x="342" y="48" text-anchor="middle" font-size="6.5" font-family="sans-serif" fill="#1a7f37" font-weight="bold">確認</text>
+
+        <!-- YOU（右・確認） -->
+        <circle cx="371" cy="55" r="20" fill="#1a1a2e" stroke="#1a7f37" stroke-width="1.5"/>
+        <text x="371" y="50" text-anchor="middle" font-size="5.5" font-family="sans-serif" fill="rgba(255,255,255,.55)">User</text>
+        <text x="371" y="61" text-anchor="middle" font-size="8.5" font-family="sans-serif" font-weight="bold" fill="white">YOU</text>
+
+        <!-- 自走ゾーンラベル（下） -->
+        <text x="217" y="93" text-anchor="middle" font-size="6" font-family="sans-serif" fill="rgba(91,106,240,.55)" letter-spacing=".04em">思考 · スケジューリング · 設計 · 実装 · テスト をエージェントが自走</text>
+      </svg>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:9pt;color:var(--mid);">ユーザーが手を動かすのは <strong style="color:var(--ink);">「依頼」と「成果物確認」の 2 回だけ。</strong></div>
+      <div style="font-size:7.5pt;color:var(--pale);">用途例: アプリ開発 / 研修資料作成 / データ分析…</div>
+    </div>
+  </div>
 
   <!-- プロトコル進化図 -->
   <div class="fig">
@@ -734,31 +817,13 @@
   <div style="margin:4mm 0;background:var(--ink);border-radius:10px;padding:5mm 6mm 4mm;position:relative;overflow:hidden;">
     <div style="position:absolute;top:-6mm;left:3mm;font-size:52pt;font-family:var(--font-serif);color:rgba(91,106,240,.18);line-height:1;pointer-events:none;">"</div>
     <div style="position:absolute;bottom:-8mm;right:4mm;font-size:52pt;font-family:var(--font-serif);color:rgba(232,93,122,.12);line-height:1;pointer-events:none;">"</div>
-    <div style="font-size:7pt;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:2mm;">Design Decision</div>
+    <div style="font-size:9pt;font-weight:700;color:var(--accent2);margin-bottom:2mm;">チェック！！</div>
     <div style="font-family:var(--font-serif);font-size:13pt;font-weight:700;color:#fff;line-height:1.55;margin-bottom:2mm;">
-      <span style="color:var(--accent2);">チェック！！</span>　作業可視化はカンバンでも可能だが、<span style="color:#a8b4ff;">イマイチ面白くない。</span>
+      作業可視化はカンバンでも可能だが、<span style="color:#a8b4ff;">イマイチ面白くない。</span>
     </div>
     <p style="font-size:8pt;color:rgba(255,255,255,.65);line-height:1.75;margin:0;">
       せっかく人格のあるエージェントをつかうのだから、口語口調でやり取りが<strong style="color:rgba(255,255,255,.9);">雑談メッセージ化できる Issues</strong> を採用した。
     </p>
-  </div>
-
-  <!-- 失敗した通信手法 -->
-  <div style="margin:4mm 0 3mm;padding:3.5mm 4.5mm;background:#fff5f6;border:1px solid #f5c5c8;border-radius:8px;">
-    <div style="font-size:8pt;font-weight:700;color:#c0392b;margin-bottom:2.5mm;letter-spacing:.02em;">YAML キュー採択前の失敗パターン</div>
-    <div class="cols-2" style="margin:0;gap:4mm;">
-      <div>
-        <div style="font-size:7.5pt;font-weight:700;color:#c0392b;margin-bottom:1mm;">案 A — Notion API 全読込ポーリング</div>
-        <p style="font-size:7.5pt;color:var(--mid);margin:0;line-height:1.65;">各エージェントが毎ターン Notion ボードの全ページ内容を API で取得する方式。タスク数・コメント数が増えるにつれ <strong>1 往復あたりのトークン消費が数千〜数万</strong> に膨張。コンテキストウィンドウを圧迫し、長時間セッションで文脈欠落が頻発。</p>
-      </div>
-      <div>
-        <div style="font-size:7.5pt;font-weight:700;color:#c0392b;margin-bottom:1mm;">案 B — tmux 全文 send-keys 方式</div>
-        <p style="font-size:7.5pt;color:var(--mid);margin:0;line-height:1.65;">PM がタスク仕様・完了報告の全文を <code style="font-size:6.5pt;background:#f5e8e8;padding:1px 3px;border-radius:2px;">tmux send-keys</code> で流し込む方式。仕様文が Claude のコンテキストに直接入るため <strong>セッション内トークンが加速度的に増加</strong>。数回のやり取りで上限に達しクラッシュ。</p>
-      </div>
-    </div>
-    <div style="margin-top:2.5mm;padding-top:2mm;border-top:1px solid #f5c5c8;font-size:7pt;color:#999;letter-spacing:.02em;">
-      → 解決策: <strong style="color:var(--ink);">tmux は短い "inbox" 通知のみ。メッセージ本文はファイルに分離</strong>（以下 図3-2）
-    </div>
   </div>
 
   <!-- YAML キュー構造図 -->
@@ -831,6 +896,82 @@
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
     <span class="page-num">5</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- 失敗史ページ: 通信インフラ 失敗の実録      -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" style="background:linear-gradient(150deg,#1a0808 0%,#1a1020 60%,#0f0f2e 100%);color:white;padding:16mm 18mm 14mm;">
+
+  <div style="margin-bottom:7mm;">
+    <div style="font-size:7.5pt;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:2mm;">Incident Log — 採択前史</div>
+    <div style="font-family:var(--font-serif);font-size:24pt;font-weight:700;color:white;line-height:1.2;">通信インフラ 失敗の実録</div>
+    <div style="width:22mm;height:2px;background:var(--accent2);margin-top:3mm;"></div>
+  </div>
+
+  <p style="font-size:10pt;color:rgba(255,255,255,.6);margin-bottom:7mm;line-height:1.85;">
+    YAML キュー採択に至るまで、4 つの失敗を経た。いずれも「やってみないとわからなかった」罠であり、この踏破なしに現在の軽量設計は生まれなかった。
+  </p>
+
+  <div class="cols-2" style="gap:5mm;margin-bottom:5mm;">
+
+    <!-- ① -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
+      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">①</div>
+      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">Vercel Cron ポーリング</div>
+      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">Notion Search API を 1 分毎にポーリングする方式を ADR-0003 で採択。実装フェーズ直前まで誰も気づかなかった。</p>
+      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
+        Vercel Hobby plan の cron 制限 = <strong style="color:white;">1 日 1 回</strong><br>「5 分毎」と誤認。Pricing ページの独立確認漏れ。
+      </div>
+    </div>
+
+    <!-- ② -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
+      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">②</div>
+      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">GitHub Actions + Vercel Functions</div>
+      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">Vercel 代替として Actions schedule + Hono 受け皿に切替。routing・runtime の設定が連鎖的に崩壊した。</p>
+      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
+        <strong style="color:white;">500 FUNCTION_INVOCATION_FAILED</strong> が 3 段階の修正後も解決不能。4 タスク消費で撤退判断へ。
+      </div>
+    </div>
+
+    <!-- ③ -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
+      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">③</div>
+      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">過剰設計の発覚 — ADR-0008</div>
+      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">4 タスク踏破後、参照実装を読み直して重大事実を発見。</p>
+      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
+        <strong style="color:white;">参照実装は「通知レイヤ」を持っていない。</strong><br>Vercel・Cloudflare Tunnel を全削除。能動 fetch + YAML に回帰。
+      </div>
+    </div>
+
+    <!-- ④ -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.5);border-radius:10px;padding:6mm 7mm;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-2mm;right:4mm;font-size:72pt;font-weight:900;color:rgba(232,93,122,.07);line-height:1;pointer-events:none;">50x</div>
+      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">④</div>
+      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">エージェント生成フローの崩壊</div>
+      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">4 ペイン同時起動で各エージェントが CLAUDE.md・instructions・会話履歴を全コンテキストに積み上げる構造だった。</p>
+      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
+        通常の ADD 比 <strong style="color:white;font-size:12pt;">約 50 倍</strong> のトークン消費。軽量起動 + inbox ポーリング方式への再設計を強制。
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 解決策バナー -->
+  <div style="background:rgba(91,106,240,.18);border:1px solid rgba(91,106,240,.45);border-radius:10px;padding:4mm 6mm;display:flex;align-items:center;gap:5mm;">
+    <div style="font-size:26pt;color:#a8b4ff;font-weight:900;flex-shrink:0;line-height:1;">→</div>
+    <div>
+      <div style="font-size:10pt;font-weight:700;color:#a8b4ff;margin-bottom:1mm;">採択: YAML キュー + tmux 短文通知</div>
+      <div style="font-size:8.5pt;color:rgba(255,255,255,.6);line-height:1.7;">tmux は <code style="background:rgba(255,255,255,.12);padding:1px 5px;border-radius:3px;font-size:7.5pt;">"inbox"</code> の一言のみ送信。メッセージ本文は YAML ファイルに分離することで、コンテキスト汚染ゼロ・コスト最小・クロスプラットフォームを同時達成。</div>
+    </div>
+  </div>
+
+  <div class="footer" style="color:rgba(255,255,255,.3);border-color:rgba(255,255,255,.12);">
+    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
+    <span class="page-num">—</span>
   </div>
 </div>
 
