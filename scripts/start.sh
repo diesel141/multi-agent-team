@@ -73,7 +73,7 @@ instr_for() {
 
 # 各ペインで claude を起動
 for i in 0 1 2 3; do
-  tmux send-keys -t team:0.$i "cd '$WIN_REPO_ROOT'; claude --dangerously-skip-permissions" Enter
+  tmux send-keys -t team:0.$i "cd '$REPO_ROOT' && claude --dangerously-skip-permissions" Enter
 done
 
 # claude 起動待機（psmux は capture-pane で ❯ を検出できないため固定 sleep）
