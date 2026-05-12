@@ -10,6 +10,12 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
+WIN_REPO_ROOT=$(cygpath -w "$REPO_ROOT" 2>/dev/null || echo "$REPO_ROOT")
+
+NO_ATTACH=0
+for arg in "$@"; do
+  [ "$arg" = "--no-attach" ] && NO_ATTACH=1
+done
 
 # キュークリア（オプション）
 if [ "$1" = "-c" ]; then
@@ -27,11 +33,15 @@ touch queue/you_to_pm.yaml
 
 # tmux セッション既存確認
 if tmux has-session -t team 2>/dev/null; then
+  if [ "$NO_ATTACH" = "1" ]; then
+    echo "[info] team セッションが既に存在します。--no-attach のためスキップ。"
+    exit 0
+  fi
   echo "[info] team セッションが既に存在します。アタッチします。"
   if [ -n "$TMUX" ]; then
     tmux switch-client -t team
   else
-    tmux attach-session -t team
+    exec tmux attach-session -t team
   fi
   exit 0
 fi
@@ -63,25 +73,12 @@ instr_for() {
 
 # 各ペインで claude を起動
 for i in 0 1 2 3; do
-  tmux send-keys -t team:0.$i "cd $REPO_ROOT && claude --dangerously-skip-permissions" Enter
+  tmux send-keys -t team:0.$i "cd '$WIN_REPO_ROOT'; claude --dangerously-skip-permissions" Enter
 done
 
-# 各ペインで claude プロンプト '❯' が出るまで待機（fixed sleep ではなくポーリング）
-for i in 0 1 2 3; do
-  role=$(role_for $i)
-  echo "[init] pane $i ($role): claude 起動待機..."
-  ready=0
-  for attempt in $(seq 1 30); do
-    if tmux capture-pane -t team:0.$i -p | grep -q "❯"; then
-      ready=1
-      break
-    fi
-    sleep 2
-  done
-  if [ "$ready" -ne 1 ]; then
-    echo "[warn] pane $i ($role): 60 秒以内に claude プロンプトが確認できませんでした。手動で確認してください。"
-  fi
-done
+# claude 起動待機（psmux は capture-pane で ❯ を検出できないため固定 sleep）
+echo "[init] claude 起動待機 (15 秒)..."
+sleep 15
 
 # 各ペインに init プロンプトを送信
 # 長文 + Enter を 1 回の send-keys で送ると Enter が消化されないことがあるため分離
@@ -108,8 +105,12 @@ echo "[ok] queue ウォッチャー起動 (PID: $! / ログ: logs/watch-queue.lo
 echo "アタッチ: tmux attach-session -t team"
 echo "終了: tmux kill-session -t team"
 
+if [ "$NO_ATTACH" = "1" ]; then
+  echo "[ok] --no-attach: 起動完了。'tmux a' で接続してください。"
+  exit 0
+fi
 if [ -n "$TMUX" ]; then
   tmux switch-client -t team
 else
-  tmux attach-session -t team
+  exec tmux attach-session -t team
 fi
