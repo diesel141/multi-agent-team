@@ -834,82 +834,6 @@
 
 
 <!-- ══════════════════════════════════════════ -->
-<!-- 失敗史ページ: 通信インフラ 失敗の実録      -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page" style="background:linear-gradient(150deg,#1a0808 0%,#1a1020 60%,#0f0f2e 100%);color:white;padding:16mm 18mm 14mm;">
-
-  <div style="margin-bottom:7mm;">
-    <div style="font-size:7.5pt;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:2mm;">Incident Log — 採択前史</div>
-    <div style="font-family:var(--font-serif);font-size:24pt;font-weight:700;color:white;line-height:1.2;">通信インフラ 失敗の実録</div>
-    <div style="width:22mm;height:2px;background:var(--accent2);margin-top:3mm;"></div>
-  </div>
-
-  <p style="font-size:10pt;color:rgba(255,255,255,.6);margin-bottom:7mm;line-height:1.85;">
-    YAML キュー採択に至るまで、4 つの失敗を経た。いずれも「やってみないとわからなかった」罠であり、この踏破なしに現在の軽量設計は生まれなかった。
-  </p>
-
-  <div class="cols-2" style="gap:5mm;margin-bottom:5mm;">
-
-    <!-- ① -->
-    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
-      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">①</div>
-      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">Vercel Cron ポーリング</div>
-      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">Notion Search API を 1 分毎にポーリングする方式を ADR-0003 で採択。実装フェーズ直前まで誰も気づかなかった。</p>
-      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
-        Vercel Hobby plan の cron 制限 = <strong style="color:white;">1 日 1 回</strong><br>「5 分毎」と誤認。Pricing ページの独立確認漏れ。
-      </div>
-    </div>
-
-    <!-- ② -->
-    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
-      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">②</div>
-      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">GitHub Actions + Vercel Functions</div>
-      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">Vercel 代替として Actions schedule + Hono 受け皿に切替。routing・runtime の設定が連鎖的に崩壊した。</p>
-      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
-        <strong style="color:white;">500 FUNCTION_INVOCATION_FAILED</strong> が 3 段階の修正後も解決不能。4 タスク消費で撤退判断へ。
-      </div>
-    </div>
-
-    <!-- ③ -->
-    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
-      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">③</div>
-      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">過剰設計の発覚 — ADR-0008</div>
-      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">4 タスク踏破後、参照実装を読み直して重大事実を発見。</p>
-      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
-        <strong style="color:white;">参照実装は「通知レイヤ」を持っていない。</strong><br>Vercel・Cloudflare Tunnel を全削除。能動 fetch + YAML に回帰。
-      </div>
-    </div>
-
-    <!-- ④ -->
-    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.5);border-radius:10px;padding:6mm 7mm;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:-2mm;right:4mm;font-size:72pt;font-weight:900;color:rgba(232,93,122,.07);line-height:1;pointer-events:none;">50x</div>
-      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">④</div>
-      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">エージェント生成フローの崩壊</div>
-      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">4 ペイン同時起動で各エージェントが CLAUDE.md・instructions・会話履歴を全コンテキストに積み上げる構造だった。</p>
-      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
-        通常の ADD 比 <strong style="color:white;font-size:12pt;">約 50 倍</strong> のトークン消費。軽量起動 + inbox ポーリング方式への再設計を強制。
-      </div>
-    </div>
-
-  </div>
-
-  <!-- 解決策バナー -->
-  <div style="background:rgba(91,106,240,.18);border:1px solid rgba(91,106,240,.45);border-radius:10px;padding:4mm 6mm;display:flex;align-items:center;gap:5mm;">
-    <div style="font-size:26pt;color:#a8b4ff;font-weight:900;flex-shrink:0;line-height:1;">→</div>
-    <div>
-      <div style="font-size:10pt;font-weight:700;color:#a8b4ff;margin-bottom:1mm;">採択: YAML キュー + tmux 短文通知</div>
-      <div style="font-size:8.5pt;color:rgba(255,255,255,.6);line-height:1.7;">tmux は <code style="background:rgba(255,255,255,.12);padding:1px 5px;border-radius:3px;font-size:7.5pt;">"inbox"</code> の一言のみ送信。メッセージ本文は YAML ファイルに分離することで、コンテキスト汚染ゼロ・コスト最小・クロスプラットフォームを同時達成。</div>
-    </div>
-  </div>
-
-  <div class="footer" style="color:rgba(255,255,255,.3);border-color:rgba(255,255,255,.12);">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">—</span>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════ -->
 <!-- p6: §3続き + §4 環境設計の変遷            -->
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
@@ -1089,7 +1013,83 @@
 
 
 <!-- ══════════════════════════════════════════ -->
-<!-- p7: §5 ADR 系統図                         -->
+<!-- p7: 通信インフラ 失敗の実録                 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" style="background:linear-gradient(150deg,#1a0808 0%,#1a1020 60%,#0f0f2e 100%);color:white;padding:16mm 18mm 14mm;">
+
+  <div style="margin-bottom:7mm;">
+    <div style="font-size:7.5pt;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:2mm;">Incident Log — 採択前史</div>
+    <div style="font-family:var(--font-serif);font-size:24pt;font-weight:700;color:white;line-height:1.2;">通信インフラ 失敗の実録</div>
+    <div style="width:22mm;height:2px;background:var(--accent2);margin-top:3mm;"></div>
+  </div>
+
+  <p style="font-size:10pt;color:rgba(255,255,255,.6);margin-bottom:7mm;line-height:1.85;">
+    YAML キュー採択に至るまで、4 つの失敗を経た。いずれも「やってみないとわからなかった」罠であり、この踏破なしに現在の軽量設計は生まれなかった。
+  </p>
+
+  <div class="cols-2" style="gap:5mm;margin-bottom:5mm;">
+
+    <!-- ① -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
+      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">①</div>
+      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">Vercel Cron ポーリング</div>
+      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">Notion Search API を 1 分毎にポーリングする方式を ADR-0003 で採択。実装フェーズ直前まで誰も気づかなかった。</p>
+      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
+        Vercel Hobby plan の cron 制限 = <strong style="color:white;">1 日 1 回</strong><br>「5 分毎」と誤認。Pricing ページの独立確認漏れ。
+      </div>
+    </div>
+
+    <!-- ② -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
+      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">②</div>
+      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">GitHub Actions + Vercel Functions</div>
+      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">Vercel 代替として Actions schedule + Hono 受け皿に切替。routing・runtime の設定が連鎖的に崩壊した。</p>
+      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
+        <strong style="color:white;">500 FUNCTION_INVOCATION_FAILED</strong> が 3 段階の修正後も解決不能。4 タスク消費で撤退判断へ。
+      </div>
+    </div>
+
+    <!-- ③ -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
+      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">③</div>
+      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">過剰設計の発覚 — ADR-0008</div>
+      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">4 タスク踏破後、参照実装を読み直して重大事実を発見。</p>
+      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
+        <strong style="color:white;">参照実装は「通知レイヤ」を持っていない。</strong><br>Vercel・Cloudflare Tunnel を全削除。能動 fetch + YAML に回帰。
+      </div>
+    </div>
+
+    <!-- ④ -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.5);border-radius:10px;padding:6mm 7mm;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-2mm;right:4mm;font-size:72pt;font-weight:900;color:rgba(232,93,122,.07);line-height:1;pointer-events:none;">50x</div>
+      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">④</div>
+      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">エージェント生成フローの崩壊</div>
+      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">4 ペイン同時起動で各エージェントが CLAUDE.md・instructions・会話履歴を全コンテキストに積み上げる構造だった。</p>
+      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
+        通常の ADD 比 <strong style="color:white;font-size:12pt;">約 50 倍</strong> のトークン消費。軽量起動 + inbox ポーリング方式への再設計を強制。
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 解決策バナー -->
+  <div style="background:rgba(91,106,240,.18);border:1px solid rgba(91,106,240,.45);border-radius:10px;padding:4mm 6mm;display:flex;align-items:center;gap:5mm;">
+    <div style="font-size:26pt;color:#a8b4ff;font-weight:900;flex-shrink:0;line-height:1;">→</div>
+    <div>
+      <div style="font-size:10pt;font-weight:700;color:#a8b4ff;margin-bottom:1mm;">採択: YAML キュー + tmux 短文通知</div>
+      <div style="font-size:8.5pt;color:rgba(255,255,255,.6);line-height:1.7;">tmux は <code style="background:rgba(255,255,255,.12);padding:1px 5px;border-radius:3px;font-size:7.5pt;">"inbox"</code> の一言のみ送信。メッセージ本文は YAML ファイルに分離することで、コンテキスト汚染ゼロ・コスト最小・クロスプラットフォームを同時達成。</div>
+    </div>
+  </div>
+
+  <div class="footer" style="color:rgba(255,255,255,.3);border-color:rgba(255,255,255,.12);">
+    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
+    <span class="page-num">—</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- p8: §5 ADR 系統図                         -->
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
@@ -1195,7 +1195,7 @@
 
 
 <!-- ══════════════════════════════════════════ -->
-<!-- p8: §6 開発タイムライン                   -->
+<!-- p9: §6 開発タイムライン                   -->
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
@@ -1283,7 +1283,7 @@
 
 
 <!-- ══════════════════════════════════════════ -->
-<!-- p9: §7 現在の運用フロー                   -->
+<!-- p10: §7 現在の運用フロー                  -->
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
@@ -1381,7 +1381,7 @@ acceptance_criteria:
 
 
 <!-- ══════════════════════════════════════════ -->
-<!-- p10: §8 学びと次のステップ                -->
+<!-- p11: §8 学びと次のステップ               -->
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
