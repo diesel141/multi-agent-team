@@ -1,0 +1,22 @@
+- task_id: TASK-NEWCH2-01
+  type: formal
+  from: dev3
+  to: pm
+  at: 2026-05-16
+  status: done
+  acceptance:
+    a_shape_overlap: PASS  # 新章 + 修正済スライド (19-29) で有意 overlap なし
+    b_text_diff:     PASS  # slide 25-29 に「04」章番号残存なし（副作用 0）
+    c_padding:       PASS  # 新章 6 枚 outer shape padding 対称 (diff < 0.10 inch)
+    d_consistency:   PASS  # 章番号連番一貫 (01-05 / MY-AGENT-TEAM 含む)
+    designer_visual: PENDING  # Designer 実描画確認未実施（PowerPoint 目視 or PNG 書き出し必要）
+  branch: feature/task-newch2-01
+  commit: a4feda4
+  output_files:
+    - "AI研修⑤-エージェント駆動開発（ADD）への挑戦２.pptx (29 slides)"
+    - scripts/verify_task_newch2_01.py (4 項目機械検証 / 全 PASS)
+  notes: |
+    - slide 25 SECTION "Q & A" → "05 / Q&A" に修正（他 SECTION とのフォーマット統一）。
+    - 検証スクリプト verify_task_newch2_01.py で 4 項目 PASS 確認済み。
+    - designer_visual: PowerPoint 目視 or PNG 書き出しで PM/Designer 確認が必要。
+  questions: []
