@@ -1,1472 +1,413 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>少数精鋭のペルソナ設計と、自走開発の可視化</title>
-<style>
-  /* ── 基本設定 ────────────────────── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ink:     #1a1a2e;
-    --mid:     #4a4a6a;
-    --pale:    #8888aa;
-    --accent:  #5b6af0;
-    --accent2: #e85d7a;
-    --bg-soft: #f5f5fc;
-    --bg-card: #ffffff;
-    --border:  #d8d8ee;
-    --font-serif: 'Noto Serif JP', 'Yu Mincho', 'YuMincho', 'HG明朝E', serif;
-    --font-sans:  'Noto Sans JP', 'Yu Gothic', 'YuGothic', 'Hiragino Sans', sans-serif;
-    --font-mono:  'Cascadia Code', 'Consolas', 'Courier New', monospace;
-  }
-
-  body {
-    font-family: var(--font-sans);
-    color: var(--ink);
-    background: #eee;
-    font-size: 10pt;
-    line-height: 1.75;
-  }
-
-  /* ── A4 ページ ───────────────────── */
-  .page {
-    width: 210mm;
-    min-height: 297mm;
-    background: var(--bg-card);
-    margin: 8mm auto;
-    padding: 18mm 18mm 16mm;
-    box-shadow: 0 4px 32px rgba(0,0,0,.18);
-    position: relative;
-    page-break-after: always;
-    overflow: hidden;
-  }
-
-  /* ── 印刷設定 ─────────────────────── */
-  @page { size: A4 portrait; margin: 0; }
-  @media print {
-    body { background: white; }
-    .page { margin: 0 auto; box-shadow: none; }
-  }
-
-  /* ── 表紙 ────────────────────────── */
-  .cover {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    min-height: 297mm;
-    padding: 20mm;
-    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    color: white;
-  }
-  .cover-eyebrow {
-    font-size: 7.5pt;
-    letter-spacing: .25em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.55);
-    margin-bottom: 10mm;
-  }
-  .cover-title {
-    font-family: var(--font-serif);
-    font-size: 26pt;
-    font-weight: 700;
-    line-height: 1.35;
-    color: #fff;
-    margin-bottom: 6mm;
-    letter-spacing: .04em;
-  }
-  .cover-subtitle {
-    font-size: 10pt;
-    color: rgba(255,255,255,.7);
-    margin-bottom: 18mm;
-  }
-  .cover-divider {
-    width: 40mm;
-    height: 1px;
-    background: rgba(255,255,255,.25);
-    margin: 0 auto 12mm;
-  }
-  .cover-meta {
-    font-size: 8pt;
-    color: rgba(255,255,255,.45);
-    line-height: 2;
-  }
-  .cover-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(91,106,240,.35);
-    border: 1px solid rgba(91,106,240,.6);
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: 8pt;
-    color: rgba(255,255,255,.85);
-    margin-bottom: 14mm;
-  }
-  .cover-dot { width:7px; height:7px; background:#5b6af0; border-radius:50%; }
-
-  /* ── セクションヘッダ ────────────── */
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 7mm;
-  }
-  .section-num {
-    font-size: 7pt;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: .15em;
-    min-width: 28px;
-  }
-  .section-title {
-    font-family: var(--font-serif);
-    font-size: 16pt;
-    font-weight: 700;
-    color: var(--ink);
-    border-bottom: 2px solid var(--accent);
-    padding-bottom: 2px;
-    flex: 1;
-  }
-
-  /* ── 本文 ────────────────────────── */
-  p { margin-bottom: 4mm; }
-  .lead {
-    font-size: 11pt;
-    color: var(--mid);
-    margin-bottom: 6mm;
-    line-height: 1.9;
-  }
-
-  /* ── カード ──────────────────────── */
-  .card {
-    background: var(--bg-soft);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 5mm 6mm;
-    margin-bottom: 4mm;
-  }
-  .card-title {
-    font-size: 9pt;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 2mm;
-    letter-spacing: .05em;
-  }
-  .card p { margin: 0; font-size: 9pt; color: var(--mid); }
-
-  /* ── キャプション ────────────────── */
-  .caption {
-    text-align: center;
-    font-size: 9.5pt;
-    color: var(--pale);
-    margin-top: 2mm;
-    margin-bottom: 4mm;
-  }
-
-  /* ── 2カラム ─────────────────────── */
-  .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-bottom: 4mm; }
-  .cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4mm; margin-bottom: 4mm; }
-
-  /* ── ハイライトボックス ──────────── */
-  .highlight {
-    border-left: 4px solid var(--accent);
-    padding: 3mm 5mm;
-    background: rgba(91,106,240,.06);
-    border-radius: 0 6px 6px 0;
-    margin-bottom: 4mm;
-    font-size: 9.5pt;
-  }
-  .highlight.warn {
-    border-color: var(--accent2);
-    background: rgba(232,93,122,.06);
-  }
-
-  /* ── テーブル ─────────────────────── */
-  table { width: 100%; border-collapse: collapse; margin-bottom: 4mm; font-size: 8.5pt; }
-  th {
-    background: var(--ink);
-    color: white;
-    padding: 2.5mm 3mm;
-    text-align: left;
-    font-weight: 600;
-    font-size: 8pt;
-    letter-spacing: .04em;
-  }
-  td {
-    padding: 2mm 3mm;
-    border-bottom: 1px solid var(--border);
-    color: var(--mid);
-    vertical-align: top;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:nth-child(even) td { background: var(--bg-soft); }
-
-  /* ── フッター ─────────────────────── */
-  .footer {
-    position: absolute;
-    bottom: 8mm;
-    left: 18mm;
-    right: 18mm;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 7pt;
-    color: var(--pale);
-    border-top: 1px solid var(--border);
-    padding-top: 3mm;
-  }
-
-  /* ── SVG 共通 ─────────────────────── */
-  svg { display: block; width: 100%; height: auto; }
-  .fig { margin: 5mm 0; }
-
-  /* ── タイムライン ────────────────── */
-  .timeline-item {
-    display: flex;
-    gap: 5mm;
-    margin-bottom: 5mm;
-    position: relative;
-  }
-  .tl-dot-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 10mm;
-  }
-  .tl-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--accent);
-    margin-top: 3px;
-    flex-shrink: 0;
-  }
-  .tl-dot.warn { background: var(--accent2); }
-  .tl-line {
-    width: 2px;
-    flex: 1;
-    background: var(--border);
-    margin-top: 4px;
-  }
-  .tl-date {
-    font-size: 7.5pt;
-    font-weight: 700;
-    color: var(--accent);
-    white-space: nowrap;
-    min-width: 22mm;
-    padding-top: 1px;
-  }
-  .tl-body { flex: 1; }
-  .tl-title { font-weight: 700; font-size: 9.5pt; margin-bottom: 1mm; }
-  .tl-desc { font-size: 8.5pt; color: var(--mid); }
-
-  /* ── ページ番号 ─────────────────── */
-  .page-num { font-variant-numeric: tabular-nums; }
-
-  /* ── コードブロック ─────────────── */
-  code {
-    font-family: var(--font-mono);
-    font-size: 8pt;
-    background: #1a1a2e;
-    color: #a8c5ff;
-    padding: 1px 4px;
-    border-radius: 3px;
-  }
-  pre {
-    font-family: var(--font-mono);
-    font-size: 8pt;
-    background: #1a1a2e;
-    color: #a8c5ff;
-    padding: 4mm 5mm;
-    border-radius: 6px;
-    margin-bottom: 4mm;
-    line-height: 1.6;
-    overflow-x: auto;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ローカルLLM環境構築レポート - Qwen 2.5 Coder 統合</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 20px; text-align: center; }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .metadata { background: #f9f9f9; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .metadata-item { padding: 10px; }
+        .metadata-item strong { color: #667eea; display: block; margin-bottom: 5px; }
+        nav { background: #f0f0f0; padding: 20px; }
+        nav h3 { margin-bottom: 15px; }
+        nav ul { list-style: none; }
+        nav li { padding: 10px; background: white; border-left: 4px solid #667eea; margin-bottom: 5px; }
+        .content { padding: 40px 20px; }
+        .section { margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid #eee; }
+        .section h2 { color: #667eea; font-size: 2em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+        .section h3 { color: #764ba2; font-size: 1.5em; margin: 20px 0 15px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background: #667eea; color: white; padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #ddd; }
+        tr:hover { background: #f5f5f5; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; color: #d63384; }
+        pre { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; margin: 15px 0; }
+        .success { background: #e8f5e9; padding: 15px; border-left: 4px solid #4caf50; margin: 15px 0; }
+        .warning { background: #fff3e0; padding: 15px; border-left: 4px solid #ff9800; margin: 15px 0; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 600; }
+        .status-success { background: #4caf50; color: white; }
+        .status-warning { background: #ff9800; color: white; }
+        footer { background: #333; color: #fff; text-align: center; padding: 20px; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>🚀 ローカルLLM環境構築レポート</h1>
+            <p>Qwen-2.5-Coder-14B × Antigravity IDE × Continue 統合</p>
+        </header>
 
-<!-- ══════════════════════════════════════════ -->
-<!-- 表紙                                       -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page cover">
-  <div class="cover-eyebrow">Multi-Agent ADD Team — Development Report</div>
+        <div class="metadata">
+            <div class="metadata-item">
+                <strong>📅 実施日</strong>
+                2026-05-30
+            </div>
+            <div class="metadata-item">
+                <strong>💻 環境</strong>
+                Windows 11 Pro (RX-6900XT)
+            </div>
+            <div class="metadata-item">
+                <strong>📊 ステータス</strong>
+                <span class="status-badge status-success">✅ 完全成功</span>
+            </div>
+            <div class="metadata-item">
+                <strong>🎯 最終状態</strong>
+                完全に機能する統合環境
+            </div>
+        </div>
 
-  <img src="脳みそチーム.png" style="max-width:160mm;max-height:120mm;object-fit:contain;margin-bottom:6mm;border-radius:8px;">
+        <nav>
+            <h3>📑 章立てドキュメント</h3>
+            <ul>
+                <li><strong>詳細な記録は以下に保存されています:</strong></li>
+                <li>• 01_session_overview.md - セッション概要</li>
+                <li>• 02_initial_state_verification.md - 初期状態確認</li>
+                <li>• 03_gpu_optimization_analysis.md - GPU最適化分析</li>
+                <li>• 04_lm_studio_setup.md - LM Studio セットアップ</li>
+                <li>• 05_antigravity_ide_integration_attempts.md - IDE統合試行記録</li>
+                <li>• 06_continue_extension_integration.md - Continue統合（成功）</li>
+                <li>• 07_final_configuration_and_results.md - 最終設定と成果</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>保存位置:</strong> <code>C:\_vps\git\multi-agent-team\docs\history\</code></p>
+        </nav>
 
-  <div class="cover-badge"><div class="cover-dot"></div>ドラフト v1 — 2026-05-11</div>
+        <div class="content">
+            <div class="section">
+                <h2>📊 実施内容サマリー</h2>
 
-  <div class="cover-title">少数精鋭のペルソナ設計と、<br>自走開発の可視化</div>
-  <div class="cover-subtitle">Multi-Agent ADD チーム 開発史レポート</div>
+                <div class="success">
+                    <h3>セッション目標の達成</h3>
+                    <p>前回のセッションで中断していたローカルLLM環境（LM Studio + Qwen-2.5-Coder-14B）の構築を完全に完了し、Antigravity IDE との統合を実現しました。</p>
+                </div>
 
-  <div class="cover-divider"></div>
+                <h3>セッション進行状況</h3>
+                <table>
+                    <tr>
+                        <th>段階</th>
+                        <th>実施内容</th>
+                        <th>ステータス</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>前回の進捗確認</td>
+                        <td><span class="status-badge status-success">✅ 完了</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>GPU 最適化分析</td>
+                        <td><span class="status-badge status-success">✅ 完了</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>LM Studio セットアップ</td>
+                        <td><span class="status-badge status-success">✅ 完了</span></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Antigravity IDE 統合試行</td>
+                        <td><span class="status-badge status-warning">⚠️ 試行錯誤</span></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Continue 拡張機能統合</td>
+                        <td><span class="status-badge status-success">✅ 成功</span></td>
+                    </tr>
+                </table>
 
-  <div class="cover-meta">
-    プロジェクト: tomokazu-i/multi-agent-team<br>
-    記録期間: 2026-04-25 〜 2026-05-11<br>
-    発行: ユーザー + Claude (claude-sonnet-4-6)
-  </div>
-</div>
+                <h3>最終成果</h3>
+                <div class="success">
+                    <ul>
+                        <li>✅ LM Studio サーバー: 稼働中（Port 1234）</li>
+                        <li>✅ Qwen-2.5-Coder-14B: ロード済み（32K コンテキスト）</li>
+                        <li>✅ Continue 統合: 動作確認済み</li>
+                        <li>✅ ローカルLLM環境: 完全に機能可能</li>
+                    </ul>
+                </div>
+            </div>
 
+            <div class="section">
+                <h2>🖥️ 最終システム構成</h2>
 
-<!-- ══════════════════════════════════════════ -->
-<!-- p2: 目次                                   -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span class="section-num">INDEX</span>
-    <span class="section-title">目次</span>
-  </div>
+                <h3>ハードウェア</h3>
+                <table>
+                    <tr>
+                        <th>コンポーネント</th>
+                        <th>仕様</th>
+                    </tr>
+                    <tr>
+                        <td>GPU</td>
+                        <td>AMD RX-6900XT (16GB VRAM)</td>
+                    </tr>
+                    <tr>
+                        <td>CPU</td>
+                        <td>Windows 11 Pro</td>
+                    </tr>
+                </table>
 
-  <table style="font-size:11pt;">
-    <tr>
-      <th style="width:12mm">§</th>
-      <th>セクション</th>
-      <th style="width:18mm; text-align:right">ページ</th>
-    </tr>
-    <tr><td>1</td><td>本プロジェクト概要</td><td style="text-align:right">3</td></tr>
-    <tr><td>2</td><td>チーム設計 — 少数精鋭のペルソナ</td><td style="text-align:right">4</td></tr>
-    <tr><td>3</td><td>コミュニケーション設計の進化</td><td style="text-align:right">5</td></tr>
-    <tr><td>4</td><td>環境設計の変遷 — 外部参照実装 → WSL2 → psmux</td><td style="text-align:right">6</td></tr>
-    <tr><td>5</td><td>意思決定の記録（ADR 系統図）</td><td style="text-align:right">7</td></tr>
-    <tr><td>6</td><td>開発タイムライン</td><td style="text-align:right">8</td></tr>
-    <tr><td>7</td><td>現在の運用フロー</td><td style="text-align:right">9</td></tr>
-    <tr><td>8</td><td>学びと次のステップ</td><td style="text-align:right">10</td></tr>
-  </table>
+                <h3>ソフトウェアスタック</h3>
+                <table>
+                    <tr>
+                        <th>レイヤー</th>
+                        <th>コンポーネント</th>
+                    </tr>
+                    <tr>
+                        <td>IDE</td>
+                        <td>Antigravity IDE v1.107.0</td>
+                    </tr>
+                    <tr>
+                        <td>拡張機能</td>
+                        <td>Continue (LM Studio プロバイダー)</td>
+                    </tr>
+                    <tr>
+                        <td>LLM サーバー</td>
+                        <td>LM Studio (Port 1234, OpenAI互換API)</td>
+                    </tr>
+                    <tr>
+                        <td>モデル</td>
+                        <td>Qwen-2.5-Coder-14B (Q4_K_M量子化)</td>
+                    </tr>
+                </table>
 
-  <div class="highlight" style="margin-top:6mm">
-    <strong>このレポートの読み方:</strong><br>
-    本レポートは <em>ドラフト v1</em> です。ユーザーとの対話でブラッシュアップを重ね、2026年7月頃を目処に完成版を目指します。
-    図解・構成への追加・修正フィードバックを歓迎します。
-  </div>
+                <h3>GPU メモリプロファイル</h3>
+                <pre>GPU メモリ配分 (RX-6900XT 16GB)
+┌──────────────────────────────┐
+│ 16.00 GB VRAM               │
+├──────────────────────────────┤
+│ Qwen モデル: 12.62 GB        │ ← 78.9% 使用
+│ OS & 予約: 1.00 GB           │
+│ 自由領域: 2.38 GB            │ ← バッファ（21.1%）
+└──────────────────────────────┘</pre>
+            </div>
 
-  <div class="footer">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">2</span>
-  </div>
-</div>
+            <div class="section">
+                <h2>⚙️ 設定と実行方法</h2>
 
+                <h3>LM Studio 起動コマンド</h3>
+                <pre><code>lms server start
+lms load qwen/qwen2.5-coder-14b --gpu max --context-length 32768 --parallel 4 -y</code></pre>
 
-<!-- ══════════════════════════════════════════ -->
-<!-- p3: §1 本プロジェクト概要                  -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span class="section-num">§ 1</span>
-    <span class="section-title">本プロジェクト概要</span>
-  </div>
+                <h3>自動起動スクリプト</h3>
+                <p><strong>位置:</strong> <code>C:\Users\141di\start-qwen-optimized.ps1</code></p>
+                <p>このスクリプトを実行すると、LM Studio サーバーが最適設定で自動起動します。</p>
 
-  <p class="lead">
-    本プロジェクトは、<strong>人間のデベロッパーを AI エージェントに置き換え、少数精鋭の開発チームを構築する</strong>取り組みです。
-    設計・開発・テスト・提案・資料作成といった汎用的な作業をタスクベースで遂行させ、
-    エージェントが自律的にタスクをこなす様子を可視化することを学習目的としています。
-    本資料はその立案から実装・ドキュメント化に至るまでの過程を記録したものです。
-  </p>
+                <h3>Continue 設定ファイル</h3>
+                <p><strong>位置:</strong> <code>C:\Users\141di\.continue\config.yaml</code></p>
+                <pre><code>name: My Config
+version: 0.0.1
+schema: v1
+defaultModel: Qwen 2.5 Coder 14B (Local)
+models:
+  - name: Qwen 2.5 Coder 14B (Local)
+    provider: lmstudio
+    model: qwen/qwen2.5-coder-14b
+    apiBase: http://localhost:1234/v1
+disableIndexing: true</code></pre>
 
-  <!-- 立案〜ドキュメント化 フロー -->
-  <div class="fig">
-    <svg viewBox="0 0 420 110">
-      <defs>
-        <marker id="arr-ov" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-          <path d="M0,0 L8,4 L0,8 Z" fill="#5b6af0"/>
-        </marker>
-      </defs>
-      <rect width="420" height="110" rx="10" fill="#f5f5fc"/>
+                <h3>API エンドポイント</h3>
+                <p><strong>URL:</strong> <code>http://localhost:1234/v1</code></p>
+                <p><strong>タイプ:</strong> OpenAI 互換 API</p>
+            </div>
 
-      <!-- Step 1 -->
-      <rect x="8" y="14" width="93" height="62" rx="8" fill="#1a1a2e"/>
-      <text x="54" y="38" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="9" font-family="sans-serif">Step 1</text>
-      <text x="54" y="58" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif" font-weight="bold">チーム構成</text>
-      <text x="54" y="72" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="9" font-family="sans-serif">の検討</text>
+            <div class="section">
+                <h2>📈 パフォーマンス指標</h2>
 
-      <line x1="103" y1="45" x2="113" y2="45" stroke="#5b6af0" stroke-width="2" marker-end="url(#arr-ov)"/>
+                <h3>ロード時間</h3>
+                <table>
+                    <tr>
+                        <th>条件</th>
+                        <th>ロード時間</th>
+                        <th>備考</th>
+                    </tr>
+                    <tr>
+                        <td>初期ロード</td>
+                        <td>15.56秒</td>
+                        <td>GPU設定なし</td>
+                    </tr>
+                    <tr>
+                        <td>GPU max</td>
+                        <td>12.90秒</td>
+                        <td>17.1% 高速化</td>
+                    </tr>
+                    <tr style="background: #e8f5e9;">
+                        <td>最適設定（32K コンテキスト）</td>
+                        <td>30.27秒</td>
+                        <td>フル設定</td>
+                    </tr>
+                </table>
 
-      <!-- Step 2 -->
-      <rect x="115" y="14" width="88" height="62" rx="8" fill="#16213e"/>
-      <text x="159" y="38" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="9" font-family="sans-serif">Step 2</text>
-      <text x="159" y="58" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif" font-weight="bold">ペルソナ</text>
-      <text x="159" y="72" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="9" font-family="sans-serif">設計</text>
+                <h3>推論パフォーマンス</h3>
+                <table>
+                    <tr>
+                        <th>タスク</th>
+                        <th>推論時間</th>
+                    </tr>
+                    <tr>
+                        <td>短いチャット（&lt;50トークン）</td>
+                        <td>2-5秒</td>
+                    </tr>
+                    <tr>
+                        <td>コード生成（100-200トークン）</td>
+                        <td>5-10秒</td>
+                    </tr>
+                    <tr>
+                        <td>長いコード生成（500+トークン）</td>
+                        <td>15-30秒</td>
+                    </tr>
+                    <tr>
+                        <td>自動補完（10-30トークン）</td>
+                        <td>&lt; 2秒</td>
+                    </tr>
+                </table>
+            </div>
 
-      <line x1="205" y1="45" x2="215" y2="45" stroke="#5b6af0" stroke-width="2" marker-end="url(#arr-ov)"/>
+            <div class="section">
+                <h2>✨ 利用可能な機能</h2>
 
-      <!-- Step 3 -->
-      <rect x="217" y="14" width="88" height="62" rx="8" fill="#5b6af0"/>
-      <text x="261" y="30" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="9" font-family="sans-serif">Step 3</text>
-      <text x="261" y="47" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="8" font-family="sans-serif">エージェントによる</text>
-      <text x="261" y="63" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif" font-weight="bold">実作業</text>
+                <h3>Continue による統合機能</h3>
+                <div class="success">
+                    <ul>
+                        <li><strong>チャット機能</strong> - IDE 内でのテキスト会話</li>
+                        <li><strong>自動補完</strong> - Tab キーでのコード生成</li>
+                        <li><strong>編集支援</strong> - /edit コマンドでコード改修提案</li>
+                        <li><strong>ドキュメント生成</strong> - /doc コマンドで自動ドキュメント作成</li>
+                        <li><strong>テスト生成</strong> - /test コマンドでユニットテスト自動生成</li>
+                    </ul>
+                </div>
 
-      <line x1="307" y1="45" x2="317" y2="45" stroke="#5b6af0" stroke-width="2" marker-end="url(#arr-ov)"/>
+                <h3>ローカル実行のメリット</h3>
+                <ul>
+                    <li>✅ <strong>データプライバシー</strong> - コード、入力内容がすべてローカルで処理</li>
+                    <li>✅ <strong>無制限利用</strong> - API 呼び出し制限なし</li>
+                    <li>✅ <strong>低遅延</strong> - ネットワーク遅延がない</li>
+                    <li>✅ <strong>オフライン対応</strong> - インターネット接続不要</li>
+                </ul>
+            </div>
 
-      <!-- Step 4 -->
-      <rect x="319" y="14" width="93" height="62" rx="8" fill="#5b6af0" opacity=".7"/>
-      <text x="365" y="38" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="9" font-family="sans-serif">Step 4</text>
-      <text x="365" y="63" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif" font-weight="bold">可視化</text>
-    </svg>
-  </div>
-  <p class="caption">図1-1 プロジェクトの 4 ステップ。チーム構成の検討・ペルソナ設計・実作業を経て、タスクカンバン・Issues による可視化へ至る。</p>
+            <div class="section">
+                <h2>🎓 主要な知見と教訓</h2>
 
-  <!-- チーム構成図 -->
-  <div style="margin-top:3mm">
-    <div class="card-title" style="color:var(--ink);font-size:9.5pt;margin-bottom:3mm;">チーム構成</div>
-    <div class="fig">
-      <svg viewBox="0 0 420 160">
-        <defs>
-          <marker id="arr-hier" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L8,3 z" fill="#5b6af0"/>
-          </marker>
-        </defs>
-        <rect width="420" height="160" rx="10" fill="#f5f5fc"/>
+                <div class="warning">
+                    <h3>1. IDE 統合パスの選定</h3>
+                    <p>Antigravity IDE のネイティブ機能では LM Studio との直接統合が困難でしたが、Continue 拡張機能を使用することで実現できました。</p>
+                </div>
 
-        <!-- ユーザー -->
-        <rect x="155" y="10" width="110" height="34" rx="6" fill="#eef0fe" stroke="#5b6af0" stroke-width="1.5"/>
-        <text x="210" y="23" text-anchor="middle" fill="var(--mid)" font-size="7.5" font-family="sans-serif">発注者</text>
-        <text x="210" y="37" text-anchor="middle" fill="#1a1a2e" font-size="9" font-family="sans-serif" font-weight="bold">ユーザー</text>
+                <div class="warning">
+                    <h3>2. Continue の設定ファイル形式</h3>
+                    <p>Continue の設定は YAML 形式（<code>config.yaml</code>）であり、JSON ではありません。モデル識別子は完全形式（<code>qwen/qwen2.5-coder-14b</code>）で指定する必要があります。</p>
+                </div>
 
-        <!-- ユーザー → PM -->
-        <line x1="210" y1="44" x2="210" y2="58" stroke="#5b6af0" stroke-width="1.5" marker-end="url(#arr-hier)"/>
+                <div class="warning">
+                    <h3>3. GPU メモリの効率的な活用</h3>
+                    <p>RX-6900XT の 16GB VRAM に対して、Q4_K_M 量子化された 14B モデルを 78.9% の利用率で運用でき、十分な安全マージン（21.1%）を確保できます。</p>
+                </div>
+            </div>
 
-        <!-- PM -->
-        <rect x="130" y="60" width="160" height="38" rx="6" fill="#5b6af0"/>
-        <text x="210" y="75" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="7.5" font-family="sans-serif">PM 兼 Designer</text>
-        <text x="210" y="90" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif" font-weight="bold">藤宮 詩織</text>
+            <div class="section">
+                <h2>📝 次のステップ</h2>
 
-        <!-- PM → dev1 -->
-        <line x1="155" y1="98" x2="70"  y2="118" stroke="#5b6af0" stroke-width="1.5" marker-end="url(#arr-hier)"/>
-        <!-- PM → dev2 -->
-        <line x1="210" y1="98" x2="210" y2="118" stroke="#5b6af0" stroke-width="1.5" marker-end="url(#arr-hier)"/>
-        <!-- PM → dev3 -->
-        <line x1="265" y1="98" x2="350" y2="118" stroke="#5b6af0" stroke-width="1.5" marker-end="url(#arr-hier)"/>
+                <h3>短期（1-2 週間）</h3>
+                <ul>
+                    <li>[ ] パフォーマンスベンチマーク実施</li>
+                    <li>[ ] 各コマンドの精度評価</li>
+                    <li>[ ] ユーザー体験のフィードバック集約</li>
+                </ul>
 
-        <!-- dev1 -->
-        <rect x="10"  y="120" width="120" height="32" rx="6" fill="#1a1a2e"/>
-        <text x="70"  y="133" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">黒崎 颯真</text>
-        <text x="70"  y="146" text-anchor="middle" fill="white" font-size="9" font-family="sans-serif" font-weight="bold">黒崎 颯真</text>
+                <h3>中期（1-2 ヶ月）</h3>
+                <ul>
+                    <li>[ ] キャッシング機構の導入検討</li>
+                    <li>[ ] より大きなコンテキスト長の試行（64K）</li>
+                    <li>[ ] マルチモデル環境の構築（Qwen + GLM 並用）</li>
+                </ul>
 
-        <!-- dev2 -->
-        <rect x="150" y="120" width="120" height="32" rx="6" fill="#1a4a1a"/>
-        <text x="210" y="133" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">緑川 啓介</text>
-        <text x="210" y="146" text-anchor="middle" fill="white" font-size="9" font-family="sans-serif" font-weight="bold">緑川 啓介</text>
+                <h3>長期（3-6 ヶ月）</h3>
+                <ul>
+                    <li>[ ] 更新版モデル（Qwen 2.5.1等）の統合</li>
+                    <li>[ ] より高度な量子化手法の検討</li>
+                    <li>[ ] チーム向けマルチユーザー環境の構築</li>
+                </ul>
+            </div>
 
-        <!-- dev3 -->
-        <rect x="290" y="120" width="120" height="32" rx="6" fill="#4a1a1a"/>
-        <text x="350" y="133" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">茜野 真理</text>
-        <text x="350" y="146" text-anchor="middle" fill="white" font-size="9" font-family="sans-serif" font-weight="bold">茜野 真理</text>
-      </svg>
+            <div class="section">
+                <h2>📚 ドキュメント構成</h2>
+
+                <p>このレポートは、以下の 7 つの詳細な Markdown ドキュメントで構成されています。</p>
+
+                <table>
+                    <tr>
+                        <th>#</th>
+                        <th>ファイル名</th>
+                        <th>内容</th>
+                    </tr>
+                    <tr>
+                        <td>01</td>
+                        <td>session_overview.md</td>
+                        <td>セッション概要、目的、進行状況</td>
+                    </tr>
+                    <tr>
+                        <td>02</td>
+                        <td>initial_state_verification.md</td>
+                        <td>前回セッションの成果確認</td>
+                    </tr>
+                    <tr>
+                        <td>03</td>
+                        <td>gpu_optimization_analysis.md</td>
+                        <td>GPU メモリ最適化の詳細分析</td>
+                    </tr>
+                    <tr>
+                        <td>04</td>
+                        <td>lm_studio_setup.md</td>
+                        <td>LM Studio セットアップと コマンドリファレンス</td>
+                    </tr>
+                    <tr>
+                        <td>05</td>
+                        <td>antigravity_ide_integration_attempts.md</td>
+                        <td>IDE 統合の試行錯誤記録</td>
+                    </tr>
+                    <tr>
+                        <td>06</td>
+                        <td>continue_extension_integration.md</td>
+                        <td>Continue による統合成功パス（詳細）</td>
+                    </tr>
+                    <tr>
+                        <td>07</td>
+                        <td>final_configuration_and_results.md</td>
+                        <td>最終設定、パフォーマンス、まとめ</td>
+                    </tr>
+                </table>
+
+                <p><strong>保存位置:</strong> <code>C:\_vps\git\multi-agent-team\docs\history\</code></p>
+            </div>
+
+            <div class="section">
+                <h2>✅ セッション完了チェックリスト</h2>
+
+                <div class="success">
+                    <ul>
+                        <li>[x] LM Studio サーバー起動</li>
+                        <li>[x] Qwen-2.5-Coder-14B モデル ロード</li>
+                        <li>[x] GPU 最適化設定（32K コンテキスト、パラレル 4）</li>
+                        <li>[x] Antigravity IDE 起動</li>
+                        <li>[x] Continue 拡張機能の設定</li>
+                        <li>[x] モデルの動作確認</li>
+                        <li>[x] チャット機能テスト</li>
+                        <li>[x] コード補完テスト</li>
+                        <li>[x] ドキュメント作成</li>
+                        <li>[x] セッション記録保存</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>📑 ローカルLLM環境構築レポート | 実施日: 2026-05-30 | Qwen-2.5-Coder-14B × Antigravity IDE × Continue 統合</p>
+            <p>詳細な章立てドキュメント: <code>C:\_vps\git\multi-agent-team\docs\history\</code></p>
+            <p style="margin-top: 10px;">このレポートは、複数のセッション記録 Markdown ファイルで構成されています。</p>
+        </footer>
     </div>
-    <p class="caption">図1-2 チーム構成。ユーザー → PM（藤宮詩織）→ dev × 3 の 1 PM × 3 Developer 体制。</p>
-  </div>
-
-  <!-- 学習目的の3軸 -->
-  <div class="cols-3" style="margin-top:3mm">
-    <div class="card">
-      <div class="card-title">チームの構築</div>
-      <p>人間の代わりに AI エージェントを配置し、ロール・責任・権限を設計する</p>
-    </div>
-    <div class="card">
-      <div class="card-title">タスクの遂行</div>
-      <p>設計・開発・テスト・提案・資料作成など汎用的な作業をタスクベースで実行する</p>
-    </div>
-    <div class="card">
-      <div class="card-title">自律性の可視化</div>
-      <p>エージェントが自立してタスクをこなす過程を記録・分析し、学習知見を得る</p>
-    </div>
-  </div>
-
-  <div class="footer">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">3</span>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════ -->
-<!-- p4: §2 チーム設計                         -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span class="section-num">§ 2</span>
-    <span class="section-title">チーム設計 — 少数精鋭のペルソナ</span>
-  </div>
-
-  <p class="lead">各エージェントは「職能ペルソナ」を持ち、自分のロールと権限範囲を自覚して動く。ペルソナは実務経験を反映した固有名を持ち、責任境界が明文化されている。</p>
-
-  <!-- ペルソナカード -->
-  <div class="fig">
-    <svg viewBox="0 0 420 320">
-      <defs>
-        <clipPath id="clip-pm">  <rect x="338" y="13" width="64" height="82" rx="8"/></clipPath>
-        <clipPath id="clip-d1"><rect x="98"  y="122" width="34" height="56" rx="5"/></clipPath>
-        <clipPath id="clip-d2"><rect x="236" y="122" width="34" height="56" rx="5"/></clipPath>
-        <clipPath id="clip-d3"><rect x="374" y="122" width="34" height="56" rx="5"/></clipPath>
-      </defs>
-      <rect width="420" height="320" rx="10" fill="#f5f5fc"/>
-
-      <!-- PM カード（上段・全幅） -->
-      <rect x="10" y="10" width="400" height="96" rx="8" fill="#5b6af0"/>
-      <rect x="10" y="10" width="6" height="96" rx="3" fill="#fff" opacity=".3"/>
-      <!-- PM アバター -->
-      <image href="藤宮詩織.png" x="338" y="13" width="64" height="82" clip-path="url(#clip-pm)" preserveAspectRatio="xMidYMid meet"/>
-      <text x="28" y="30" fill="rgba(255,255,255,.55)" font-size="7.5" font-family="sans-serif">PM 兼 Designer</text>
-      <text x="28" y="50" fill="white" font-size="13" font-family="sans-serif" font-weight="bold">藤宮 詩織　Fujimiya Shiori</text>
-      <text x="28" y="66" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="sans-serif">UX 出身 → PM 8 年。受入規律のテンプレ化を主導。</text>
-      <text x="28" y="81" fill="rgba(255,255,255,.65)" font-size="7" font-family="sans-serif">Goal: タスク分解 / 受入レビュー / UX 仕様の最終判断</text>
-      <text x="28" y="95" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">Constraint: 自分でコードは書かない / self-merge 禁止</text>
-
-      <!-- dev1 カード（下段左） -->
-      <rect x="10" y="118" width="126" height="192" rx="8" fill="#1a1a2e"/>
-      <!-- dev1 アバター -->
-      <image href="黒崎颯真.png" x="98" y="122" width="34" height="56" clip-path="url(#clip-d1)" preserveAspectRatio="xMidYMid meet"/>
-      <rect x="10" y="118" width="126" height="5" rx="3" fill="#888" opacity=".5"/>
-      <text x="22" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">黒崎 — 36歳</text>
-      <text x="22" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">黒崎 颯真</text>
-      <text x="22" y="173" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">描画系 Developer</text>
-      <line x1="22" y1="181" x2="122" y2="181" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="22" y="196" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">フロント 10 年。</text>
-      <text x="22" y="209" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">pixel-perfect /</text>
-      <text x="22" y="222" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">grid systems /</text>
-      <text x="22" y="235" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">typography / a11y</text>
-      <line x1="22" y1="244" x2="122" y2="244" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="22" y="259" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="sans-serif">Tools:</text>
-      <text x="22" y="272" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">python-pptx</text>
-      <text x="22" y="284" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">8pt baseline grid</text>
-      <text x="22" y="296" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">Figma / VSCode</text>
-
-      <!-- dev2 カード（下段中） -->
-      <rect x="148" y="118" width="126" height="192" rx="8" fill="#1a4a1a"/>
-      <!-- dev2 アバター -->
-      <image href="緑川啓介.png" x="236" y="122" width="34" height="56" clip-path="url(#clip-d2)" preserveAspectRatio="xMidYMid meet"/>
-      <rect x="148" y="118" width="126" height="5" rx="3" fill="#4caf50" opacity=".7"/>
-      <text x="160" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">緑川 — 49歳</text>
-      <text x="160" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">緑川 啓介</text>
-      <text x="160" y="173" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">インフラエンジニア</text>
-      <line x1="160" y1="181" x2="260" y2="181" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="160" y="196" fill="#7dd87d" font-size="7" font-family="sans-serif" font-weight="bold">Harvard 卒</text>
-      <text x="160" y="209" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">シリコンバレー →</text>
-      <text x="160" y="222" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">国内大規模 SaaS</text>
-      <text x="160" y="235" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">インフラ責任者を歴任</text>
-      <line x1="160" y1="244" x2="260" y2="244" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="160" y="259" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="sans-serif">Tools:</text>
-      <text x="160" y="272" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">AWS / GCP / K8s</text>
-      <text x="160" y="284" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">Terraform / Datadog</text>
-      <text x="160" y="296" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">OpenTelemetry / IaC</text>
-
-      <!-- dev3 カード（下段右） -->
-      <rect x="286" y="118" width="124" height="192" rx="8" fill="#4a1a1a"/>
-      <!-- dev3 アバター -->
-      <image href="茜野真理.png" x="374" y="122" width="34" height="56" clip-path="url(#clip-d3)" preserveAspectRatio="xMidYMid meet"/>
-      <rect x="286" y="118" width="124" height="5" rx="3" fill="#e85d7a" opacity=".7"/>
-      <text x="298" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">茜野 真理</text>
-      <text x="298" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">茜野 真理</text>
-      <text x="298" y="173" fill="rgba(255,255,255,.65)" font-size="7.5" font-family="sans-serif">QA + 検証 + 仕様書化</text>
-      <line x1="298" y1="181" x2="398" y2="181" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="298" y="196" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">QA リード 10 年。</text>
-      <text x="298" y="209" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">E2E / Property-based</text>
-      <text x="298" y="222" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">Mutation testing の</text>
-      <text x="298" y="235" fill="rgba(255,255,255,.55)" font-size="7" font-family="sans-serif">標準化を主導</text>
-      <line x1="298" y1="244" x2="398" y2="244" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
-      <text x="298" y="259" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="sans-serif">Tools:</text>
-      <text x="298" y="272" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">pytest / playwright</text>
-      <text x="298" y="284" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">hypothesis / mermaid</text>
-      <text x="298" y="296" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">python-pptx</text>
-    </svg>
-  </div>
-  <p class="caption">図2-1 4名のペルソナカード。各メンバーは固有の専門性・バックストーリー・ツールセットを持つ。</p>
-
-  <div class="highlight warn" style="margin-top:3mm">
-    <strong>権限境界の明文化:</strong>
-    PM はスコープ・期日・受入基準を担い、UX 仕様の最終判断は Designer 権限。実装・PR レビューは dev が担い self-merge は禁止。ペルソナごとの「やらないこと」が自律性を保つ。
-  </div>
-
-  <div style="margin-top:5mm;background:var(--ink);border-radius:10px;padding:5mm 6mm 4mm;position:relative;overflow:hidden;">
-    <div style="position:absolute;top:-6mm;left:3mm;font-size:52pt;font-family:var(--font-serif);color:rgba(91,106,240,.18);line-height:1;pointer-events:none;">"</div>
-    <div style="position:absolute;bottom:-8mm;right:4mm;font-size:52pt;font-family:var(--font-serif);color:rgba(232,93,122,.12);line-height:1;pointer-events:none;">"</div>
-    <div style="font-size:9pt;font-weight:700;color:var(--accent2);margin-bottom:2mm;">チェック！！</div>
-    <div style="font-family:var(--font-serif);font-size:15pt;font-weight:700;color:#fff;line-height:1.4;margin-bottom:3mm;">
-      実はこれらのペルソナは、<span style="color:#a8b4ff;">中2思想</span>で設計した。
-    </div>
-    <p style="font-size:8pt;color:rgba(255,255,255,.65);line-height:1.75;margin:0;">
-      例えば藤宮さんは「<strong style="color:rgba(255,255,255,.9);">世界最高峰の PM</strong>」、緑川さんは「<strong style="color:rgba(255,255,255,.9);">ハーバード大卒の天才プログラマー</strong>」とだけ提示。細かな設定は AI が提案してくれたもの。
-    </p>
-  </div>
-
-  <div class="footer">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">4</span>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════ -->
-<!-- p5: §3 コミュニケーション設計の進化       -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span class="section-num">§ 3</span>
-    <span class="section-title">コミュニケーション設計の進化</span>
-  </div>
-
-  <!-- ADD チームの価値 -->
-  <div style="margin-bottom:6mm;background:var(--bg-soft);border-radius:10px;padding:5mm 6mm;border:1px solid var(--border);">
-    <div style="font-size:7.5pt;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3mm;">ADD チームが実現すること</div>
-    <div class="fig" style="margin:0 0 3mm;">
-      <svg viewBox="0 0 420 98" height="98">
-        <defs>
-          <marker id="arr-add1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#5b6af0"/>
-          </marker>
-          <marker id="arr-add2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-            <path d="M0,0 L5,2.5 L0,5 Z" fill="rgba(255,255,255,.6)"/>
-          </marker>
-          <marker id="arr-add3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#1a7f37"/>
-          </marker>
-        </defs>
-
-        <!-- エージェント自走ゾーン -->
-        <rect x="100" y="28" width="234" height="54" rx="6" fill="rgba(91,106,240,.08)" stroke="rgba(91,106,240,.22)" stroke-width="1" stroke-dasharray="4,3"/>
-        <text x="217" y="20" text-anchor="middle" font-size="6.5" font-family="sans-serif" fill="#5b6af0" letter-spacing=".05em">エージェントチーム 自走ゾーン</text>
-
-        <!-- YOU（左・依頼） -->
-        <circle cx="36" cy="55" r="20" fill="#1a1a2e"/>
-        <text x="36" y="51" text-anchor="middle" font-size="5.5" font-family="sans-serif" fill="rgba(255,255,255,.55)">User</text>
-        <text x="36" y="63" text-anchor="middle" font-size="8.5" font-family="sans-serif" font-weight="bold" fill="white">YOU</text>
-
-        <!-- 依頼 矢印 -->
-        <line x1="57" y1="55" x2="70" y2="55" stroke="#5b6af0" stroke-width="1.6" marker-end="url(#arr-add1)"/>
-        <text x="63" y="48" text-anchor="middle" font-size="6.5" font-family="sans-serif" fill="#5b6af0" font-weight="bold">依頼</text>
-
-        <!-- PM 藤宮 -->
-        <circle cx="85" cy="55" r="14" fill="#e85d7a"/>
-        <text x="85" y="51" text-anchor="middle" font-size="5" font-family="sans-serif" fill="rgba(255,255,255,.75)">PM</text>
-        <text x="85" y="62" text-anchor="middle" font-size="6.5" font-family="sans-serif" font-weight="bold" fill="white">藤宮</text>
-
-        <!-- PM → zone -->
-        <line x1="99" y1="55" x2="107" y2="55" stroke="rgba(91,106,240,.5)" stroke-width="1.2" marker-end="url(#arr-add2)"/>
-
-        <!-- 思考 -->
-        <rect x="109" y="37" width="38" height="34" rx="4" fill="#5b6af0"/>
-        <text x="128" y="57" text-anchor="middle" font-size="8" font-family="sans-serif" font-weight="bold" fill="white">思考</text>
-        <line x1="147" y1="55" x2="152" y2="55" stroke="rgba(255,255,255,.5)" stroke-width="1" marker-end="url(#arr-add2)"/>
-
-        <!-- 計画立案 -->
-        <rect x="154" y="37" width="38" height="34" rx="4" fill="#4a56d0"/>
-        <text x="173" y="52" text-anchor="middle" font-size="7" font-family="sans-serif" fill="white">計画</text>
-        <text x="173" y="63" text-anchor="middle" font-size="6" font-family="sans-serif" fill="rgba(255,255,255,.75)">立案</text>
-        <line x1="192" y1="55" x2="197" y2="55" stroke="rgba(255,255,255,.5)" stroke-width="1" marker-end="url(#arr-add2)"/>
-
-        <!-- 設計 -->
-        <rect x="199" y="37" width="38" height="34" rx="4" fill="#3d4abb"/>
-        <text x="218" y="57" text-anchor="middle" font-size="8" font-family="sans-serif" font-weight="bold" fill="white">設計</text>
-        <line x1="237" y1="55" x2="242" y2="55" stroke="rgba(255,255,255,.5)" stroke-width="1" marker-end="url(#arr-add2)"/>
-
-        <!-- 実装 -->
-        <rect x="244" y="37" width="38" height="34" rx="4" fill="#2f3ea5"/>
-        <text x="263" y="57" text-anchor="middle" font-size="8" font-family="sans-serif" font-weight="bold" fill="white">実装</text>
-        <line x1="282" y1="55" x2="287" y2="55" stroke="rgba(255,255,255,.5)" stroke-width="1" marker-end="url(#arr-add2)"/>
-
-        <!-- テスト -->
-        <rect x="289" y="37" width="38" height="34" rx="4" fill="#1a1a2e" stroke="#5b6af0" stroke-width="1.2"/>
-        <text x="308" y="57" text-anchor="middle" font-size="8" font-family="sans-serif" font-weight="bold" fill="white">テスト</text>
-
-        <!-- zone → YOU（右） -->
-        <line x1="333" y1="55" x2="352" y2="55" stroke="#1a7f37" stroke-width="1.6" marker-end="url(#arr-add3)"/>
-        <text x="342" y="48" text-anchor="middle" font-size="6.5" font-family="sans-serif" fill="#1a7f37" font-weight="bold">確認</text>
-
-        <!-- YOU（右・確認） -->
-        <circle cx="371" cy="55" r="20" fill="#1a1a2e" stroke="#1a7f37" stroke-width="1.5"/>
-        <text x="371" y="50" text-anchor="middle" font-size="5.5" font-family="sans-serif" fill="rgba(255,255,255,.55)">User</text>
-        <text x="371" y="61" text-anchor="middle" font-size="8.5" font-family="sans-serif" font-weight="bold" fill="white">YOU</text>
-
-        <!-- 自走ゾーンラベル（下） -->
-        <text x="217" y="93" text-anchor="middle" font-size="6" font-family="sans-serif" fill="rgba(91,106,240,.55)" letter-spacing=".04em">思考 · スケジューリング · 設計 · 実装 · テスト をエージェントが自走</text>
-      </svg>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:9pt;color:var(--mid);">ユーザーが手を動かすのは <strong style="color:var(--ink);">「依頼」と「成果物確認」の 2 回だけ。</strong></div>
-      <div style="font-size:7.5pt;color:var(--pale);">用途例: アプリ開発 / 研修資料作成 / データ分析…</div>
-    </div>
-  </div>
-
-  <p class="lead">通信プロトコルは「形式的すぎる → 軽量 informal 追加 → 雑談・進捗ログ整理」という 3 段階で洗練された。</p>
-
-  <!-- プロトコル進化図 -->
-  <div class="fig">
-    <svg viewBox="0 0 420 80" height="80">
-      <rect width="420" height="80" rx="8" fill="#f5f5fc"/>
-      <!-- Phase 1 -->
-      <rect x="10" y="15" width="115" height="50" rx="6" fill="#1a1a2e" opacity=".85"/>
-      <text x="67" y="34" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">ADR-0004 (当初)</text>
-      <text x="67" y="49" text-anchor="middle" fill="white" font-size="8.5" font-family="sans-serif" font-weight="bold">カンバン型</text>
-      <text x="67" y="62" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">Formal 3種のみ</text>
-
-      <!-- → -->
-      <text x="138" y="43" text-anchor="middle" fill="#5b6af0" font-size="14" font-family="sans-serif">→</text>
-
-      <!-- Phase 2 -->
-      <rect x="152" y="15" width="115" height="50" rx="6" fill="#5b6af0"/>
-      <text x="209" y="34" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="7" font-family="sans-serif">ADR-0005</text>
-      <text x="209" y="49" text-anchor="middle" fill="white" font-size="8.5" font-family="sans-serif" font-weight="bold">ハイブリッド型</text>
-      <text x="209" y="62" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="6.5" font-family="sans-serif">Formal + Informal</text>
-
-      <!-- → -->
-      <text x="280" y="43" text-anchor="middle" fill="#5b6af0" font-size="14" font-family="sans-serif">→</text>
-
-      <!-- Phase 3 -->
-      <rect x="294" y="15" width="115" height="50" rx="6" fill="#16213e"/>
-      <text x="351" y="34" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">ADR-0009</text>
-      <text x="351" y="49" text-anchor="middle" fill="white" font-size="8.5" font-family="sans-serif" font-weight="bold">洗練型</text>
-      <text x="351" y="62" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">雑談追加・ログ整理</text>
-    </svg>
-  </div>
-  <p class="caption">図3-1 通信プロトコル 3 世代。Formal を土台に Informal を積み上げた。</p>
-
-  <!-- Notion カンバン + GitHub Issues イメージ -->
-  <div class="cols-2" style="margin-top:4mm;margin-bottom:1mm;gap:4mm;">
-    <div>
-      <div style="font-size:7pt;font-weight:700;color:var(--mid);margin-bottom:1.5mm;letter-spacing:.05em;text-transform:uppercase;">Notion カンバン (イメージ)</div>
-      <svg viewBox="0 0 200 100" style="border-radius:5px;overflow:visible">
-        <rect width="200" height="100" rx="5" fill="#f7f6f3"/>
-        <!-- header bar -->
-        <rect width="200" height="19" rx="5" fill="#e9e8e4"/>
-        <rect x="0" y="14" width="200" height="5" fill="#e9e8e4"/>
-        <text x="9" y="13" font-size="7" font-family="sans-serif" font-weight="700" fill="#37352f">タスクボード</text>
-        <!-- Col 1: Todo -->
-        <rect x="4" y="22" width="59" height="74" rx="4" fill="#eeede9"/>
-        <text x="9" y="32" font-size="5.5" font-family="sans-serif" font-weight="700" fill="#37352f">Todo</text>
-        <rect x="7" y="35" width="53" height="22" rx="3" fill="white"/>
-        <text x="10" y="44" font-size="5" font-family="sans-serif" fill="#37352f">LEGACY-FIX-01</text>
-        <rect x="10" y="47" width="18" height="7" rx="2" fill="#d3e5ef"/>
-        <text x="11.5" y="52.5" font-size="4.5" font-family="sans-serif" fill="#0b6e99">fix</text>
-        <!-- Col 2: In Progress -->
-        <rect x="68" y="22" width="60" height="74" rx="4" fill="#e8eeff"/>
-        <text x="73" y="32" font-size="5.5" font-family="sans-serif" font-weight="700" fill="#37352f">In Progress</text>
-        <rect x="71" y="35" width="54" height="22" rx="3" fill="white"/>
-        <text x="74" y="44" font-size="5" font-family="sans-serif" fill="#37352f">SECFIX-01</text>
-        <rect x="74" y="47" width="17" height="7" rx="2" fill="#d3e5ef"/>
-        <text x="75.5" y="52.5" font-size="4.5" font-family="sans-serif" fill="#0b6e99">fix</text>
-        <rect x="94" y="47" width="22" height="7" rx="2" fill="#f0e8f8"/>
-        <text x="96" y="52.5" font-size="4.5" font-family="sans-serif" fill="#9c4dc8">黒崎</text>
-        <rect x="71" y="60" width="54" height="22" rx="3" fill="white"/>
-        <text x="74" y="69" font-size="5" font-family="sans-serif" fill="#37352f">CI-01</text>
-        <rect x="74" y="72" width="14" height="7" rx="2" fill="#feebc8"/>
-        <text x="75.5" y="77.5" font-size="4.5" font-family="sans-serif" fill="#975a16">CI</text>
-        <rect x="91" y="72" width="22" height="7" rx="2" fill="#f0e8f8"/>
-        <text x="93" y="77.5" font-size="4.5" font-family="sans-serif" fill="#9c4dc8">緑川</text>
-        <!-- Col 3: Done -->
-        <rect x="133" y="22" width="63" height="74" rx="4" fill="#ebf5eb"/>
-        <text x="138" y="32" font-size="5.5" font-family="sans-serif" font-weight="700" fill="#37352f">Done</text>
-        <rect x="136" y="35" width="56" height="22" rx="3" fill="white" opacity=".8"/>
-        <text x="139" y="44" font-size="5" font-family="sans-serif" fill="#9b9a97">NEWCH-01</text>
-        <rect x="139" y="47" width="22" height="7" rx="2" fill="#c6f6d5"/>
-        <text x="140.5" y="52.5" font-size="4.5" font-family="sans-serif" fill="#22543d">done</text>
-        <rect x="136" y="60" width="56" height="22" rx="3" fill="white" opacity=".8"/>
-        <text x="139" y="69" font-size="5" font-family="sans-serif" fill="#9b9a97">NEWCH2-01</text>
-        <rect x="139" y="72" width="22" height="7" rx="2" fill="#c6f6d5"/>
-        <text x="140.5" y="77.5" font-size="4.5" font-family="sans-serif" fill="#22543d">done</text>
-      </svg>
-    </div>
-    <div>
-      <div style="font-size:7pt;font-weight:700;color:var(--mid);margin-bottom:1.5mm;letter-spacing:.05em;text-transform:uppercase;">GitHub Issues (イメージ)</div>
-      <svg viewBox="0 0 200 108" style="border-radius:5px;border:0.6px solid #d1d5db;overflow:visible">
-        <rect width="200" height="108" rx="5" fill="white"/>
-        <!-- issue header -->
-        <rect width="200" height="18" rx="5" fill="#f6f8fa"/>
-        <rect x="0" y="13" width="200" height="5" fill="#f6f8fa"/>
-        <circle cx="10" cy="9.5" r="3.5" fill="none" stroke="#1a7f37" stroke-width="1.2"/>
-        <circle cx="10" cy="9.5" r="1.8" fill="#1a7f37"/>
-        <text x="16" y="12.5" font-size="6" font-family="sans-serif" font-weight="700" fill="#1f2328">TASK-CI-01 — 進捗チェック</text>
-        <rect x="158" y="5" width="30" height="9" rx="3" fill="#dcfce7"/>
-        <text x="161" y="12" font-size="4.5" font-family="sans-serif" fill="#15803d">informal</text>
-        <!-- comment 1: dev2 -->
-        <rect x="0" y="18" width="200" height="24" fill="white"/>
-        <circle cx="11" cy="29" r="5.5" fill="#5b6af0"/>
-        <text x="11" y="31.5" font-size="5.5" font-family="sans-serif" font-weight="700" fill="white" text-anchor="middle">緑</text>
-        <text x="20" y="27" font-size="5" font-family="sans-serif" font-weight="700" fill="#1f2328">緑川啓介</text>
-        <text x="47" y="27" font-size="4.5" font-family="sans-serif" fill="#9ba5b3">dev2</text>
-        <text x="20" y="36" font-size="5.5" font-family="sans-serif" fill="#24292f">着手しました。設計判断 1 件確認いいですか？</text>
-        <line x1="0" y1="42" x2="200" y2="42" stroke="#d8dee4" stroke-width="0.5"/>
-        <!-- comment 2: pm -->
-        <rect x="0" y="42" width="200" height="24" fill="#fffdf5"/>
-        <circle cx="11" cy="53" r="5.5" fill="#e85d7a"/>
-        <text x="11" y="55.5" font-size="5.5" font-family="sans-serif" font-weight="700" fill="white" text-anchor="middle">藤</text>
-        <text x="20" y="51" font-size="5" font-family="sans-serif" font-weight="700" fill="#1f2328">藤宮詩織</text>
-        <text x="47" y="51" font-size="4.5" font-family="sans-serif" fill="#9ba5b3">pm</text>
-        <text x="20" y="60" font-size="5.5" font-family="sans-serif" fill="#24292f">どうぞ！B 案で進めて。推奨に賛同です</text>
-        <line x1="0" y1="66" x2="200" y2="66" stroke="#d8dee4" stroke-width="0.5"/>
-        <!-- comment 3: dev2 -->
-        <rect x="0" y="66" width="200" height="24" fill="white"/>
-        <circle cx="11" cy="77" r="5.5" fill="#5b6af0"/>
-        <text x="11" y="79.5" font-size="5.5" font-family="sans-serif" font-weight="700" fill="white" text-anchor="middle">緑</text>
-        <text x="20" y="75" font-size="5" font-family="sans-serif" font-weight="700" fill="#1f2328">緑川啓介</text>
-        <text x="47" y="75" font-size="4.5" font-family="sans-serif" fill="#9ba5b3">dev2</text>
-        <text x="20" y="84" font-size="5.5" font-family="sans-serif" fill="#24292f">承認ありがとうございます。実装します！</text>
-        <line x1="0" y1="90" x2="200" y2="90" stroke="#d8dee4" stroke-width="0.5"/>
-        <!-- footer -->
-        <rect x="0" y="90" width="200" height="18" rx="5" fill="#f6f8fa"/>
-        <rect x="0" y="90" width="200" height="5" fill="#f6f8fa"/>
-        <text x="8" y="102" font-size="4.5" font-family="sans-serif" fill="#9ba5b3">口語調 OK — インフォーマル通信の実例</text>
-      </svg>
-    </div>
-  </div>
-  <p class="caption" style="margin-top:1mm;">図3-1-b タスク可視化の二層構造。Notion カンバンでリアルタイム状況把握、GitHub Issues でラベル・担当・番号による正式記録。</p>
-
-  <div style="margin:4mm 0;background:var(--ink);border-radius:10px;padding:5mm 6mm 4mm;position:relative;overflow:hidden;">
-    <div style="position:absolute;top:-6mm;left:3mm;font-size:52pt;font-family:var(--font-serif);color:rgba(91,106,240,.18);line-height:1;pointer-events:none;">"</div>
-    <div style="position:absolute;bottom:-8mm;right:4mm;font-size:52pt;font-family:var(--font-serif);color:rgba(232,93,122,.12);line-height:1;pointer-events:none;">"</div>
-    <div style="font-size:9pt;font-weight:700;color:var(--accent2);margin-bottom:2mm;">チェック！！</div>
-    <div style="font-family:var(--font-serif);font-size:13pt;font-weight:700;color:#fff;line-height:1.55;margin-bottom:2mm;">
-      作業可視化はカンバンでも可能だが、<span style="color:#a8b4ff;">イマイチ面白くない。</span>
-    </div>
-    <p style="font-size:8pt;color:rgba(255,255,255,.65);line-height:1.75;margin:0;">
-      せっかく人格のあるエージェントをつかうのだから、口語口調でやり取りが<strong style="color:rgba(255,255,255,.9);">雑談メッセージ化できる Issues</strong> を採用した。
-    </p>
-  </div>
-
-  <div class="footer">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">5</span>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════ -->
-<!-- p6: §3続き + §4 環境設計の変遷            -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page">
-
-  <!-- YAML キュー構造図 -->
-  <div style="margin-bottom:4mm">
-    <div class="card-title" style="color:var(--ink);margin-bottom:3mm;font-size:9.5pt;">YAML キュー — 現行通信インフラ</div>
-    <div class="fig">
-      <svg viewBox="0 0 420 150" height="150">
-        <defs>
-          <marker id="ah2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#5b6af0"/>
-          </marker>
-          <marker id="ah3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#e85d7a"/>
-          </marker>
-        </defs>
-        <rect width="420" height="150" rx="8" fill="#1a1a2e"/>
-        <rect x="10" y="52" width="62" height="46" rx="6" fill="#0f3460"/>
-        <text x="41" y="73" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="7" font-family="monospace">User</text>
-        <text x="41" y="87" text-anchor="middle" fill="white" font-size="8" font-family="monospace" font-weight="bold">you</text>
-        <rect x="90" y="55" width="90" height="40" rx="5" fill="rgba(91,106,240,.25)" stroke="#5b6af0" stroke-width="1"/>
-        <text x="135" y="73" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">you_to_pm</text>
-        <text x="135" y="86" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">.yaml</text>
-        <line x1="74" y1="75" x2="88" y2="75" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah2)"/>
-        <rect x="200" y="35" width="72" height="80" rx="6" fill="#5b6af0"/>
-        <text x="236" y="58" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="7" font-family="monospace">PM</text>
-        <text x="236" y="73" text-anchor="middle" fill="white" font-size="8" font-family="monospace" font-weight="bold">藤宮詩織</text>
-        <text x="236" y="86" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="6" font-family="monospace">inbox/pm.yaml</text>
-        <text x="236" y="99" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="6" font-family="monospace">→ reports/</text>
-        <line x1="182" y1="75" x2="198" y2="75" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah2)"/>
-        <rect x="290" y="14" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
-        <text x="334" y="30" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev1.yaml</text>
-        <text x="334" y="42" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 黒崎</text>
-        <rect x="290" y="58" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
-        <text x="334" y="74" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev2.yaml</text>
-        <text x="334" y="86" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 緑川</text>
-        <rect x="290" y="102" width="88" height="34" rx="5" fill="rgba(91,106,240,.2)" stroke="#5b6af0" stroke-width="1"/>
-        <text x="334" y="118" text-anchor="middle" fill="#a8c5ff" font-size="7" font-family="monospace">inbox/dev3.yaml</text>
-        <text x="334" y="130" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="monospace">→ 茜野</text>
-        <line x1="274" y1="62" x2="288" y2="40" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
-        <line x1="274" y1="75" x2="288" y2="75" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
-        <line x1="274" y1="88" x2="288" y2="110" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#ah2)"/>
-        <text x="210" y="136" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="6.5" font-family="monospace">watch-queue.ps1 → tmux send-keys "inbox"</text>
-      </svg>
-    </div>
-    <p class="caption">図3-2 YAML キュー全体図。watch-queue.ps1 がファイル変更を検知し、対象ペインに inbox コマンドを自動送信する。</p>
-  </div>
-
-  <table style="margin-bottom:6mm">
-    <tr><th style="width:32mm">通信種別</th><th style="width:28mm">分類</th><th>内容</th></tr>
-    <tr><td>開始指令 / 完了報告 / 問題報告</td><td><strong>Formal</strong></td><td>YAML 必須記入。PM レビュー対象。</td></tr>
-    <tr><td>着手返答 / 進捗共有 / 質疑</td><td>Informal</td><td>軽量テキストで可。YAML 省略可。</td></tr>
-    <tr><td>雑談・思考メモ</td><td>Informal</td><td>ADR-0009 で追加。口語調 OK。</td></tr>
-  </table>
-
-  <div class="section-header">
-    <span class="section-num">§ 4</span>
-    <span class="section-title">環境設計の変遷 — 外部参照実装 → WSL2 → psmux</span>
-  </div>
-
-  <p class="lead">
-    初期は WSL2 + Linux 環境を前提に設計していたが、Windows ネイティブの psmux 発見により全面刷新。
-    「WSL2 不要・Rust 製・高速起動」が決め手となった。
-  </p>
-
-  <!-- 3フェーズ比較 -->
-  <div class="cols-3" style="margin-top:2mm">
-    <div class="card" style="border-top:3px solid #8888aa;">
-      <div class="card-title" style="color:#8888aa">Phase 0（旧運用）</div>
-      <p><strong>Notion 掲示板</strong>で全通信<br>
-      外部サブモジュール組み込み<br>
-      ターミナル多重化なし<br>
-      <br>
-      <span style="color:var(--pale);font-size:8pt">→ 通知レイヤが複雑化</span></p>
-    </div>
-    <div class="card" style="border-top:3px solid #e85d7a;">
-      <div class="card-title" style="color:#e85d7a">Phase 1（WSL2 試行）</div>
-      <p><strong>WSL2 Ubuntu</strong> で tmux 起動<br>
-      参照実装スタイルへ全面刷新<br>
-      ワンコマンドセットアップ試作<br>
-      <br>
-      <span style="color:#e85d7a;font-size:8pt">→ Windows 環境との摩擦で撤退</span></p>
-    </div>
-    <div class="card" style="border-top:3px solid #5b6af0;">
-      <div class="card-title">Phase 2（現行 / psmux）</div>
-      <p><strong>psmux 3.3.3+</strong>（Windows ネイティブ Rust）<br>
-      bash（Git for Windows）<br>
-      WSL2 完全不要<br>
-      <br>
-      <span style="color:#5b6af0;font-size:8pt">✓ 安定稼働中</span></p>
-    </div>
-  </div>
-
-  <!-- 起動フロー -->
-  <div style="margin-top:3mm">
-    <div class="card-title" style="color:var(--ink);font-size:9.5pt;margin-bottom:3mm;">現行 起動フロー（start.sh）</div>
-    <div class="fig">
-      <svg viewBox="0 0 420 110" height="110">
-        <rect width="420" height="110" rx="8" fill="#1a1a2e"/>
-        <defs>
-          <marker id="ah4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#5b6af0"/>
-          </marker>
-        </defs>
-
-        <!-- ステップ -->
-        <!-- S1 -->
-        <rect x="10" y="35" width="72" height="40" rx="5" fill="#0f3460"/>
-        <text x="46" y="53" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">Step 1</text>
-        <text x="46" y="67" text-anchor="middle" fill="white" font-size="7.5" font-family="monospace">./start.sh</text>
-
-        <line x1="84" y1="55" x2="96" y2="55" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah4)"/>
-
-        <!-- S2 -->
-        <rect x="98" y="28" width="78" height="54" rx="5" fill="#16213e"/>
-        <text x="137" y="46" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="monospace">Step 2</text>
-        <text x="137" y="60" text-anchor="middle" fill="#a8c5ff" font-size="7.5" font-family="monospace">psmux new</text>
-        <text x="137" y="72" text-anchor="middle" fill="#a8c5ff" font-size="7.5" font-family="monospace">session "team"</text>
-
-        <line x1="178" y1="55" x2="190" y2="55" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah4)"/>
-
-        <!-- S3 -->
-        <rect x="192" y="20" width="78" height="70" rx="5" fill="#16213e"/>
-        <text x="231" y="38" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="monospace">Step 3</text>
-        <text x="231" y="52" text-anchor="middle" fill="#a8c5ff" font-size="7.5" font-family="monospace">4ペイン作成</text>
-        <text x="231" y="65" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="monospace">pm / 黒崎</text>
-        <text x="231" y="77" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="monospace">緑川 / 茜野</text>
-
-        <line x1="272" y1="55" x2="284" y2="55" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#ah4)"/>
-
-        <!-- S4 -->
-        <rect x="286" y="15" width="120" height="80" rx="5" fill="#5b6af0" opacity=".85"/>
-        <text x="346" y="35" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="monospace">Step 4</text>
-        <text x="346" y="50" text-anchor="middle" fill="white" font-size="7.5" font-family="monospace">claude起動</text>
-        <text x="346" y="63" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="6.5" font-family="monospace">--dangerously-</text>
-        <text x="346" y="75" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="6.5" font-family="monospace">skip-permissions</text>
-        <text x="346" y="87" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="6.5" font-family="monospace">instructions/ 読込</text>
-      </svg>
-    </div>
-    <p class="caption">図4-1 start.sh 起動フロー。コマンド 1 本で 4 エージェントが同時起動する。</p>
-  </div>
-
-  <!-- 4ペイン配置 -->
-  <div style="margin-top:3mm">
-    <div class="card-title" style="color:var(--ink);font-size:9.5pt;margin-bottom:3mm;">4 ペイン配置イメージ</div>
-    <div class="fig">
-      <svg viewBox="0 0 420 100" height="100">
-        <rect width="420" height="100" rx="8" fill="#0d1117"/>
-        <!-- 上半分 左右 -->
-        <rect x="8" y="8" width="200" height="40" rx="4" fill="#1a1a2e" stroke="#5b6af0" stroke-width="1.2"/>
-        <text x="108" y="25" text-anchor="middle" fill="#5b6af0" font-size="8" font-family="monospace" font-weight="bold">PM (team:0.0)</text>
-        <text x="108" y="38" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">藤宮詩織 — 待機中</text>
-
-        <rect x="212" y="8" width="200" height="40" rx="4" fill="#1a1a2e" stroke="#16213e" stroke-width="1.2"/>
-        <text x="312" y="25" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="monospace" font-weight="bold">黒崎 (team:0.1)</text>
-        <text x="312" y="38" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">黒崎颯真 — 待機中</text>
-
-        <!-- 下半分 左右 -->
-        <rect x="8" y="52" width="200" height="40" rx="4" fill="#1a1a2e" stroke="#16213e" stroke-width="1.2"/>
-        <text x="108" y="69" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="monospace" font-weight="bold">緑川 (team:0.2)</text>
-        <text x="108" y="82" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">緑川啓介 — 待機中</text>
-
-        <rect x="212" y="52" width="200" height="40" rx="4" fill="#1a1a2e" stroke="#16213e" stroke-width="1.2"/>
-        <text x="312" y="69" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="monospace" font-weight="bold">茜野 (team:0.3)</text>
-        <text x="312" y="82" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">茜野真理 — 待機中</text>
-      </svg>
-    </div>
-    <p class="caption">図4-2 psmux セッション "team" の 4 ペイン配置。左上が PM ペイン（青枠）。</p>
-  </div>
-
-  <div class="footer">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">6</span>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════ -->
-<!-- p7: 通信インフラ 失敗の実録                 -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page" style="background:linear-gradient(150deg,#1a0808 0%,#1a1020 60%,#0f0f2e 100%);color:white;padding:16mm 18mm 14mm;">
-
-  <div style="margin-bottom:7mm;">
-    <div style="font-size:7.5pt;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:2mm;">Incident Log — 採択前史</div>
-    <div style="font-family:var(--font-serif);font-size:24pt;font-weight:700;color:white;line-height:1.2;">通信インフラ 失敗の実録</div>
-    <div style="width:22mm;height:2px;background:var(--accent2);margin-top:3mm;"></div>
-  </div>
-
-  <p style="font-size:10pt;color:rgba(255,255,255,.6);margin-bottom:7mm;line-height:1.85;">
-    YAML キュー採択に至るまで、4 つの失敗を経た。いずれも「やってみないとわからなかった」罠であり、この踏破なしに現在の軽量設計は生まれなかった。
-  </p>
-
-  <div class="cols-2" style="gap:5mm;margin-bottom:5mm;">
-
-    <!-- ① -->
-    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
-      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">①</div>
-      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">Vercel Cron ポーリング</div>
-      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">Notion Search API を 1 分毎にポーリングする方式を ADR-0003 で採択。実装フェーズ直前まで誰も気づかなかった。</p>
-      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
-        Vercel Hobby plan の cron 制限 = <strong style="color:white;">1 日 1 回</strong><br>「5 分毎」と誤認。Pricing ページの独立確認漏れ。
-      </div>
-    </div>
-
-    <!-- ② -->
-    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
-      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">②</div>
-      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">GitHub Actions + Vercel Functions</div>
-      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">Vercel 代替として Actions schedule + Hono 受け皿に切替。routing・runtime の設定が連鎖的に崩壊した。</p>
-      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
-        <strong style="color:white;">500 FUNCTION_INVOCATION_FAILED</strong> が 3 段階の修正後も解決不能。4 タスク消費で撤退判断へ。
-      </div>
-    </div>
-
-    <!-- ③ -->
-    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.3);border-radius:10px;padding:6mm 7mm;">
-      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">③</div>
-      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">過剰設計の発覚 — ADR-0008</div>
-      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">4 タスク踏破後、参照実装を読み直して重大事実を発見。</p>
-      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
-        <strong style="color:white;">参照実装は「通知レイヤ」を持っていない。</strong><br>Vercel・Cloudflare Tunnel を全削除。能動 fetch + YAML に回帰。
-      </div>
-    </div>
-
-    <!-- ④ -->
-    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(232,93,122,.5);border-radius:10px;padding:6mm 7mm;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:-2mm;right:4mm;font-size:72pt;font-weight:900;color:rgba(232,93,122,.07);line-height:1;pointer-events:none;">50x</div>
-      <div style="font-size:32pt;font-weight:900;color:rgba(232,93,122,.45);line-height:1;margin-bottom:3mm;">④</div>
-      <div style="font-size:12pt;font-weight:700;color:white;margin-bottom:2.5mm;">エージェント生成フローの崩壊</div>
-      <p style="font-size:8.5pt;color:rgba(255,255,255,.6);margin:0 0 3mm;line-height:1.75;">4 ペイン同時起動で各エージェントが CLAUDE.md・instructions・会話履歴を全コンテキストに積み上げる構造だった。</p>
-      <div style="background:rgba(232,93,122,.15);border-left:3px solid var(--accent2);padding:2.5mm 3.5mm;border-radius:0 5px 5px 0;font-size:8pt;color:#ffaaaa;line-height:1.65;">
-        通常の ADD 比 <strong style="color:white;font-size:12pt;">約 50 倍</strong> のトークン消費。軽量起動 + inbox ポーリング方式への再設計を強制。
-      </div>
-    </div>
-
-  </div>
-
-  <!-- 解決策バナー -->
-  <div style="background:rgba(91,106,240,.18);border:1px solid rgba(91,106,240,.45);border-radius:10px;padding:4mm 6mm;display:flex;align-items:center;gap:5mm;">
-    <div style="font-size:26pt;color:#a8b4ff;font-weight:900;flex-shrink:0;line-height:1;">→</div>
-    <div>
-      <div style="font-size:10pt;font-weight:700;color:#a8b4ff;margin-bottom:1mm;">採択: YAML キュー + tmux 短文通知</div>
-      <div style="font-size:8.5pt;color:rgba(255,255,255,.6);line-height:1.7;">tmux は <code style="background:rgba(255,255,255,.12);padding:1px 5px;border-radius:3px;font-size:7.5pt;">"inbox"</code> の一言のみ送信。メッセージ本文は YAML ファイルに分離することで、コンテキスト汚染ゼロ・コスト最小・クロスプラットフォームを同時達成。</div>
-    </div>
-  </div>
-
-  <div class="footer" style="color:rgba(255,255,255,.3);border-color:rgba(255,255,255,.12);">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">—</span>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════ -->
-<!-- p8: §5 ADR 系統図                         -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span class="section-num">§ 5</span>
-    <span class="section-title">意思決定の記録（ADR 系統図）</span>
-  </div>
-
-  <p class="lead">すべての重要な技術・組織判断を ADR（Architecture Decision Record）に記録。「採用案・却下案・再考閾値」の 3 点を必ず記述するハウススタイルが、後続判断を大幅に加速した。</p>
-
-  <!-- ADR map -->
-  <div class="fig">
-    <svg viewBox="0 0 420 230" height="230">
-      <defs>
-        <marker id="adr-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-          <path d="M0,0 L6,3 L0,6 Z" fill="#8888aa"/>
-        </marker>
-        <marker id="adr-sup" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-          <path d="M0,0 L6,3 L0,6 Z" fill="#e85d7a"/>
-        </marker>
-      </defs>
-      <rect width="420" height="230" rx="8" fill="#f5f5fc"/>
-
-      <!-- 凡例 -->
-      <rect x="295" y="8" width="118" height="46" rx="5" fill="white" stroke="#d8d8ee" stroke-width="1"/>
-      <text x="305" y="22" fill="#1a1a2e" font-size="7" font-family="sans-serif" font-weight="bold">凡例</text>
-      <rect x="305" y="27" width="10" height="10" rx="2" fill="#5b6af0"/>
-      <text x="320" y="36" fill="#4a4a6a" font-size="6.5" font-family="sans-serif">有効 ADR</text>
-      <rect x="305" y="41" width="10" height="10" rx="2" fill="#e85d7a" opacity=".7"/>
-      <text x="320" y="50" fill="#4a4a6a" font-size="6.5" font-family="sans-serif">部分 Superseded</text>
-
-      <!-- ADR-0001 -->
-      <rect x="10" y="15" width="88" height="36" rx="5" fill="#5b6af0"/>
-      <text x="54" y="30" text-anchor="middle" fill="white" font-size="7" font-family="sans-serif" font-weight="bold">ADR-0001</text>
-      <text x="54" y="43" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="6" font-family="sans-serif">技術スタック</text>
-
-      <!-- ADR-0002 -->
-      <rect x="110" y="15" width="88" height="36" rx="5" fill="#5b6af0"/>
-      <text x="154" y="30" text-anchor="middle" fill="white" font-size="7" font-family="sans-serif" font-weight="bold">ADR-0002</text>
-      <text x="154" y="43" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="6" font-family="sans-serif">メンバー提案</text>
-
-      <!-- ADR-0003 → 0008 で Superseded -->
-      <rect x="10" y="70" width="88" height="36" rx="5" fill="#e85d7a" opacity=".7"/>
-      <text x="54" y="85" text-anchor="middle" fill="white" font-size="7" font-family="sans-serif" font-weight="bold">ADR-0003</text>
-      <text x="54" y="98" text-anchor="middle" fill="rgba(255,255,255,.9)" font-size="6" font-family="sans-serif">通知レイヤ設計</text>
-      <!-- Superseded arrow →0008 -->
-      <line x1="100" y1="88" x2="158" y2="88" stroke="#e85d7a" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#adr-sup)"/>
-      <text x="129" y="82" text-anchor="middle" fill="#e85d7a" font-size="6" font-family="sans-serif">Superseded</text>
-
-      <!-- ADR-0005 → 0009 で Superseded -->
-      <rect x="10" y="125" width="88" height="36" rx="5" fill="#e85d7a" opacity=".7"/>
-      <text x="54" y="140" text-anchor="middle" fill="white" font-size="7" font-family="sans-serif" font-weight="bold">ADR-0005</text>
-      <text x="54" y="153" text-anchor="middle" fill="rgba(255,255,255,.9)" font-size="6" font-family="sans-serif">通信プロトコル改訂</text>
-      <line x1="100" y1="143" x2="158" y2="188" stroke="#e85d7a" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#adr-sup)"/>
-      <text x="129" y="163" text-anchor="middle" fill="#e85d7a" font-size="6" font-family="sans-serif">Superseded</text>
-
-      <!-- ADR-0006 -->
-      <rect x="110" y="70" width="88" height="36" rx="5" fill="#5b6af0"/>
-      <text x="154" y="85" text-anchor="middle" fill="white" font-size="7" font-family="sans-serif" font-weight="bold">ADR-0006</text>
-      <text x="154" y="98" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="6" font-family="sans-serif">ペルソナ起案フロー</text>
-
-      <!-- ADR-0007 -->
-      <rect x="210" y="70" width="88" height="36" rx="5" fill="#5b6af0"/>
-      <text x="254" y="85" text-anchor="middle" fill="white" font-size="7" font-family="sans-serif" font-weight="bold">ADR-0007</text>
-      <text x="254" y="98" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="6" font-family="sans-serif">チーム組織規律</text>
-
-      <!-- ADR-0008 -->
-      <rect x="160" y="70" width="88" height="36" rx="5" fill="#5b6af0" x="160"/>
-      <!-- 重なり対策: 独立配置 -->
-      <rect x="10" y="180" width="88" height="36" rx="5" fill="#5b6af0"/>
-      <text x="54" y="195" text-anchor="middle" fill="white" font-size="7" font-family="sans-serif" font-weight="bold">ADR-0008</text>
-      <text x="54" y="208" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="6" font-family="sans-serif">通知レイヤピボット</text>
-
-      <!-- ADR-0009 -->
-      <rect x="110" y="180" width="88" height="36" rx="5" fill="#5b6af0"/>
-      <text x="154" y="195" text-anchor="middle" fill="white" font-size="7" font-family="sans-serif" font-weight="bold">ADR-0009</text>
-      <text x="154" y="208" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="6" font-family="sans-serif">通信プロトコル再改訂</text>
-
-      <!-- 下部の有効ラベル -->
-      <text x="300" y="180" fill="#5b6af0" font-size="8.5" font-family="sans-serif" font-weight="bold">✓ 有効 ADR 計 7 件</text>
-      <text x="300" y="198" fill="#e85d7a" font-size="8.5" font-family="sans-serif">✗ 部分廃止 2 件</text>
-      <text x="300" y="215" fill="#8888aa" font-size="7.5" font-family="sans-serif">（ADR-0003, 0005）</text>
-    </svg>
-  </div>
-  <p class="caption">図5-1 ADR 系統図。Superseded（点線）は後継 ADR で意思決定を引き継いだことを示す。</p>
-
-  <table>
-    <tr><th style="width:28mm">ADR 番号</th><th>内容</th><th style="width:22mm">状態</th></tr>
-    <tr><td>ADR-0001</td><td>技術スタック（TypeScript / Next.js / Supabase / Drizzle / Clerk）</td><td>✓ 有効</td></tr>
-    <tr><td>ADR-0002</td><td>チームメンバー構成優先度</td><td>✓ 有効</td></tr>
-    <tr><td>ADR-0003</td><td>通知レイヤ（Vercel Cron + Notion ポーリング）</td><td>部分廃止</td></tr>
-    <tr><td>ADR-0005</td><td>通信プロトコル改訂（ハイブリッド型）</td><td>部分廃止</td></tr>
-    <tr><td>ADR-0006</td><td>ペルソナ起案フローと権限境界</td><td>✓ 有効</td></tr>
-    <tr><td>ADR-0007</td><td>チーム組織規律（5 論点統合）</td><td>✓ 有効</td></tr>
-    <tr><td>ADR-0008</td><td>通知レイヤ → 能動 fetch ピボット</td><td>✓ 有効</td></tr>
-    <tr><td>ADR-0009</td><td>通信プロトコル最終形（雑談 + ログ整理）</td><td>✓ 有効</td></tr>
-  </table>
-
-  <div class="footer">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">7</span>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════ -->
-<!-- p9: §6 開発タイムライン                   -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span class="section-num">§ 6</span>
-    <span class="section-title">開発タイムライン</span>
-  </div>
-
-  <p class="lead">プロジェクト開始から安定稼働まで、わずか約 1 週間。高速な意思決定と即座のピボットが特徴的なリズムを生んだ。</p>
-
-  <div class="timeline-item">
-    <div class="tl-date">04-25</div>
-    <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
-    <div class="tl-body">
-      <div class="tl-title">キックオフ & 基盤設計</div>
-      <div class="tl-desc">Tech Lead（早瀬蒼）ペルソナ起案。psmux 調査・採用決定。Notion Remote MCP 連携確立。ADR-0001（スタック）/ ADR-0002（メンバー）起案。Git ブランチ戦略策定。</div>
-    </div>
-  </div>
-
-  <div class="timeline-item">
-    <div class="tl-date">04-26</div>
-    <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
-    <div class="tl-body">
-      <div class="tl-title">TASK 実行ラッシュ & Designer 追加</div>
-      <div class="tl-desc">TASK-0001 受入完了。TASK-0003（AI 研修用語集）/ TASK-0005（通信プロトコル改訂）/ TASK-0007（pptx 修正）を同時進行。TASK-0007 の失態から UI/UX Designer ペルソナ（白井美雪）が急遽追加される。ADR-0005/0006 起案。</div>
-    </div>
-  </div>
-
-  <div class="timeline-item">
-    <div class="tl-date">04-27</div>
-    <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
-    <div class="tl-body">
-      <div class="tl-title">通知レイヤ実装開始</div>
-      <div class="tl-desc">ADR-0003 採用（Vercel Cron + Notion ポーリング）。mat-board-watcher サブリポ初期化。BE ペルソナ（黒木涼介）起案。ADR-0007 チーム組織規律策定。</div>
-    </div>
-  </div>
-
-  <div class="timeline-item">
-    <div class="tl-date">04-29</div>
-    <div class="tl-dot-col"><div class="tl-dot warn"></div><div class="tl-line"></div></div>
-    <div class="tl-body">
-      <div class="tl-title">🔴 通知レイヤ 4 段階連鎖罠 → ピボット決定</div>
-      <div class="tl-desc">Vercel Hobby 制限 → GitHub Actions 移行 → Hono routing 破綻 → Function 500 error。参照実装再確認で「通知レイヤ不要」判定。<strong>ADR-0008</strong> 採択：能動 fetch 方式へ全面撤退。mat-board-watcher 全削除。セッション 4 PM 自律完遂（ユーザー就寝中に完了）。</div>
-    </div>
-  </div>
-
-  <div class="timeline-item">
-    <div class="tl-date">04-30</div>
-    <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
-    <div class="tl-body">
-      <div class="tl-title">psmux 移行 & 旧資産 archive 退避</div>
-      <div class="tl-desc">WSL2 完全撤退。参照実装スタイルへ全面刷新（PR #27）。本プロダクト仕様カスタマイズ + 参照実装 submodule 削除（PR #28）。旧運用資産を <code>archive/legacy</code> ブランチへ退避。psmux 4 ペイン疎通確認完了（PR #31/#32）。</div>
-    </div>
-  </div>
-
-  <div class="timeline-item">
-    <div class="tl-date">05-11</div>
-    <div class="tl-dot-col"><div class="tl-dot"></div></div>
-    <div class="tl-body">
-      <div class="tl-title">安定稼働 & watch-queue.ps1 追加</div>
-      <div class="tl-desc">FileSystemWatcher による YAML キュー自動通知（PR #39）。tmux ネスト対策（PR #33）マージ。本レポート作成開始。</div>
-    </div>
-  </div>
-
-  <!-- PR統計 -->
-  <div class="cols-3" style="margin-top:5mm">
-    <div class="card" style="text-align:center">
-      <div style="font-size:22pt;font-weight:700;color:var(--accent);">39</div>
-      <div style="font-size:8pt;color:var(--mid);">マージ済み PR</div>
-    </div>
-    <div class="card" style="text-align:center">
-      <div style="font-size:22pt;font-weight:700;color:var(--accent);">9</div>
-      <div style="font-size:8pt;color:var(--mid);">完了タスク</div>
-    </div>
-    <div class="card" style="text-align:center">
-      <div style="font-size:22pt;font-weight:700;color:var(--accent);">~7日</div>
-      <div style="font-size:8pt;color:var(--mid);">キックオフ→安定稼働</div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">8</span>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════ -->
-<!-- p10: §7 現在の運用フロー                  -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span class="section-num">§ 7</span>
-    <span class="section-title">現在の運用フロー</span>
-  </div>
-
-  <p class="lead">ユーザーが YAML を 1 本書くと、PM が解釈・分配し、Dev が並列実装し、結果が自動的に戻ってくる。人間の介入は最初の指示と最後の受入確認のみ。</p>
-
-  <!-- フルフロー図 -->
-  <div class="fig">
-    <svg viewBox="0 0 420 260" height="260">
-      <defs>
-        <marker id="fl-arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-          <path d="M0,0 L7,3.5 L0,7 Z" fill="#5b6af0"/>
-        </marker>
-        <marker id="fl-arr2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-          <path d="M0,0 L7,3.5 L0,7 Z" fill="#e85d7a"/>
-        </marker>
-      </defs>
-      <rect width="420" height="260" rx="10" fill="#f5f5fc"/>
-
-      <!-- STEP 1 -->
-      <rect x="10" y="15" width="150" height="40" rx="6" fill="#1a1a2e"/>
-      <text x="85" y="31" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="sans-serif">① ユーザー → you_to_pm.yaml</text>
-      <text x="85" y="47" text-anchor="middle" fill="white" font-size="8.5" font-family="sans-serif" font-weight="bold">指示 YAML 記述</text>
-
-      <!-- watch-queue.ps1 watch -->
-      <rect x="170" y="15" width="120" height="40" rx="6" fill="rgba(91,106,240,.15)" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2"/>
-      <text x="230" y="31" text-anchor="middle" fill="#5b6af0" font-size="7" font-family="sans-serif">watch-queue.ps1</text>
-      <text x="230" y="47" text-anchor="middle" fill="#5b6af0" font-size="8" font-family="sans-serif">ファイル変更検知 → PM 通知</text>
-
-      <line x1="162" y1="35" x2="168" y2="35" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#fl-arr)"/>
-
-      <!-- STEP 2 -->
-      <rect x="10" y="75" width="280" height="50" rx="6" fill="#5b6af0"/>
-      <text x="145" y="93" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="7" font-family="sans-serif">② PM — タスク分解 & 分配</text>
-      <text x="145" y="108" text-anchor="middle" fill="white" font-size="8.5" font-family="sans-serif" font-weight="bold">inbox/dev{N}.yaml 書き込み → 3 並列振り分け</text>
-      <text x="145" y="120" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="7" font-family="sans-serif">受入基準を各 dev に明示</text>
-
-      <line x1="210" y1="57" x2="210" y2="73" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#fl-arr)"/>
-      <line x1="145" y1="127" x2="145" y2="143" stroke="#5b6af0" stroke-width="1.2" marker-end="url(#fl-arr)"/>
-
-      <!-- STEP 3 dev 3並列 -->
-      <rect x="10" y="145" width="82" height="56" rx="6" fill="#16213e"/>
-      <text x="51" y="163" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="sans-serif">③-a 黒崎</text>
-      <text x="51" y="177" text-anchor="middle" fill="white" font-size="8" font-family="sans-serif" font-weight="bold">実装+テスト</text>
-      <text x="51" y="191" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="sans-serif">PR 作成</text>
-
-      <rect x="99" y="145" width="82" height="56" rx="6" fill="#16213e"/>
-      <text x="140" y="163" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="sans-serif">③-b 緑川</text>
-      <text x="140" y="177" text-anchor="middle" fill="white" font-size="8" font-family="sans-serif" font-weight="bold">実装+テスト</text>
-      <text x="140" y="191" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="sans-serif">PR 作成</text>
-
-      <rect x="188" y="145" width="82" height="56" rx="6" fill="#16213e"/>
-      <text x="229" y="163" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="sans-serif">③-c 茜野</text>
-      <text x="229" y="177" text-anchor="middle" fill="white" font-size="8" font-family="sans-serif" font-weight="bold">実装+テスト</text>
-      <text x="229" y="191" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="6.5" font-family="sans-serif">PR 作成</text>
-
-      <!-- dev → PM 報告 -->
-      <line x1="51"  y1="203" x2="120" y2="220" stroke="#e85d7a" stroke-width="1.2" marker-end="url(#fl-arr2)"/>
-      <line x1="140" y1="203" x2="140" y2="220" stroke="#e85d7a" stroke-width="1.2" marker-end="url(#fl-arr2)"/>
-      <line x1="229" y1="203" x2="160" y2="220" stroke="#e85d7a" stroke-width="1.2" marker-end="url(#fl-arr2)"/>
-
-      <!-- STEP 4 -->
-      <rect x="10" y="222" width="280" height="32" rx="6" fill="#5b6af0" opacity=".85"/>
-      <text x="145" y="235" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="7" font-family="sans-serif">④ PM — 受入レビュー</text>
-      <text x="145" y="248" text-anchor="middle" fill="white" font-size="8" font-family="sans-serif" font-weight="bold">受入基準照合 → ユーザーへ完了報告</text>
-
-      <!-- 右側 注記 -->
-      <rect x="305" y="145" width="108" height="108" rx="6" fill="rgba(91,106,240,.08)" stroke="#5b6af0" stroke-width="1" stroke-dasharray="3,2"/>
-      <text x="359" y="165" text-anchor="middle" fill="#5b6af0" font-size="7.5" font-family="sans-serif" font-weight="bold">報告は YAML</text>
-      <text x="359" y="180" text-anchor="middle" fill="#4a4a6a" font-size="6.5" font-family="sans-serif">reports/dev{N}.yaml</text>
-      <text x="359" y="198" text-anchor="middle" fill="#4a4a6a" font-size="6.5" font-family="sans-serif">watch-queue.ps1 が</text>
-      <text x="359" y="212" text-anchor="middle" fill="#4a4a6a" font-size="6.5" font-family="sans-serif">PM ペインへ通知</text>
-      <text x="359" y="230" text-anchor="middle" fill="rgba(91,106,240,.6)" font-size="6" font-family="sans-serif">（自動プッシュ）</text>
-    </svg>
-  </div>
-  <p class="caption">図7-1 現行フル運用フロー。ユーザー操作は① と受入確認のみ。</p>
-
-  <pre style="margin-top:3mm">
-# you_to_pm.yaml 記述例
-task_id: TASK-0010
-title: README.md を psmux 仕様に更新
-priority: P1
-acceptance_criteria:
-  - start.sh 起動手順が正確に記述されている
-  - WSL2 の記述がすべて削除されている</pre>
-
-  <div class="footer">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">9</span>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════ -->
-<!-- p11: §8 学びと次のステップ               -->
-<!-- ══════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span class="section-num">§ 8</span>
-    <span class="section-title">学びと次のステップ</span>
-  </div>
-
-  <p class="lead">1 週間の高密度開発から得た「構造的な知見」を記録する。これらは将来のマルチエージェント開発設計のための一次資産である。</p>
-
-  <!-- 学び4つ -->
-  <div class="cols-2">
-    <div class="card">
-      <div class="card-title">① 再考閾値の明示が判断を加速する</div>
-      <p>ADR 却下案に「いつ再検討するか」の測定可能な条件を付記することで、後続の判断が自動的に進む。「チーム 6 ロール以上かつ同時稼働 4+」のように定量化することが鍵。</p>
-    </div>
-    <div class="card">
-      <div class="card-title">② 権限境界の明文化は早ければ早いほどよい</div>
-      <p>TASK-0007 で PM が UX 仕様を越権決定した失態が起きてから ADR-0006 を整備。初期 ADR に権限マップを入れておくことで、ペルソナ追加時の摩擦がゼロになる。</p>
-    </div>
-    <div class="card">
-      <div class="card-title">③ 3 段階以上の連鎖罠 = 撤退シグナル</div>
-      <p>ADR-0003（通知レイヤ）は 4 段階の罠を踏んでから撤退を決定。「2 連続で詰まる = 黄信号 / 3 連続 = 要件再評価セッション」を次規律として明文化。</p>
-    </div>
-    <div class="card">
-      <div class="card-title">④ 参照元ドキュメントに早期回帰する</div>
-      <p>参照実装 アーキテクチャ調査メモ（2026-04-25）を ADR-0003 起案時（04-27）に再読していれば「通知レイヤ不要」判定が 2 日早かった。ADR 起案前の関連歴史化メモ全件再読を義務化。</p>
-    </div>
-  </div>
-
-  <!-- phase2 条件 -->
-  <div style="margin-top:4mm">
-    <div class="card-title" style="color:var(--ink);font-size:9.5pt;margin-bottom:3mm;">次のステップ & phase2 条件</div>
-    <table>
-      <tr><th style="width:40mm">項目</th><th>内容</th><th style="width:30mm">発動条件</th></tr>
-      <tr>
-        <td>通知レイヤ phase2</td>
-        <td>Webhook 型通知の再実装（ローカル Notifier + Cloudflare Tunnel）</td>
-        <td>ロール 6 以上 ＆ 同時稼働 4+ ＆ 1 日 10 メッセージ超</td>
-      </tr>
-      <tr>
-        <td>モバイル対応</td>
-        <td>React Native / Expo の評価</td>
-        <td>本プロダクトにモバイル機能要件が発生時</td>
-      </tr>
-      <tr>
-        <td>GitHub Issue 可視化</td>
-        <td>3 軸 13 ラベルによる Issue 管理（既採用）</td>
-        <td>✓ 運用中</td>
-      </tr>
-      <tr>
-        <td>自動レビュー予約</td>
-        <td>/schedule で 2026-10-29 に通知レイヤ再評価を予約済み</td>
-        <td>✓ スケジュール済</td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- まとめ -->
-  <div class="highlight" style="margin-top:4mm">
-    <strong>この環境が目指す姿:</strong><br>
-    ユーザーは「何を作るか」だけを考える。「どう作るか」の設計・実装・検証・報告はチームが担う。
-    ペルソナは固有名と責任境界を持ち、ADR が判断の重さを記録し続ける。
-    <em>少数精鋭が、自走する。</em>
-  </div>
-
-  <!-- レポート末尾 -->
-  <div style="text-align:center; margin-top:8mm;">
-    <svg width="40" height="40" viewBox="0 0 60 60" style="display:inline-block;">
-      <circle cx="30" cy="30" r="28" fill="none" stroke="#d8d8ee" stroke-width="1.5"/>
-      <circle cx="30" cy="12" r="7" fill="#5b6af0"/>
-      <circle cx="10" cy="44" r="6" fill="#5b6af0" opacity=".75"/>
-      <circle cx="30" cy="50" r="6" fill="#5b6af0" opacity=".75"/>
-      <circle cx="50" cy="44" r="6" fill="#5b6af0" opacity=".75"/>
-      <line x1="30" y1="19" x2="14" y2="38" stroke="#5b6af0" stroke-width="1.5" opacity=".6"/>
-      <line x1="30" y1="19" x2="30" y2="44" stroke="#5b6af0" stroke-width="1.5" opacity=".6"/>
-      <line x1="30" y1="19" x2="46" y2="38" stroke="#5b6af0" stroke-width="1.5" opacity=".6"/>
-    </svg>
-    <div style="margin-top:3mm;font-size:8pt;color:var(--pale);">ドラフト v1 — 2026-05-11<br>フィードバックをお待ちしています</div>
-  </div>
-
-  <div class="footer">
-    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">10</span>
-  </div>
-</div>
-
 </body>
 </html>
