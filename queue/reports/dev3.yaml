@@ -20,3 +20,57 @@
     - 検証スクリプト verify_task_newch2_01.py で 4 項目 PASS 確認済み。
     - designer_visual: PowerPoint 目視 or PNG 書き出しで PM/Designer 確認が必要。
   questions: []
+
+- task_id: TASK-GLOBALCTX-VERIFY-01
+  type: formal
+  from: dev3
+  to: pm
+  at: 2026-06-29
+  status: verified_pending_pm_decision  # スクリプト作成+検証は完了 / e の受入判断は PM 待ち
+  target_pptx: W:\ai_training_for_rjc\AI研修-CLIの便利コマンドとトークン節約術.pptx
+  depends_on: TASK-GLOBALCTX-01 (dev1 完了検知 = pptx 29 枚化を確認済)
+  script: scripts/verify_task_globalctx_01.py (5 項目 / before は git show HEAD^:<rel> で自動取得)
+  acceptance:
+    a_overlap_zero: PASS  # 意図的レイアウト(包含 / 2行タイトル / ✓コールアウト)除外後 = 真の崩れ 0
+    b_no_overflow:  PASS  # bbox スライド外はみ出し = 0 (行あふれ推定は WARN 参考・FAIL 非関与)
+    c_slide_count:  PASS  # 29 枚 (旧 26 + 新規 3)
+    d_numbering:    PASS  # 04/GLOBAL CONTEXT・05/COST・AGENDA "100 minutes ｜ 5 sections"
+    e_side_effect:  FAIL_2  # S8・S11 の計 2 件 → PM 判定依頼
+  e_analysis: |
+    e の差分 2 件は dev1 の "git diff HEAD" に含まれない（dev1 の変更は S1 想定時間 /
+    AGENDA 5sections 化 / 新規 GLOBAL CONTEXT 3 枚 / COST 04→05 のみ = 指示通り純粋）。
+    原因 = before pptx(HEAD) と ビルダ(create_cli_training.py@HEAD) の既往不一致。
+    before pptx にだけ存在したテキスト（ビルダに無い）が、dev1 のビルダ再生成で消失。
+    dev1 の責任ではなく正規化の結果。コンテンツ復元 要/不要 は PM 判定。
+      - S8 (/effort): "因みにGemini Flash3.5（medium）←これもeffort" が ✓チェック末尾から消滅
+      - S11 (USEFUL SKILLS): ページタイトル "定番＆作っておきたい skills" → "作っておきたい skills"
+  notes: |
+    - スクリプトは multi-agent-team/scripts/ に配置（ai_training_for_rjc は dev1 作業中のため非干渉）
+    - a overlap の意図的除外ロジック（包含 / xo>1.0かつyg<0.4 / ✓コールアウト）は本デッキ既知パターン。
+      「有意な重なり」の最終解釈は PM/Designer 目視確認を推奨。
+  questions:
+    - e 差分 2 件 (S8/S11) を「副作用 OK で受入」か「ビルダへ復元→再生成」か PM 判定ください
+
+- task_id: TASK-GLOBALCTX-VERIFY-02
+  type: formal
+  from: dev3
+  to: pm
+  at: 2026-06-29
+  status: done  # 全 5 項目 PASS
+  target_pptx: W:\ai_training_for_rjc\AI研修-CLIの便利コマンドとトークン節約術.pptx
+  depends_on: TASK-GLOBALCTX-02 (dev1 再生成完了検知 = pptx 31 枚化を確認)
+  script: scripts/verify_task_globalctx_02.py (5 項目 / before=01 成果 29 枚版 snapshot)
+  before_snapshot: W:\ai_training_for_rjc\cli_globalctx02_old_for_verify.pptx (*_old_for_verify.pptx で gitignore 済)
+  acceptance:
+    a_overlap_zero: PASS  # 意図的レイアウト(包含/2行タイトル/✓コールアウト)除外後 = 真の崩れ 0
+    b_no_overflow:  PASS  # bbox スライド外はみ出し = 0 (新規パス/フロー/6カードの行あふれ WARN なし)
+    c_slide_count:  PASS  # 31 枚 (旧26 + divider + 本編4)
+    d_structure:    PASS  # 04 GC 本編 WHAT→PATH&FLOW→WHY/HOW 順序正 / 05 COST / AGENDA 100min 5sections
+    e_side_effect:  PASS  # before(29枚) vs after(31枚) / GC4枚+AGENDA 以外 差分 0 / S8・S11 は 02 前後で不変(既知許容)
+  notes: |
+    - S8/S11 ドリフトは 01 で既に取り込まれ 02 前後(29→31枚)で不変のため、before=29枚版
+      snapshot との比較で自動的に差分なし。PM「既知ドリフト許容」方針を自然に満たす。02 新規副作用 0 件。
+    - a overlap は意図的レイアウト除外ロジック(包含/xo>1.0かつyg<0.4/✓コールアウト)使用。
+      「有意な重なり」の最終解釈は PM/Designer 目視確認を推奨。
+    - dev1 が W: 側に _verify_gc02.py(untracked) を作成(自己検証)。本スクリプト(multi-agent-team 側)とは別物。
+  questions: []
