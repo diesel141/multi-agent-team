@@ -330,12 +330,13 @@
     </tr>
     <tr><td>1</td><td>本プロジェクト概要</td><td style="text-align:right">3</td></tr>
     <tr><td>2</td><td>チーム設計 — 少数精鋭のペルソナ</td><td style="text-align:right">4</td></tr>
-    <tr><td>3</td><td>コミュニケーション設計の進化</td><td style="text-align:right">5</td></tr>
-    <tr><td>4</td><td>環境設計の変遷 — 外部参照実装 → WSL2 → psmux</td><td style="text-align:right">6</td></tr>
-    <tr><td>5</td><td>意思決定の記録（ADR 系統図）</td><td style="text-align:right">7</td></tr>
-    <tr><td>6</td><td>開発タイムライン</td><td style="text-align:right">8</td></tr>
-    <tr><td>7</td><td>現在の運用フロー</td><td style="text-align:right">9</td></tr>
-    <tr><td>8</td><td>学びと次のステップ</td><td style="text-align:right">10</td></tr>
+    <tr><td>3</td><td>チーム召喚 — pm.cmd ひとつで始まる</td><td style="text-align:right">5</td></tr>
+    <tr><td>4</td><td>コミュニケーション設計の進化</td><td style="text-align:right">6</td></tr>
+    <tr><td>5</td><td>環境設計の変遷 — 外部参照実装 → WSL2 → psmux</td><td style="text-align:right">7</td></tr>
+    <tr><td>6</td><td>意思決定の記録（ADR 系統図）</td><td style="text-align:right">8</td></tr>
+    <tr><td>7</td><td>開発タイムライン</td><td style="text-align:right">9</td></tr>
+    <tr><td>8</td><td>現在の運用フロー</td><td style="text-align:right">10</td></tr>
+    <tr><td>9</td><td>学びと次のステップ</td><td style="text-align:right">11</td></tr>
   </table>
 
   <div class="highlight" style="margin-top:6mm">
@@ -601,11 +602,39 @@
 
 
 <!-- ══════════════════════════════════════════ -->
-<!-- p5: §3 コミュニケーション設計の進化       -->
+<!-- p5: §3 チーム召喚（NEW）                   -->
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
     <span class="section-num">§ 3</span>
+    <span class="section-title">チーム召喚 — pm.cmd ひとつで始まる</span>
+  </div>
+
+  <p class="lead">「pm.cmd」を叩くだけで、psmux 上に PM + Developer×3 の 4 ペイン編成が一括で召喚される。各ペインは起動直後に自律的に <code>instructions/*.md</code> を読み込み、自身の役割と権限を自覚した状態で整列を完了する。</p>
+
+  <div class="fig">
+    <img src="チーム召喚.png" alt="pm.cmd による4ペイン召喚画面" style="display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--border);">
+  </div>
+  <p class="caption">図3-1 <code>pm.cmd</code> 実行直後の psmux 4 ペイン画面。左上に PM（藤宮詩織）、右上に dev1（黒崎颯真）、左下に dev2（緑川啓介）、右下に dev3（茜野真理）が配置され、各ペインが割り当てられた指示ファイルを読み込んで整列完了状態で待機している。</p>
+
+  <div class="highlight" style="margin-top:4mm">
+    <strong>ユーザーが行うのは実行のみ。</strong><br>
+    psmux が session "team" を作成し、4 ペインを起動、各ペインで claude を自動起動して instructions を読み込み、整列を完了する —— この一連の流れがコマンド 1 本で完結する。
+  </div>
+
+  <div class="footer">
+    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
+    <span class="page-num">5</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- p6: §4 コミュニケーション設計の進化        -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-num">§ 4</span>
     <span class="section-title">コミュニケーション設計の進化</span>
   </div>
 
@@ -722,7 +751,7 @@
       <text x="351" y="62" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="6.5" font-family="sans-serif">雑談追加・ログ整理</text>
     </svg>
   </div>
-  <p class="caption">図3-1 通信プロトコル 3 世代。Formal を土台に Informal を積み上げた。</p>
+  <p class="caption">図4-1 通信プロトコル 3 世代。Formal を土台に Informal を積み上げた。</p>
 
   <!-- Notion カンバン + GitHub Issues イメージ -->
   <div class="cols-2" style="margin-top:4mm;margin-bottom:1mm;gap:4mm;">
@@ -812,7 +841,7 @@
       </svg>
     </div>
   </div>
-  <p class="caption" style="margin-top:1mm;">図3-1-b タスク可視化の二層構造。Notion カンバンでリアルタイム状況把握、GitHub Issues でラベル・担当・番号による正式記録。</p>
+  <p class="caption" style="margin-top:1mm;">図4-1-b タスク可視化の二層構造。Notion カンバンでリアルタイム状況把握、GitHub Issues でラベル・担当・番号による正式記録。</p>
 
   <div style="margin:4mm 0;background:var(--ink);border-radius:10px;padding:5mm 6mm 4mm;position:relative;overflow:hidden;">
     <div style="position:absolute;top:-6mm;left:3mm;font-size:52pt;font-family:var(--font-serif);color:rgba(91,106,240,.18);line-height:1;pointer-events:none;">"</div>
@@ -828,7 +857,7 @@
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">5</span>
+    <span class="page-num">6</span>
   </div>
 </div>
 
@@ -880,7 +909,7 @@
         <text x="210" y="136" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="6.5" font-family="monospace">watch-queue.ps1 → tmux send-keys "inbox"</text>
       </svg>
     </div>
-    <p class="caption">図3-2 YAML キュー全体図。watch-queue.ps1 がファイル変更を検知し、対象ペインに inbox コマンドを自動送信する。</p>
+    <p class="caption">図4-2 YAML キュー全体図。watch-queue.ps1 がファイル変更を検知し、対象ペインに inbox コマンドを自動送信する。</p>
   </div>
 
   <table style="margin-bottom:6mm">
@@ -891,7 +920,7 @@
   </table>
 
   <div class="section-header">
-    <span class="section-num">§ 4</span>
+    <span class="section-num">§ 5</span>
     <span class="section-title">環境設計の変遷 — 外部参照実装 → WSL2 → psmux</span>
   </div>
 
@@ -974,7 +1003,7 @@
         <text x="346" y="87" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="6.5" font-family="monospace">instructions/ 読込</text>
       </svg>
     </div>
-    <p class="caption">図4-1 start.sh 起動フロー。コマンド 1 本で 4 エージェントが同時起動する。</p>
+    <p class="caption">図5-1 start.sh 起動フロー。コマンド 1 本で 4 エージェントが同時起動する。</p>
   </div>
 
   <!-- 4ペイン配置 -->
@@ -1002,12 +1031,12 @@
         <text x="312" y="82" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6.5" font-family="monospace">茜野真理 — 待機中</text>
       </svg>
     </div>
-    <p class="caption">図4-2 psmux セッション "team" の 4 ペイン配置。左上が PM ペイン（青枠）。</p>
+    <p class="caption">図5-2 psmux セッション "team" の 4 ペイン配置。左上が PM ペイン（青枠）。</p>
   </div>
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">6</span>
+    <span class="page-num">7</span>
   </div>
 </div>
 
@@ -1093,7 +1122,7 @@
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
-    <span class="section-num">§ 5</span>
+    <span class="section-num">§ 6</span>
     <span class="section-title">意思決定の記録（ADR 系統図）</span>
   </div>
 
@@ -1173,7 +1202,7 @@
       <text x="300" y="215" fill="#8888aa" font-size="7.5" font-family="sans-serif">（ADR-0003, 0005）</text>
     </svg>
   </div>
-  <p class="caption">図5-1 ADR 系統図。Superseded（点線）は後継 ADR で意思決定を引き継いだことを示す。</p>
+  <p class="caption">図6-1 ADR 系統図。Superseded（点線）は後継 ADR で意思決定を引き継いだことを示す。</p>
 
   <table>
     <tr><th style="width:28mm">ADR 番号</th><th>内容</th><th style="width:22mm">状態</th></tr>
@@ -1189,7 +1218,7 @@
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">7</span>
+    <span class="page-num">8</span>
   </div>
 </div>
 
@@ -1199,7 +1228,7 @@
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
-    <span class="section-num">§ 6</span>
+    <span class="section-num">§ 7</span>
     <span class="section-title">開発タイムライン</span>
   </div>
 
@@ -1277,7 +1306,7 @@
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">8</span>
+    <span class="page-num">9</span>
   </div>
 </div>
 
@@ -1287,7 +1316,7 @@
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
-    <span class="section-num">§ 7</span>
+    <span class="section-num">§ 8</span>
     <span class="section-title">現在の運用フロー</span>
   </div>
 
@@ -1362,7 +1391,7 @@
       <text x="359" y="230" text-anchor="middle" fill="rgba(91,106,240,.6)" font-size="6" font-family="sans-serif">（自動プッシュ）</text>
     </svg>
   </div>
-  <p class="caption">図7-1 現行フル運用フロー。ユーザー操作は① と受入確認のみ。</p>
+  <p class="caption">図8-1 現行フル運用フロー。ユーザー操作は① と受入確認のみ。</p>
 
   <pre style="margin-top:3mm">
 # you_to_pm.yaml 記述例
@@ -1375,7 +1404,7 @@ acceptance_criteria:
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">9</span>
+    <span class="page-num">10</span>
   </div>
 </div>
 
@@ -1385,7 +1414,7 @@ acceptance_criteria:
 <!-- ══════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
-    <span class="section-num">§ 8</span>
+    <span class="section-num">§ 9</span>
     <span class="section-title">学びと次のステップ</span>
   </div>
 
@@ -1464,7 +1493,7 @@ acceptance_criteria:
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">10</span>
+    <span class="page-num">11</span>
   </div>
 </div>
 
