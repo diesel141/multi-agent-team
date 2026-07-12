@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【付録２】本気で検証！AIプラン - 主要AIサブスクリプション実運用比較</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 20px; text-align: center; }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .content { padding: 40px 20px; }
+        .content ul { padding-left: 2em; }
+        .section { margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid #eee; }
+        .section h2 { color: #667eea; font-size: 2em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+        .section h3 { color: #764ba2; font-size: 1.5em; margin: 20px 0 15px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background: #667eea; color: white; padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #ddd; }
+        tr:hover { background: #f5f5f5; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; color: #d63384; }
+        .success { background: #e8f5e9; padding: 15px; border-left: 4px solid #4caf50; margin: 15px 0; }
+        .warning { background: #fff3e0; padding: 15px; border-left: 4px solid #ff9800; margin: 15px 0; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 600; }
+        .status-success { background: #4caf50; color: white; }
+        .status-warning { background: #ff9800; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔬 本気で検証！AIプラン</h1>
+            <p>主要AIサブスクリプション 7 プランを ADD（Agent-Driven Development）で実運用比較</p>
+        </header>
+
+        <div class="content">
+            <div class="section">
+                <h2>📊 SUMMARY</h2>
+
+                <p>1日 2～3 時間の ADD 運用を前提に、主要 AI サブスクリプション 7 プランを並行利用し、コストと性能を実地検証した。</p>
+
+                <h3>利用したプラン</h3>
+                <table>
+                    <tr>
+                        <th>プラン</th>
+                        <th>月額</th>
+                        <th>円換算</th>
+                        <th>備考</th>
+                    </tr>
+                    <tr>
+                        <td>CLAUDE max 5x</td>
+                        <td>$110</td>
+                        <td>￥18,162</td>
+                        <td>制限に届かずストレスフリー</td>
+                    </tr>
+                    <tr>
+                        <td>CLAUDE pro</td>
+                        <td>$22</td>
+                        <td>￥3,659</td>
+                        <td>小規模アプリ 3 本で枯渇</td>
+                    </tr>
+                    <tr>
+                        <td>GLM pro</td>
+                        <td>$18</td>
+                        <td>￥2,992</td>
+                        <td><span class="status-badge status-warning">コスパ 2 位</span></td>
+                    </tr>
+                    <tr>
+                        <td>Deepseek</td>
+                        <td>$21.2（プリペイド）</td>
+                        <td>￥3,523</td>
+                        <td><span class="status-badge status-success">コスパ 1 位</span> 唯一のプリペイド</td>
+                    </tr>
+                    <tr>
+                        <td>Google One</td>
+                        <td>-</td>
+                        <td>￥2,900</td>
+                        <td>トークン消費が激しい</td>
+                    </tr>
+                    <tr>
+                        <td>GitHub Copilot pro</td>
+                        <td>$10</td>
+                        <td>￥1,626</td>
+                        <td>スポットワークフロー向き</td>
+                    </tr>
+                    <tr>
+                        <td>Codex（Chat GPT）Plus</td>
+                        <td>-</td>
+                        <td>￥3,000</td>
+                        <td>CLAUDE に近いが議論は弱い</td>
+                    </tr>
+                    <tr style="background: #e8f5e9; font-weight: 600;">
+                        <td>合計</td>
+                        <td>-</td>
+                        <td>￥35,862</td>
+                        <td>7 プラン並行利用時の月額総額</td>
+                    </tr>
+                </table>
+                <p>※ 円換算は購入時レートによる実額。</p>
+            </div>
+
+            <div class="section">
+                <h2>💰 コスト</h2>
+
+                <h3>CLAUDE max 5x</h3>
+                <ul>
+                    <li>1日 2～3H の ADD において、60% 程度の消費だった</li>
+                    <li>どの制限にも引っかかることがなくストレスフリー</li>
+                </ul>
+
+                <h3>CLAUDE pro</h3>
+                <ul>
+                    <li>ADD において、小規模なアプリ 3 つ（作り切った）程度で枯渇</li>
+                    <li>5H 制限（5 時間ごとにリセットされる利用上限）がかかることがあり、別の LLM で対応することが多かった</li>
+                    <li>1 週間制限がかかることがあった</li>
+                </ul>
+
+                <h3>GLM pro <span class="status-badge status-warning">コスパ 2 位</span></h3>
+                <ul>
+                    <li>CLAUDE pro の 3 倍トークン（体感 2 倍）で余裕</li>
+                    <li>5H 制限がかかることがあり、別の LLM で対応することが多かった</li>
+                </ul>
+
+                <h3>Deepseek <span class="status-badge status-success">コスパ 1 位</span></h3>
+                <ul>
+                    <li>唯一のプリペイドプラン（月額固定ではなくチャージ式）</li>
+                    <li>安いのに制限なし</li>
+                    <li>トークンが潤沢</li>
+                </ul>
+
+                <h3>Google One</h3>
+                <ul>
+                    <li>タスク完遂まで進める癖ありトークンの消費が激しい</li>
+                </ul>
+
+                <h3>GitHub Copilot pro</h3>
+                <ul>
+                    <li>設計・提案は弱いがスポットワークフローに問題なし</li>
+                </ul>
+
+                <h3>Codex Plus</h3>
+                <ul>
+                    <li>CLAUDE に近いが、設計・言論のやりとりが弱い</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>⚡ 性能</h2>
+
+                <p>コスト検証と並行して、ADD（設計～実装～テスト）における体感性能を比較した。評価は本検証における主観ベース（◎=強い / ○=実用十分 / △=弱い）。</p>
+
+                <h3>性能比較表</h3>
+                <table>
+                    <tr>
+                        <th>プラン</th>
+                        <th>設計・提案</th>
+                        <th>実装</th>
+                        <th>エージェント自走</th>
+                        <th>ひとことメモ</th>
+                    </tr>
+                    <tr>
+                        <td>CLAUDE max 5x / pro</td>
+                        <td>◎</td>
+                        <td>◎</td>
+                        <td>◎</td>
+                        <td>ADD の中核。設計・言論のやりとりが最強</td>
+                    </tr>
+                    <tr>
+                        <td>Codex Plus</td>
+                        <td>△</td>
+                        <td>◎</td>
+                        <td>○</td>
+                        <td>実装特化。CLAUDE に近いが議論は苦手</td>
+                    </tr>
+                    <tr>
+                        <td>GLM pro</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>バランス型。サブ機として優秀</td>
+                    </tr>
+                    <tr>
+                        <td>Deepseek</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>コスパ最強。試行錯誤の主力に</td>
+                    </tr>
+                    <tr>
+                        <td>Google One</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>◎</td>
+                        <td>完遂志向で自走力が高い（消費も激しい）</td>
+                    </tr>
+                    <tr>
+                        <td>GitHub Copilot pro</td>
+                        <td>△</td>
+                        <td>○</td>
+                        <td>△</td>
+                        <td>補完・スポット修正特化</td>
+                    </tr>
+                </table>
+
+                <h3>CLAUDE（max 5x / pro）</h3>
+                <ul>
+                    <li>設計・言論のやりとり（要件の壁打ち・仕様の言語化）が 7 プラン中で最も強い</li>
+                    <li>エージェントとして長時間自走させても指示逸脱・暴走が少なく、ADD の中核に据えられる</li>
+                    <li>max 5x なら上位モデルを常用しても制限に届かず、品質と快適さを両立できる</li>
+                </ul>
+
+                <h3>Codex（Chat GPT）Plus</h3>
+                <ul>
+                    <li>実装力は CLAUDE に近い水準で、明確な指示に対するコード生成は高速・正確</li>
+                    <li>設計・言論のやりとりが弱く、要件整理や方針議論の相手には不向き</li>
+                    <li>「設計は CLAUDE、実装は Codex」という分担が現実的</li>
+                </ul>
+
+                <h3>GLM pro</h3>
+                <ul>
+                    <li>日常的なコーディング・テスト生成では上位プランと遜色ない品質</li>
+                    <li>複雑な設計判断や長い議論では CLAUDE に一歩譲る</li>
+                    <li>トークン量（CLAUDE pro の 3 倍・体感 2 倍）と性能のバランスが良く、5H 制限時の受け皿として優秀</li>
+                </ul>
+
+                <h3>Deepseek</h3>
+                <ul>
+                    <li>推論力が高く、コード品質も価格からは想像できない水準</li>
+                    <li>プリペイドで制限なし・トークン潤沢のため、大量の試行錯誤に最適</li>
+                    <li>推論（思考）が長くなりがちで、応答の体感速度は上位プランに劣る場面がある</li>
+                </ul>
+
+                <h3>Google One</h3>
+                <ul>
+                    <li>タスク完遂まで自走する癖が強く、放置型のワークフローでは頼れる</li>
+                    <li>反面、途中確認が少なくトークン消費が激しい（コスト面の弱点と表裏一体）</li>
+                    <li>長大なコンテキスト処理（大きなコードベースの読み込み）に強い</li>
+                </ul>
+
+                <h3>GitHub Copilot pro</h3>
+                <ul>
+                    <li>エディタ内補完・スポットの修正は快適で、日常の実装速度を底上げする</li>
+                    <li>設計・提案は弱く、単体で ADD を回すのは難しい</li>
+                    <li>他プランと併用する「作業補助」ポジションが最適</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>📝 総評</h2>
+
+                <div class="success">
+                    <h3>結論：開発性能に妥協せず、最もコスパが良い組み合わせ</h3>
+                    <p>本検証の結果、採用する組み合わせは以下に決定した。</p>
+                    <table>
+                        <tr>
+                            <th>プラン</th>
+                            <th>月額</th>
+                            <th>担当領域</th>
+                        </tr>
+                        <tr>
+                            <td>CLAUDE pro</td>
+                            <td>$22/月</td>
+                            <td>設計・監視・運用（Opus / Fable）</td>
+                        </tr>
+                        <tr>
+                            <td>GLM pro</td>
+                            <td>$18/月</td>
+                            <td>実装・テスト実施・資料作成</td>
+                        </tr>
+                        <tr>
+                            <td>Deepseek</td>
+                            <td>利用分だけ（プリペイド）</td>
+                            <td>制限時のバックアップ</td>
+                        </tr>
+                        <tr style="font-weight: 600;">
+                            <td>合計</td>
+                            <td>$40＋/月</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>運用方針</h3>
+                <ul>
+                    <li>CLAUDE Opus や Fable に<strong>設計・監視・運用</strong>などを任せる</li>
+                    <li>GLM に<strong>実装・テスト実施・資料作成</strong>を任せる</li>
+                    <li>いずれかに制限がかかった場合、<strong>Deepseek で補う</strong></li>
+                </ul>
+
+                <h3>選定理由</h3>
+                <ul>
+                    <li>設計・言論に最も強い CLAUDE と、トークン量に余裕がある GLM の分担で、性能と物量を両立できる</li>
+                    <li>両者の弱点である 5H 制限は、制限なしのプリペイド型 Deepseek がカバーする</li>
+                    <li>7 プラン並行時（￥35,862/月）と比較して、月額を約 $40＋（￥6,651＋利用分）まで圧縮できる</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>🏆 私的最高の使い方</h2>
+
+                <div class="success">
+                    <p>psmux でエージェントチームを組み、以下の割り当てとすることで、チームの能力を十分に発揮し、コストも抑えた環境を構築することに成功した。</p>
+                    <table>
+                        <tr>
+                            <th>ロール</th>
+                            <th>割り当てモデル</th>
+                        </tr>
+                        <tr>
+                            <td>PM</td>
+                            <td>CLAUDE Opus</td>
+                        </tr>
+                        <tr>
+                            <td>フロント SE</td>
+                            <td>GLM</td>
+                        </tr>
+                        <tr>
+                            <td>インフラ SE</td>
+                            <td>GLM</td>
+                        </tr>
+                        <tr>
+                            <td>QA</td>
+                            <td>GLM</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <p>※「<a href="./少数精鋭のペルソナ設計と、自走開発の可視化.html">少数精鋭のペルソナ設計と、自走開発の可視化</a>」レポートを参照</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
