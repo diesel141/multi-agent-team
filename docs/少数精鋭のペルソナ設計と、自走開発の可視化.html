@@ -81,7 +81,7 @@
   .cover-subtitle {
     font-size: 10pt;
     color: rgba(255,255,255,.7);
-    margin-bottom: 18mm;
+    margin-bottom: 12mm;
   }
   .cover-divider {
     width: 40mm;
@@ -113,7 +113,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 7mm;
+    margin-bottom: 5mm;
   }
   .section-num {
     font-size: 7pt;
@@ -146,7 +146,7 @@
     background: var(--bg-soft);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 5mm 6mm;
+    padding: 4mm 5mm;
     margin-bottom: 4mm;
   }
   .card-title {
@@ -156,7 +156,7 @@
     margin-bottom: 2mm;
     letter-spacing: .05em;
   }
-  .card p { margin: 0; font-size: 9pt; color: var(--mid); }
+  .card p { margin: 0; font-size: 9pt; color: var(--mid); line-height: 1.6; }
 
   /* ── キャプション ────────────────── */
   .caption {
@@ -186,7 +186,7 @@
   }
 
   /* ── テーブル ─────────────────────── */
-  table { width: 100%; border-collapse: collapse; margin-bottom: 4mm; font-size: 8.5pt; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 4mm; font-size: 8pt; }
   th {
     background: var(--ink);
     color: white;
@@ -197,7 +197,7 @@
     letter-spacing: .04em;
   }
   td {
-    padding: 2mm 3mm;
+    padding: 1.6mm 3mm;
     border-bottom: 1px solid var(--border);
     color: var(--mid);
     vertical-align: top;
@@ -228,7 +228,7 @@
   .timeline-item {
     display: flex;
     gap: 5mm;
-    margin-bottom: 5mm;
+    margin-bottom: 2.5mm;
     position: relative;
   }
   .tl-dot-col {
@@ -260,8 +260,8 @@
     padding-top: 1px;
   }
   .tl-body { flex: 1; }
-  .tl-title { font-weight: 700; font-size: 9.5pt; margin-bottom: 1mm; }
-  .tl-desc { font-size: 8.5pt; color: var(--mid); }
+  .tl-title { font-weight: 700; font-size: 9.5pt; margin-bottom: 0.5mm; }
+  .tl-desc { font-size: 8.5pt; color: var(--mid); line-height: 1.5; }
 
   /* ── ページ番号 ─────────────────── */
   .page-num { font-variant-numeric: tabular-nums; }
@@ -296,7 +296,7 @@
 <div class="page cover">
   <div class="cover-eyebrow">Multi-Agent ADD Team — Development Report</div>
 
-  <img src="脳みそチーム.png" style="max-width:160mm;max-height:120mm;object-fit:contain;margin-bottom:6mm;border-radius:8px;">
+  <img src="images/脳みそチーム.png" style="max-width:150mm;max-height:92mm;object-fit:contain;margin-bottom:5mm;border-radius:8px;">
 
   <div class="cover-badge"><div class="cover-dot"></div>2026-07-12</div>
 
@@ -305,8 +305,10 @@
 
   <div class="cover-divider"></div>
 
+  <div style="font-size:10.5pt;color:rgba(255,255,255,.85);letter-spacing:.08em;margin-bottom:8mm;">システム開発部 石井友和</div>
+
   <div class="cover-meta">
-    プロジェクト: tomokazu-i/multi-agent-team<br>
+    プロジェクト: multi-agent-team<br>
     記録期間: 2026-04-25 〜 2026-07-12<br>
     発行: ユーザー + Claude (claude-sonnet-4-6)
   </div>
@@ -332,12 +334,12 @@
     <tr><td>2</td><td>チーム設計 — 少数精鋭のペルソナ</td><td style="text-align:right">4</td></tr>
     <tr><td>3</td><td>チーム召喚 — pm.cmd ひとつで始まる</td><td style="text-align:right">5</td></tr>
     <tr><td>4</td><td>コミュニケーション設計の進化</td><td style="text-align:right">6</td></tr>
-    <tr><td>5</td><td>環境設計の変遷 — 外部参照実装 → WSL2 → psmux</td><td style="text-align:right">8</td></tr>
+    <tr><td>5</td><td>環境設計の変遷 — 外部参照実装 → WSL2 → psmux</td><td style="text-align:right">9</td></tr>
     <tr><td>—</td><td>幕間 — 通信インフラ 失敗の実録</td><td style="text-align:right">—</td></tr>
-    <tr><td>6</td><td>意思決定の記録（ADR 系統図）</td><td style="text-align:right">9</td></tr>
-    <tr><td>7</td><td>開発タイムライン</td><td style="text-align:right">10</td></tr>
-    <tr><td>8</td><td>現在の運用フロー</td><td style="text-align:right">11</td></tr>
-    <tr><td>9</td><td>学びと次のステップ</td><td style="text-align:right">12</td></tr>
+    <tr><td>6</td><td>意思決定の記録（ADR 系統図）</td><td style="text-align:right">10</td></tr>
+    <tr><td>7</td><td>開発タイムライン</td><td style="text-align:right">11</td></tr>
+    <tr><td>8</td><td>現在の運用フロー</td><td style="text-align:right">12</td></tr>
+    <tr><td>9</td><td>学びと次のステップ</td><td style="text-align:right">13</td></tr>
   </table>
 
   <div class="footer">
@@ -505,7 +507,7 @@
       <rect x="10" y="10" width="400" height="96" rx="8" fill="#5b6af0"/>
       <rect x="10" y="10" width="6" height="96" rx="3" fill="#fff" opacity=".3"/>
       <!-- PM アバター -->
-      <image href="藤宮詩織.png" x="338" y="13" width="64" height="82" clip-path="url(#clip-pm)" preserveAspectRatio="xMidYMid meet"/>
+      <image href="images/藤宮詩織.png" x="338" y="13" width="64" height="82" clip-path="url(#clip-pm)" preserveAspectRatio="xMidYMid meet"/>
       <text x="28" y="30" fill="rgba(255,255,255,.55)" font-size="7.5" font-family="sans-serif">PM 兼 Designer</text>
       <text x="28" y="50" fill="white" font-size="13" font-family="sans-serif" font-weight="bold">藤宮 詩織　Fujimiya Shiori</text>
       <text x="28" y="66" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="sans-serif">UX 出身 → PM 8 年。受入規律のテンプレ化を主導。</text>
@@ -515,7 +517,7 @@
       <!-- dev1 カード（下段左） -->
       <rect x="10" y="118" width="126" height="192" rx="8" fill="#1a1a2e"/>
       <!-- dev1 アバター -->
-      <image href="黒崎颯真.png" x="98" y="122" width="34" height="56" clip-path="url(#clip-d1)" preserveAspectRatio="xMidYMid meet"/>
+      <image href="images/黒崎颯真.png" x="98" y="122" width="34" height="56" clip-path="url(#clip-d1)" preserveAspectRatio="xMidYMid meet"/>
       <rect x="10" y="118" width="126" height="5" rx="3" fill="#888" opacity=".5"/>
       <text x="22" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">黒崎 — 36歳</text>
       <text x="22" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">黒崎 颯真</text>
@@ -534,7 +536,7 @@
       <!-- dev2 カード（下段中） -->
       <rect x="148" y="118" width="126" height="192" rx="8" fill="#1a4a1a"/>
       <!-- dev2 アバター -->
-      <image href="緑川啓介.png" x="236" y="122" width="34" height="56" clip-path="url(#clip-d2)" preserveAspectRatio="xMidYMid meet"/>
+      <image href="images/緑川啓介.png" x="236" y="122" width="34" height="56" clip-path="url(#clip-d2)" preserveAspectRatio="xMidYMid meet"/>
       <rect x="148" y="118" width="126" height="5" rx="3" fill="#4caf50" opacity=".7"/>
       <text x="160" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">緑川 — 49歳</text>
       <text x="160" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">緑川 啓介</text>
@@ -553,7 +555,7 @@
       <!-- dev3 カード（下段右） -->
       <rect x="286" y="118" width="124" height="192" rx="8" fill="#4a1a1a"/>
       <!-- dev3 アバター -->
-      <image href="茜野真理.png" x="374" y="122" width="34" height="56" clip-path="url(#clip-d3)" preserveAspectRatio="xMidYMid meet"/>
+      <image href="images/茜野真理.png" x="374" y="122" width="34" height="56" clip-path="url(#clip-d3)" preserveAspectRatio="xMidYMid meet"/>
       <rect x="286" y="118" width="124" height="5" rx="3" fill="#e85d7a" opacity=".7"/>
       <text x="298" y="140" fill="rgba(255,255,255,.45)" font-size="7" font-family="sans-serif">茜野 真理</text>
       <text x="298" y="158" fill="white" font-size="10.5" font-family="sans-serif" font-weight="bold">茜野 真理</text>
@@ -608,7 +610,7 @@
   <p class="lead">「pm.cmd」を叩くだけで、psmux 上に PM + Developer×3 の 4 ペイン編成が一括で召喚される。各ペインは起動直後に自律的に <code>instructions/*.md</code> を読み込み、自身の役割と権限を自覚した状態で整列を完了する。</p>
 
   <div class="fig">
-    <img src="チーム召喚.png" alt="pm.cmd による4ペイン召喚画面" style="display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--border);">
+    <img src="images/チーム召喚.png" alt="pm.cmd による4ペイン召喚画面" style="display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--border);">
   </div>
   <p class="caption">図3-1 <code>pm.cmd</code> 実行直後の psmux 4 ペイン画面。左上に PM（藤宮詩織）、右上に dev1（黒崎颯真）、左下に dev2（緑川啓介）、右下に dev3（茜野真理）が配置され、各ペインが割り当てられた指示ファイルを読み込んで整列完了状態で待機している。</p>
 
@@ -865,7 +867,7 @@
   <div style="margin-bottom:4mm">
     <div class="card-title" style="color:var(--ink);margin-bottom:3mm;font-size:9.5pt;">実際の Issue — GitHub 上でのタスク受発注の実例</div>
     <div class="fig">
-      <img src="ai-task-issues.png" alt="実際の GitHub Issue（#38 TASK-CI-01）" style="display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--border);">
+      <img src="images/ai-task-issues.png" alt="実際の GitHub Issue（#38 TASK-CI-01）" style="display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--border);">
     </div>
     <p class="caption">図4-3 実際の Issue（#38 [TASK-CI-01] GitHub Actions で PR 時に pptx verify 自動実行）。PM が口語調でタスクを振り出し、ラベル（<code>role:dev2</code> / <code>state:inbox</code> / <code>type:task</code>）で担当・状態を管理。dev2（緑川啓介）が「やったこと」と「acceptance チェック」を証跡付きで完了報告し、Closed に至るまでの一連の流れが 1 つの Issue 上に記録されている。</p>
   </div>
@@ -934,6 +936,17 @@
     <tr><td>雑談・思考メモ</td><td>Informal</td><td>ADR-0009 で追加。口語調 OK。</td></tr>
   </table>
 
+  <div class="footer">
+    <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
+    <span class="page-num">8</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- p9: §5 環境設計の変遷                      -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
   <div class="section-header">
     <span class="section-num">§ 5</span>
     <span class="section-title">環境設計の変遷 — 外部参照実装 → WSL2 → psmux</span>
@@ -1051,7 +1064,7 @@
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">8</span>
+    <span class="page-num">9</span>
   </div>
 </div>
 
@@ -1240,7 +1253,7 @@
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">9</span>
+    <span class="page-num">10</span>
   </div>
 </div>
 
@@ -1324,7 +1337,7 @@
     <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
     <div class="tl-body">
       <div class="tl-title">ローカルLLM 環境検証</div>
-      <div class="tl-desc">LM Studio + Qwen-2.5-Coder-14B の統合環境を構築。以降 11 モデルの実用性を検証し、granite 系小型モデルの実用域を確認（→ 付録: ローカルLLM環境構築）。</div>
+      <div class="tl-desc">LM Studio + Qwen-2.5-Coder-14B の統合環境を構築。以降 11 モデルの実用性を検証し、granite 系小型モデルの実用域を確認（→ 付録１: ローカルLLM環境構築）。</div>
     </div>
   </div>
 
@@ -1333,12 +1346,12 @@
     <div class="tl-dot-col"><div class="tl-dot"></div></div>
     <div class="tl-body">
       <div class="tl-title">AI プラン最適化 & レポート完成</div>
-      <div class="tl-desc">7 プラン並行検証を経て CLAUDE pro + GLM pro + Deepseek 構成を採択（PM に Opus、dev 3 名に GLM を割当）。Gemini CLI ベースの自作 141plot CLI も戦力化（→ 付録２・付録3）。本レポート完成。</div>
+      <div class="tl-desc">7 プラン並行検証を経て CLAUDE pro + GLM pro + Deepseek 構成を採択（PM に Opus、dev 3 名に GLM を割当）。Gemini CLI ベースの自作 141plot CLI も戦力化（→ 付録２・付録３）。本レポート完成。</div>
     </div>
   </div>
 
   <!-- PR統計 -->
-  <div class="cols-3" style="margin-top:5mm">
+  <div class="cols-3" style="margin-top:3mm">
     <div class="card" style="text-align:center">
       <div style="font-size:22pt;font-weight:700;color:var(--accent);">39</div>
       <div style="font-size:8pt;color:var(--mid);">マージ済み PR</div>
@@ -1355,7 +1368,7 @@
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">10</span>
+    <span class="page-num">11</span>
   </div>
 </div>
 
@@ -1453,7 +1466,7 @@ acceptance_criteria:
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">11</span>
+    <span class="page-num">12</span>
   </div>
 </div>
 
@@ -1467,7 +1480,7 @@ acceptance_criteria:
     <span class="section-title">学びと次のステップ</span>
   </div>
 
-  <p class="lead">1 週間の高密度開発から得た「構造的な知見」を記録する。これらは将来のマルチエージェント開発設計のための一次資産である。</p>
+  <p class="lead" style="margin-bottom:4mm;">高密度な開発の中で得た「構造的な知見」を記録する。これらは将来のマルチエージェント開発設計のための一次資産である。</p>
 
   <!-- 学び4つ -->
   <div class="cols-2">
@@ -1490,7 +1503,7 @@ acceptance_criteria:
   </div>
 
   <!-- phase2 条件 -->
-  <div style="margin-top:4mm">
+  <div style="margin-top:2mm">
     <div class="card-title" style="color:var(--ink);font-size:9.5pt;margin-bottom:3mm;">次のステップ & phase2 条件</div>
     <table>
       <tr><th style="width:40mm">項目</th><th>内容</th><th style="width:30mm">発動条件</th></tr>
@@ -1518,7 +1531,7 @@ acceptance_criteria:
   </div>
 
   <!-- まとめ -->
-  <div class="highlight" style="margin-top:4mm">
+  <div class="highlight" style="margin-top:2mm;font-size:9pt;">
     <strong>この環境が目指す姿:</strong><br>
     ユーザーは「何を作るか」だけを考える。「どう作るか」の設計・実装・検証・報告はチームが担う。
     ペルソナは固有名と責任境界を持ち、ADR が判断の重さを記録し続ける。
@@ -1526,8 +1539,8 @@ acceptance_criteria:
   </div>
 
   <!-- レポート末尾 -->
-  <div style="text-align:center; margin-top:8mm;">
-    <svg width="40" height="40" viewBox="0 0 60 60" style="display:inline-block;">
+  <div style="display:flex;align-items:center;justify-content:center;gap:3mm;margin-top:2mm;">
+    <svg width="18" height="18" viewBox="0 0 60 60" style="display:block;width:18px;height:18px;">
       <circle cx="30" cy="30" r="28" fill="none" stroke="#d8d8ee" stroke-width="1.5"/>
       <circle cx="30" cy="12" r="7" fill="#5b6af0"/>
       <circle cx="10" cy="44" r="6" fill="#5b6af0" opacity=".75"/>
@@ -1537,12 +1550,12 @@ acceptance_criteria:
       <line x1="30" y1="19" x2="30" y2="44" stroke="#5b6af0" stroke-width="1.5" opacity=".6"/>
       <line x1="30" y1="19" x2="46" y2="38" stroke="#5b6af0" stroke-width="1.5" opacity=".6"/>
     </svg>
-    <div style="margin-top:3mm;font-size:8pt;color:var(--pale);">2026-07-12</div>
+    <span style="font-size:8pt;color:var(--pale);">2026-07-12</span>
   </div>
 
   <div class="footer">
     <span>少数精鋭のペルソナ設計と、自走開発の可視化</span>
-    <span class="page-num">12</span>
+    <span class="page-num">13</span>
   </div>
 </div>
 

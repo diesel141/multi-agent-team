@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【付録3】自分だけのCLIを作ってみた - 141plot CLI 開発記</title>
+    <title>【付録３】自分だけのCLIを作ってみた - 141plot CLI 開発記</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
@@ -24,6 +24,16 @@
         .warning { background: #fff3e0; padding: 15px; border-left: 4px solid #ff9800; margin: 15px 0; }
         .screenshot { max-width: 100%; display: block; margin: 15px auto; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
         .caption { text-align: center; color: #666; font-size: 0.9em; margin-bottom: 25px; }
+        /* 印刷（PDF 出力）時の改ページ制御 */
+        @page { size: A4; margin: 12mm 10mm; }
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; max-width: 100%; }
+            h2, h3 { break-after: avoid-page; }
+            table, pre, .success, .warning, img, .screenshot { break-inside: avoid-page; }
+            tr, li { break-inside: avoid-page; }
+            .caption { break-before: avoid-page; }
+        }
     </style>
 </head>
 <body>
@@ -106,24 +116,30 @@
             <div class="section">
                 <h2>🔧 Gemini CLI からの主な改造点</h2>
 
+                <div style="break-inside: avoid-page;">
                 <h3>1. 認証プロバイダの追加</h3>
                 <ul>
                     <li>z.ai（glm-5.1 / glm-4.6）と LM Studio（ローカル LLM）を認証メニューに組み込み</li>
                     <li>プロジェクト単位で認証方法を選択でき、クラウド／ローカルをシームレスに切り替え可能</li>
                     <li>Gemini CLI 標準の Google 系認証（Google サインイン / Gemini API Key / Vertex AI）も維持</li>
                 </ul>
+                </div>
 
+                <div style="break-inside: avoid-page;">
                 <h3>2. ブランディングの変更</h3>
                 <ul>
                     <li>ASCII アートロゴ・名称（141plot CLI）を独自デザインに差し替え</li>
                     <li>起動画面・タイトルなど「自分のツール」としての見た目にカスタマイズ</li>
                 </ul>
+                </div>
 
+                <div style="break-inside: avoid-page;">
                 <h3>3. skills / hooks 機構</h3>
                 <ul>
                     <li><strong>skills</strong> - 再利用可能なタスク手順を skill として登録し、必要なときに呼び出せる拡張機構（スクリーンショット時点で 13 skills を運用）</li>
                     <li><strong>hooks</strong> - プロジェクト設定（settings.json）からイベントに処理をフックできる機構。イベント名の検証（不正な hook はスキップして警告表示）も動作している</li>
                 </ul>
+                </div>
             </div>
 
             <div class="section">
@@ -142,7 +158,7 @@
                 </ul>
             </div>
 
-            <div class="section">
+            <div class="section" style="break-inside: avoid-page;">
                 <h2>🎓 学んだこと・まとめ</h2>
 
                 <ul>
@@ -151,7 +167,7 @@
                     <li>クラウド／ローカルを 1 つの CLI に統合したことで、コスト・機密性・性能に応じた使い分け（例: 機密コードはローカル、重い設計はクラウド）が日常ワークフローに組み込めた</li>
                 </ul>
 
-                <p style="margin-top: 20px;">※ ローカル LLM 側の環境構築は「<a href="./【付録】ローカルLLM環境構築.html">【付録】ローカルLLM環境構築</a>」、プラン選定は「<a href="./【付録２】本気で検証！AIプラン.html">【付録２】本気で検証！AIプラン</a>」を参照</p>
+                <p style="margin-top: 20px;">※ ローカル LLM 側の環境構築は「<a href="./【付録１】ローカルLLM環境構築.html">【付録１】ローカルLLM環境構築</a>」、プラン選定は「<a href="./【付録２】本気で検証！AIプラン.html">【付録２】本気で検証！AIプラン</a>」を参照</p>
             </div>
         </div>
     </div>

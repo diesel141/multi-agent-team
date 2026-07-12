@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ローカルLLM環境構築レポート - Qwen 2.5 Coder 統合</title>
+    <title>【付録１】ローカルLLM環境構築 - アプリ開発における実用的なローカルLLMの選定及び環境構築</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
@@ -34,6 +34,15 @@
         .status-success { background: #4caf50; color: white; }
         .status-warning { background: #ff9800; color: white; }
         footer { background: #333; color: #fff; text-align: center; padding: 20px; }
+        /* 印刷（PDF 出力）時の改ページ制御 */
+        @page { size: A4; margin: 12mm 10mm; }
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; max-width: 100%; }
+            h2, h3 { break-after: avoid-page; }
+            table, pre, .success, .warning, img { break-inside: avoid-page; }
+            tr, li { break-inside: avoid-page; }
+        }
     </style>
 </head>
 <body>
@@ -85,7 +94,7 @@
                         <td>AMD RX-6900XT (16GB VRAM)</td>
                     </tr>
                     <tr>
-                        <td>CPU</td>
+                        <td>OS</td>
                         <td>Windows 11 Pro</td>
                     </tr>
                     <tr>
@@ -102,7 +111,7 @@
                     </tr>
                     <tr>
                         <td>CLI</td>
-                        <td>141plot CLI（独自構築＝別途レポート化）</td>
+                        <td>141plot CLI（独自構築 — 開発記は<a href="./【付録３】自分だけのCLIを作ってみた.html">【付録３】</a>参照）</td>
                     </tr>
                     <tr>
                         <td>IDE</td>
@@ -163,7 +172,7 @@ disableIndexing: true</code></pre>
             </div>
 
             <div class="section">
-                <h2>📈 パフォーマンス指標</h2>
+                <h2>📈 パフォーマンス指標（Qwen-2.5-Coder-14B）</h2>
 
                 <h3>ロード時間</h3>
                 <table>
@@ -249,7 +258,7 @@ disableIndexing: true</code></pre>
                 <h3>オフロードが重すぎて実用に耐えない</h3>
                 <div class="warning">
                     <ul>
-                        <li><code>Qwen3-14B-Q4_K_M_gguf</code>：9.00GB</li>
+                        <li><code>Qwen3-14B-Q4_K_M.gguf</code>：9.00GB</li>
                     </ul>
                 </div>
             </div>
@@ -270,7 +279,7 @@ disableIndexing: true</code></pre>
                 </div>
 
                 <h3>141plot CLI＋ローカルLLM</h3>
-                <p>Gemini CLI のカスタマイズ版のため、Gemini CLI の機能が利用可能。</p>
+                <p>Gemini CLI のカスタマイズ版のため、Gemini CLI の機能が利用可能（開発記は<a href="./【付録３】自分だけのCLIを作ってみた.html">【付録３】自分だけのCLIを作ってみた</a>を参照）。</p>
                 <div class="success">
                     <ul>
                         <li><strong>チャット機能</strong> - ターミナル上での対話型セッション（REPL）</li>
@@ -311,7 +320,7 @@ disableIndexing: true</code></pre>
 
                 <div class="warning">
                     <h3>3. GPU メモリの効率的な活用</h3>
-                    <p>RX-6900XT の 16GB VRAM に対して、Q4_K_M 量子化された 14B モデルを 78.9% の利用率で運用でき、十分な安全マージン（21.1%）を確保できます。</p>
+                    <p>RX-6900XT の 16GB VRAM に対して、Q4_K_M 量子化された 14B モデルを 78.9% の利用率で運用でき、十分な安全マージン（21.1%）を確保できます。ただし体感の応答速度では小型モデルが優位でした（「モデルごとの実用性検証」参照）。</p>
                 </div>
 
                 <div class="warning">

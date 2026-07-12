@@ -15,7 +15,8 @@ YAML キュー + マルチペイン + ファイル監視思想を踏襲した **
 multi-agent-team/
 ├── docs/
 │   ├── specs/          # 仕様書（チーム構成・起動・通信プロトコル）
-│   └── history/        # 過去の調査・ADR 記録
+│   ├── history/        # 過去の調査・ADR 記録
+│   └── images/         # レポート用画像（png は docs 直下に置かない）
 ├── instructions/       # 各ロールの指示ファイル
 ├── queue/              # YAML キュー（エージェント間通信）
 └── scripts/            # 起動スクリプト等
